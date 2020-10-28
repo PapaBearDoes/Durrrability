@@ -1,0 +1,12 @@
+tag 89bfb0c489a369e5790ac1d3a196d6aebe26a00b 1.0.17-release
+Author:	Hizuro <hizuro@gmx.net>
+Date:	Sun Oct 18 20:43:42 2020 +0200
+
+Tagging as 1.0.17-release
+
+commit fbc25ce7862265223f7288df3df774271f3f1490
+Author: Hizuro <hizuro@gmx.net>
+Date:   Sun Oct 18 20:43:07 2020 +0200
+
+    update toc file
+

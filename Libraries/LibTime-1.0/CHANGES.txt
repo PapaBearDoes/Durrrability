@@ -1,0 +1,18 @@
+tag fb77326760c220db6c5aeb312fb2286f84be1fe0 r11
+Author:	Hizuro <hizuro@gmx.net>
+Date:	Sun Oct 18 21:11:48 2020 +0200
+
+Tagging as r11
+
+commit 270d6b718a3e61da7fc14c7a7daf915ed1bfe46e
+Author: Hizuro <hizuro@gmx.net>
+Date:   Sun Oct 18 21:11:12 2020 +0200
+
+    update toc file
+
+commit 71f787f7aed21852aab86118fea61e3904db8de0
+Author: Hizuro <hizuro@gmx.net>
+Date:   Sun Oct 18 21:08:35 2020 +0200
+
+    removed and merged localization files into main LibTime-1.0.lua
+

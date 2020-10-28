@@ -1,0 +1,64 @@
+## Interface: 90001
+
+#Meta
+## Title-deDE: #
+## Title-enUS: #
+## Title-esES: #
+## Title-esMX: #
+## Title-frFR: #
+## Title-itIT: #
+## Title-koKR: #
+## Title-ptBR: #
+## Title-ptBR: #
+## Title-zhCN: #
+## Title-zhTW: #
+## Author: PapaBearDoes
+## Notes: Starting Block For All PBD's Addons #AddonNotes#
+## Notes-deDE: #
+## Notes-enUS: #
+## Notes-esES: #
+## Notes-esMX: #
+## Notes-frFR: #
+## Notes-itIT: #
+## Notes-koKR: #
+## Notes-ptBR: #
+## Notes-ptBR: #
+## Notes-zhCN: #
+## Notes-zhTW: #
+## Title: AddonStub #AddonName#
+## Version: @project-version@
+
+# X-Meta
+## X-Category: #Curseforge Categories#
+## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask about anything else.
+## X-Website: #Repository URL#
+## X-Curse-Project-ID: #CurseForge Project ID#
+
+# Functionality
+## Dependencies: Ace3, LibDBIcon-1.0,
+## OptionalDeps: #Optional Dependencies#
+## LoadOnDemand: #LoadOnDemand? (1,0)
+## LoadWith: #Load this addon when any of this comma separated list loads#
+## SavedVariables: #Saved Variable Names#
+## SavedVariablesPerCharacter: #Saved Variable Names - Character#
+
+# Load Libraries
+  # MUST Load LibStub 1st, CallbackHandler 2nd, Locales 3rd.
+Libraries\LibStub\LibStub.lua
+Libraries\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libraries\AceLocale-3.0\AceLocale-3.0.lua
+  # Load the Rest
+Libraries\AceAddon-3.0\AceAddon-3.0.lua
+Libraries\AceConsole-3.0\AceConsole-3.0.lua
+Libraries\AceDB-3.0\AceDB-3.0.lua
+Libraries\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libraries\LibDBIcon-1.0\LibDBIcon-1.0.lua
+
+# Load Languages
+Locales\locales.xml
+
+# Load Modules
+Modules\AddonStub.mod.lua
+
+# Load Main file
+AddonStub.lua

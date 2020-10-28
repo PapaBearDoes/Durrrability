@@ -1,0 +1,67 @@
+------------------------------------------------------------------------
+r247 | Odica_Jaedenar | 2020-10-18 18:22:04 +0000 (Sun, 18 Oct 2020) | 3 lines
+Changed paths:
+   M /trunk/LibTourist-3.0.lua
+
+- Expansion names are now localized
+- Added Return to Karazhan (Legion dungeon)
+- Data returned for Uldum and Vale of Eternal Blossoms is now based on player level (<50 or 50). Looking for a better mechanism to distinguish between the original map and the N'Zoth assault map (BfA).
+------------------------------------------------------------------------
+r246 | Odica_Jaedenar | 2020-10-15 20:35:20 +0000 (Thu, 15 Oct 2020) | 13 lines
+Changed paths:
+   M /trunk/LibTourist-3.0.lua
+
+- Added Spires of Ascension
+- Added skill info for Shadowlands (fishing, mining, herbalism, skinning)
+- Added Expansion attribute to continents
+- Added 5 missing flight nodes
+- Fixed path between Exile's Reach and Darkmaul Citadel
+- Refactored Expansion lookup
+
+
+API CHANGES:
+
+- Added function Tourist:GetExpansion(zone)
+zone: unique (localized) zone name or uiMapID
+Returns: Expansion index (number) and the English expansion name (string)
+------------------------------------------------------------------------
+r245 | Odica_Jaedenar | 2020-10-14 19:34:53 +0000 (Wed, 14 Oct 2020) | 33 lines
+Changed paths:
+   M /trunk/LibTourist-3.0.lua
+   M /trunk/LibTourist-3.0.toc
+
+- upped TOC version tom 90001
+
+- Added Shadowlands continent, zones and instances
+- Corrected ALL levels (squeeze)
+- Added ChromieTime detection
+- Added 'expansion' to Zone properties
+- Removed "Violet Hold" from the duplicate names mechanism because not a duplicate ("Violet Hold" vs. "The Violet Hold")
+- Map ID lookup: corrected several map names, added 275 new map IDs
+- Tourist:GetLevel(zone) takes the current active Chromie Time expansion into account (untested)
+- Removed "Amani Pass"
+- Removed "The Ring of Valor"
+- Added "Brawl'gar Arena"
+- Added "Mardum, the Shattered Abyss"
+- Added paths to Arenas so they can be found by Tourist:IteratePath
+
+
+API CHANGES:
+-----------
+
+- Added funtion Tourist:IterateTheShadowlands()
+Iterates through the unique localized names of all zones that have player levels defined and are on the The Shadowlands continent.
+
+- Added function Tourist:IsInTheShadowlands(zone)
+zone: unique (localized) zone name or uiMapID
+Returns true if the zone is on the The Shadowlands continent.
+
+- Added function Tourist:GetChomieTimeActiveExpansion()
+Returns: 
+expansion (string)
+info (ChromieTimeExpansionInfo)
+Returns nil if no Chromie Time Expansion is active.
+
+- Removed obsolete function Tourist:GetFishingLevel(zone). Use GetFishingSkillInfo(zone) instead.
+------------------------------------------------------------------------
+

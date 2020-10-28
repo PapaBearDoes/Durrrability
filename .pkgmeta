@@ -1,0 +1,10 @@
+package-as: AddonStub
+
+externals:
+  Libraries/LibStub: https://repos.curseforge.com/wow/libstub/trunk
+  Libraries/LibDataBroker-1.1: http://github.com/tekkub/libdatabroker-1-1/
+
+license-output: LICENSE
+
+tools-used:
+    - libdatabroker-1-1
