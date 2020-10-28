@@ -30,7 +30,7 @@ local slots = {
 	{0, 0, 0, "Legs", L["Legs"], 0},
 	{0, 0, 0, "Feet", L["Feet"], 0},
 	{0, 0, 0, "MainHand", L["MainHand"], 0},
-	{0, 0, 0, "OffHand", L["OffHand"], 0},
+	{0, 0, 0, "SecondaryHand", L["SecondaryHand"], 0},
 }
 
 local bagsCost = 0
@@ -53,7 +53,7 @@ local repairIconCoords = {0.28125, 0.5625, 0, 0.5625}
 local guildRepairIconCoords = {0.5625, 0.84375, 0, 0.5625}
 
 local profileDB
-local DurrrabilityDB_Defaults = {
+local DurrrabilityDBDefaults = {
   profile = {
     showDetails = true,
     showBags = true,
@@ -62,7 +62,7 @@ local DurrrabilityDB_Defaults = {
     repairFromGuildOnly = false,
     repairThreshold = 4,
     showPopup = true,
-    repairType = 0,
+    repairType = 1,
     alwaysAsk = false,
     warntoRepair = true,
     warnThreshold = 50,
@@ -74,7 +74,7 @@ local repairAllCost, canRepair
 --------------------------------------------------------------------------------------------------------
 --                              Broker_DurabilityInfo options panel                                   --
 --------------------------------------------------------------------------------------------------------
-Durrrability.opts = {
+Durrrability.options = {
   type = "group",
   name = "Durrrability",
   args = {
@@ -141,7 +141,7 @@ Durrrability.opts = {
           end,
           set = function(key, value)
             profileDB.repairType = value
-            addon:UpdateIcon()
+            Durrrability:UpdateIcon()
           end,
           values = function()
             return {
@@ -162,7 +162,7 @@ Durrrability.opts = {
           end,
           set = function(key, value)
             profileDB.repairFromGuild = value
-            addon:UpdateIcon()
+            Durrrability:UpdateIcon()
           end,
           disabled = function()
             return not (profileDB.repairType == 1)
@@ -240,9 +240,9 @@ Durrrability.opts = {
 					set = function(key, value)
 						profileDB.warntoRepair = value
 						if (value) then
-							addon:RegisterEvent("PLAYER_UPDATE_RESTING","OnUpdateResting")
+							Durrrability:RegisterEvent("PLAYER_UPDATE_RESTING","OnUpdateResting")
 						else
-							addon:UnregisterEvent("PLAYER_UPDATE_RESTING")
+							Durrrability:UnregisterEvent("PLAYER_UPDATE_RESTING")
 						end
 					end,
 				},
@@ -264,7 +264,7 @@ Durrrability.opts = {
   },
 }
 
-function addon:SetupOptions()
+function Durrrability:SetupOptions()
   Durrrability.options.args.profile = DurrrabilityDBOptions:GetOptionsTable(self.db)
   Durrrability.options.args.profile.order = -2
 
@@ -277,7 +277,7 @@ end
 
 -- Do The Things
 function Durrrability:OnInitialize()
-  self.db = DurrrabilityDB:New("DurrrabilityDB", DurrrabilityDB_Defaults, true)
+  self.db = DurrrabilityDB:New("DurrrabilityDB", DurrrabilityDBDefaults, true)
   if not self.db then
     print("Error: Database not loaded correctly.  Please exit out of WoW and delete Broker_DurabilityInfo.lua found in: \\World of Warcraft\\WTF\\Account\\<Account Name>>\\SavedVariables\\")
   end
@@ -291,7 +291,7 @@ function Durrrability:OnInitialize()
 
   local index, item
   for index, item in pairs(slots) do
-    slots[index][ID] = GetInventorySlotInfo(item[SLOT].."Slot")
+    slots[index][ID] = GetInventorySlotInfo(item[SLOT] .. "Slot")
   end
 
   self:CreateDialogs()
@@ -313,7 +313,7 @@ function Durrrability:OnInitialize()
   self:ScheduleUpdate()
 end
 
-function addon:OnEnable()
+function Durrrability:OnEnable()
   self:ScheduleRepeatingTimer("MainUpdate", 1)
 end
 
@@ -333,7 +333,7 @@ Durrrability.obj = DurrrabilityLDB:NewDataObject("Durrrability", {
   OnTooltipShow = function(tooltip)
     if not tooltip or not tooltip.AddLine then return end
 
-    tooltip:AddLine("Durrrability" .. " " .. GetAddOnMetadata(Durrrability, "Version"))
+    tooltip:AddLine("Durrrability" .. " " .. GetAddOnMetadata("Durrrability", "Version"))
 
     local totalcost, percent, percentmin  = Durrrability:GetRepairData()
     if totalcost <= 0 then
@@ -343,8 +343,8 @@ Durrrability.obj = DurrrabilityLDB:NewDataObject("Durrrability", {
       if profileDB.showDetails then
         tooltip:AddLine(" ")
         for index, item in pairs(slots) do
-          if item[MAX] > 0 and item[VALUE] < item[MAX] then
-            local p = item[VALUE] / item[MAX]
+          if item[MAX] > 0 and item[VAL] < item[MAX] then
+            local p = item[VAL] / item[MAX]
             local r, g, b = DurrrabilityColors:GetThresholdColor(p)
 
             tooltip:AddDoubleLine(string.format("%d%%  |cFFFFFF00%s|t", p * 100, item[NAME]), Durrrability:CopperToString(math.floor(item[COST])), r, g, b, 1, 1, 1)
@@ -383,7 +383,7 @@ function Durrrability:MainUpdate()
   if request then
     request = false
 
-    if (combatState === true) and (not profileDB.updateInCombat) then
+    if (combatState == true) and (not profileDB.updateInCombat) then
       return
     end
 
@@ -409,13 +409,13 @@ function Durrrability:OnMerchantShow()
   self:AttemptToRepair()
 end
 
-function addon:OnMerchantClose()
+function Durrrability:OnMerchantClose()
   merchantState = false
-  if DurrrabilityDialog:ActiveDialog("Broker_DurabilityInfo_Confirm") then
-    DurrrabilityDialog:Dismiss("Broker_DurabilityInfo_Confirm")
+  if DurrrabilityDialog:ActiveDialog("Durrrability_Confirm") then
+    DurrrabilityDialog:Dismiss("DurrrabilityInfo_Confirm")
   end
-  if DurrrabilityDialog:ActiveDialog("Broker_DurabilityInfo_Dialog") then
-    DurrrabilityDialog:Dismiss("Broker_DurabilityInfo_Dialog")
+  if DurrrabilityDialog:ActiveDialog("Durrrability_Dialog") then
+    DurrrabilityDialog:Dismiss("Durrrability_Dialog")
   end
 end
 
@@ -491,7 +491,7 @@ function Durrrability:GetRepairData()
 			total = total + max
 			current = current + val
 			totalcost = totalcost + repairCost
-			slots[index][VALUE] = val
+			slots[index][VAL] = val
 			slots[index][MAX] = max
 			slots[index][COST] = repairCost
 			percent = val/max
@@ -593,7 +593,7 @@ function Durrrability:ShowDialog()
 end
 
 -- Auto repair using own money
-function addon:AutoRepair()
+function Durrrability:AutoRepair()
   if canRepair == true then
 		RepairAllItems()
 		Durrrability:Print("|cff00ff00[DurabilityInfo]|r " .. L["Your items have been repaired for"] .. " " .. self:CopperToString(repairAllCost))
@@ -633,7 +633,7 @@ end
 
 -- Warn to repair if under a threshold
 function Durrrability:WarnToRepair()
-	local totalcost, percent, percentmin  = addon:GetRepairData()
+	local totalcost, percent, percentmin  = Durrrability:GetRepairData()
 	if profileDB.warntoRepair and profileDB.warnThreshold >= percentmin*100 then
 		local hexColor = DurrrabilityColors:GetThresholdHexColor(percentmin)
 		local text = DurrrabilityColors:Colorize(hexColor, string.format("%d", percentmin * 100))
