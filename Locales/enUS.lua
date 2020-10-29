@@ -1,4 +1,7 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("Durrrability", "enUS", true)
+local me, ns = ...
+local lang = GetLocale()
+local l = LibStub("AceLocale-3.0")
+local L = l:NewLocale(me, "enUS", true)
 if not L then return end
 
 L["Ahem ... It seems as though your card has been declined...\\nI would love to help, but sadly it seems that you need"] = "Ahem ... It seems as though your card has been declined...\\nI would love to help, but sadly it seems that you need"
@@ -32,7 +35,7 @@ L["Neck"] = "Neck"
 L["No"] = "No"
 L["Nothing's Broke!"] = "Nothing's Broke!"
 L["Ok"] = "Ok"
-L["Only use Guild Funds."] = "Only use Guild Funds."
+L["Only use guild funds."] = "Only use guild funds."
 L["Pop up a confirmation box for lower reputations."] = "Pop up a confirmation box for lower reputations."
 L["Profiles"] = "Profiles"
 L["Ranged"] = "Ranged"
