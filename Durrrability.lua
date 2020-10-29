@@ -1,14 +1,14 @@
 local _G = getfenv(0)
 
 local Durrrability = LibStub("AceAddon-3.0"):NewAddon("Durrrability", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
---local DurrrabilityColors = LibStub:GetLibrary("LibColors-1.0")
+local L = LibStub("AceLocale-3.0"):GetLocale("Durrrability")
+
 local DurrrabilityConfig = LibStub("AceConfig-3.0")
 local DurrrabilityConfigDialog = LibStub("AceConfigDialog-3.0")
 local DurrrabilityDB = LibStub("AceDB-3.0")
 local DurrrabilityDBOptions = LibStub("AceDBOptions-3.0")
 local DurrrabilityDialog = LibStub("LibDialog-1.0")
 local DurrrabilityLDB = LibStub:GetLibrary("LibDataBroker-1.1")
-local L = LibStub("AceLocale-3.0"):GetLocale("Durrrability")
 
 -- Defaults
 local ID = 6
@@ -36,14 +36,8 @@ local slots = {
 local bagsCost = 0
 local bagsPercent = 0
 
---local IN_COMBAT = 0
---local OUT_OF_COMBAT = 1
 local combatState = true
-
---local NOT_AT_MERCHANT = 0
---local AT_MERCHANT = 1
 local merchantState = false
-
 local request = true
 
 local hiddenFrame = CreateFrame("GameTooltip")
@@ -71,9 +65,7 @@ local DurrrabilityDBDefaults = {
 
 local repairAllCost, canRepair
 
---------------------------------------------------------------------------------------------------------
---                              Broker_DurabilityInfo options panel                                   --
---------------------------------------------------------------------------------------------------------
+-- Options
 Durrrability.options = {
   type = "group",
   name = "Durrrability",
@@ -378,15 +370,18 @@ Durrrability.obj = DurrrabilityLDB:NewDataObject("Durrrability", {
   end,
 })
 updateTime, elapsed = 0.5, 0
-ldbf = CreateFrame("frame")
-ldbf:SetScript("OnUpdate", function(self, elap)
-  elapsed = elapsed + elap
-  if elapsed < updateTime then return end
-
-  elapsed = 0
-  local ldbcost, ldbpercent, ldbpercentmin = Durrrability:GetRepairData()
-  Durrrability.obj.text = string.format("%d%%", ldbpercent * 100)
-end)
+-- ldbf = CreateFrame("frame")
+hiddenFrame:SetScript("OnUpdate",
+  function(self, elap)
+    elapsed = elapsed + elap
+    if elapsed < updateTime then
+      return
+    end
+    elapsed = 0
+    local ldbcost, ldbpercent, ldbpercentmin = Durrrability:GetRepairData()
+    Durrrability.obj.text = string.format("%d%%", ldbpercent * 100)
+  end
+)
 
 -- Main update function
 function Durrrability:MainUpdate()
