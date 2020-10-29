@@ -4,24 +4,24 @@
 ## Title: Durrrability
 ## Author: PapaBearDoes
 ## Notes: A Simple Durability Plugin for LDB Displays
-## Notes-deDE: #
-## Notes-enUS: #
-## Notes-esES: #
-## Notes-esMX: #
-## Notes-frFR: #
-## Notes-itIT: #
-## Notes-koKR: #
-## Notes-ptBR: #
-## Notes-ptBR: #
-## Notes-zhCN: #
-## Notes-zhTW: #
+## Notes-deDE: Ein einfaches Haltbarkeits-Plugin für LDB-Displays
+## Notes-enUS: A Simple Durability Plugin for LDB Displays
+## Notes-esES: Un complemento de durabilidad simple para pantallas LDB
+## Notes-esMX: Un complemento de durabilidad simple para pantallas LDB
+## Notes-frFR: Un plug-in de durabilité simple pour les écrans LDB
+## Notes-itIT: Un semplice plug-in di durata per display LDB
+## Notes-koKR: LDB 디스플레이를위한 간단한 내구성 플러그인
+## Notes-ptBR: Um plug-in de durabilidade simples para monitores LDB
+## Notes-ruRU: Плагин Simple Durability для дисплеев LDB
+## Notes-zhCN: 用于LDB显示器的简单耐用性插件
+## Notes-zhTW: 用於LDB顯示器的簡單耐用性插件
 ## Version: 1.0.0-alpha
 
 # X-Meta
-## X-Category: #Curseforge Categories#
+## X-Category: Data Broker, Miscellaneous
 ## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask about anything else.
 ## X-Website: https://github.com/PapaBearDoes/Durrrability
-## X-Curse-Project-ID: #CurseForge Project ID#
+## X-Curse-Project-ID: 416370
 
 # Functionality
 ## SavedVariables: DurrrabilityDB

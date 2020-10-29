@@ -117,7 +117,7 @@ Durrrability.options = {
           order = 4,
           type = "toggle",
           name = L["Update in combat."],
-          desc = L["Toggle to update while in combat. (could be CPU intensive)"],
+          desc = L["Toggle for in-combat updates !!!This *WILL* be CPU intensive if turned on!!!"],
           get = function()
             return profileDB.updateInCombat
           end,
@@ -135,7 +135,7 @@ Durrrability.options = {
           type = "select",
           style = "dropdown",
           name = L["Repair type:"],
-          desc = L["Choose how do you want Durrrability to handle item repairs at vendor."],
+          desc = L["How should Durrrability handle item repairs at vendors?"],
           get = function()
             return profileDB.repairType
           end,
@@ -189,7 +189,7 @@ Durrrability.options = {
 					type = "select",
 					style = "dropdown",
 					name = L["Minimum reputation:"],
-					desc = L["Choose the minimum reputation level for auto repair."],
+					desc = L["Minimum reputation level needed to automatically repair at vendors?"],
 					get = function()
 						return profileDB.repairThreshold
 					end,
@@ -212,7 +212,7 @@ Durrrability.options = {
 				askEverywhere = {
 					order = 10,
 					type = "toggle",
-					name = L["If lower ask me."],
+					name = L["Ask me for input if lower"],
 					desc = L["Pop up a confirmation box for lower reputations."],
 					get = function()
 						return profileDB.alwaysAsk
@@ -365,7 +365,7 @@ Durrrability.obj = DurrrabilityLDB:NewDataObject("Durrrability", {
       tooltip:AddDoubleLine("|cFFFFFFFF"..L["Lowest"].." :", string.format("%d%%", percentmin * 100), 1, 1, 1, r, g, b)
 
       tooltip:AddLine(" ")
-			tooltip:AddLine("|cFFFFFFFF"..L["Cost for faction reputation:"])
+			tooltip:AddLine("|cFFFFFFFF"..L["Your cost based on faction reputation:"])
 			tooltip:AddDoubleLine("|cFFFFFF00".._G["FACTION_STANDING_LABEL4"], Durrrability:CopperToString(math.floor(totalcost)))
 			tooltip:AddDoubleLine("|cFFAAFF00".._G["FACTION_STANDING_LABEL5"], Durrrability:CopperToString(math.floor(totalcost*0.95)))
 			tooltip:AddDoubleLine("|cFF55FF00".._G["FACTION_STANDING_LABEL6"], Durrrability:CopperToString(math.floor(totalcost*0.90)))
@@ -607,7 +607,7 @@ function Durrrability:AutoRepair()
 		RepairAllItems()
 		Durrrability:Print("|cff00ff00[DurabilityInfo]|r " .. L["Your items have been repaired for"] .. " " .. self:CopperToString(repairAllCost))
 	else
-		Durrrability:Print("|cff00ff00[DurabilityInfo]|r " .. L["You don't have enough money for repairs! You need"] .. " " .. self:CopperToString(repairAllCost))
+		Durrrability:Print("|cff00ff00[DurabilityInfo]|r " .. L["Ahem ... It seems as though your card has been declined ... I would love to help, but sadly it seems that you need"] .. " " .. self:CopperToString(repairAllCost))
   end
 end
 
@@ -624,9 +624,9 @@ function Durrrability:AutoRepairFromBank()
 		RepairAllItems(1)
 		Durrrability:Print("|cff00ff00[DurabilityInfo]|r " .. L["Your items have been repaired using guild bank for"] .. " " .. self:CopperToString(repairAllCost))
   elseif profileDB.repairFromGuildOnly then
-    Durrrability:Print("|cff00ff00[DurabilityInfo]|r " .. L["Guild bank does not have enough money."])
+    Durrrability:Print("|cff00ff00[DurabilityInfo]|r " .. L["It seems that you Guild bank does not have enough money\\n(or you're not allowed to use guild funds)."])
 	else
-		Durrrability:Print("|cff00ff00[DurabilityInfo]|r " .. L["Guild bank does not have enough money. Using yours."])
+		Durrrability:Print("|cff00ff00[DurabilityInfo]|r " .. L["It seems that you Guild bank does not have enough money\\n(or you're not allowed to use guild funds). We'll repair with your funds then.."])
 		self:AutoRepair()
 	end
 end
@@ -693,7 +693,7 @@ function Durrrability:CreateDialogs()
 			},
 		},
 		on_show = function(self, data)
-			self.text:SetFormattedText(L["You are only |cFFFFFF00%s|r with this NPC. Auto repair requires %s.\nDo you stil want to repair?"], _G["FACTION_STANDING_LABEL"..data], _G["FACTION_STANDING_LABEL"..profileDB.repairThreshold])
+			self.text:SetFormattedText(L["You reputation with this vendor is |cFFFFFF00%s|r. Auto repair requires %s.\\nDo you stil want to repair?"], _G["FACTION_STANDING_LABEL"..data], _G["FACTION_STANDING_LABEL"..profileDB.repairThreshold])
 		end,
 		hide_on_escape = true,
 		show_while_dead = false,
@@ -708,7 +708,7 @@ function Durrrability:CreateDialogs()
 			},
 		},
 		on_show = function(self, data)
-			self.text:SetFormattedText(L["Your most broken item is at %s percent.\nTake the time to repair!"], data)
+			self.text:SetFormattedText(L["Ahem ... It seems as though your card has been declined...\\nI would love to help, but sadly it seems that you need"], data)
 		end,
 		hide_on_escape = true,
 		show_while_dead = false,
