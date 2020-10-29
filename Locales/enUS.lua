@@ -1,14 +1,14 @@
 local L = LibStub("AceLocale-3.0"):NewLocale("Durrrability", "enUS", true)
 if not L then return end
 
-L["All items repaired!"] = "All items repaired!"
+L["Nothing's Broke!"] = "Nothing's Broke!"
 L["Ask me"] = "Ask me"
 L["Auto repair"] = "Auto repair"
 L["Average"] = "Average"
 L["Back"] = "Back"
 L["Cancel"] = "Cancel"
 L["Chest"] = "Chest"
-L["Choose how do you want DurabilityInfo to handle item repairs at vendor."] = "Choose how do you want DurabilityInfo to handle item repairs at vendor."
+L["Choose how do you want Durrrability to handle item repairs at vendor."] = "Choose how do you want Durrrability to handle item repairs at vendor."
 L["Choose the minimum reputation level for auto repair."] = "Choose the minimum reputation level for auto repair."
 L["Cost for faction reputation:"] = "Cost for faction reputation:"
 L["Display Options"] = "Display Options"

@@ -135,7 +135,7 @@ Durrrability.options = {
           type = "select",
           style = "dropdown",
           name = L["Repair type:"],
-          desc = L["Choose how do you want DurabilityInfo to handle item repairs at vendor."],
+          desc = L["Choose how do you want Durrrability to handle item repairs at vendor."],
           get = function()
             return profileDB.repairType
           end,
@@ -338,7 +338,7 @@ Durrrability.obj = DurrrabilityLDB:NewDataObject("Durrrability", {
     local totalcost, percent, percentmin  = Durrrability:GetRepairData()
     if totalcost <= 0 then
       tooltip:AddLine(" ")
-      tooltip:AddLine(L["All items repaired!"], 0, 1, 0)
+      tooltip:AddLine(L["Nothing's Broke!"], 0, 1, 0)
     else
       if profileDB.showDetails then
         tooltip:AddLine(" ")
