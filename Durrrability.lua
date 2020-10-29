@@ -377,8 +377,8 @@ Durrrability.obj = DurrrabilityLDB:NewDataObject("Durrrability", {
     tooltip:AddLine(L["Right-hint"])
   end,
 })
-local updateTime, elapsed = 0.5, 0
-local ldbf = CreateFrame("frame")
+updateTime, elapsed = 0.5, 0
+ldbf = CreateFrame("frame")
 ldbf:SetScript("OnUpdate", function(self, elap)
   elapsed = elapsed + elap
   if elapsed < updateTime then return end
