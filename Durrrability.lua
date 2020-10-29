@@ -1,7 +1,7 @@
 local _G = getfenv(0)
 
 local Durrrability = LibStub("AceAddon-3.0"):NewAddon("Durrrability", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
-local DurrrabilityColors = LibStub:GetLibrary("LibColors-1.0")
+--local DurrrabilityColors = LibStub:GetLibrary("LibColors-1.0")
 local DurrrabilityConfig = LibStub("AceConfig-3.0")
 local DurrrabilityConfigDialog = LibStub("AceConfigDialog-3.0")
 local DurrrabilityDB = LibStub("AceDB-3.0")
@@ -58,7 +58,7 @@ local DurrrabilityDBDefaults = {
     showDetails = true,
     showBags = true,
     updateCombat = true,
-    repairFromGuild = false,
+    repairFromGuild = true,
     repairFromGuildOnly = false,
     repairThreshold = 4,
     showPopup = true,
@@ -345,13 +345,13 @@ Durrrability.obj = DurrrabilityLDB:NewDataObject("Durrrability", {
         for index, item in pairs(slots) do
           if item[MAX] > 0 and item[VAL] < item[MAX] then
             local p = item[VAL] / item[MAX]
-            local r, g, b = DurrrabilityColors:GetThresholdColor(p)
+            local r, g, b = Durrrability:GetThresholdColor(p)
 
             tooltip:AddDoubleLine(string.format("%d%%  |cFFFFFF00%s|t", p * 100, item[NAME]), Durrrability:CopperToString(math.floor(item[COST])), r, g, b, 1, 1, 1)
           end
         end
         if profileDB.showBags and (bagCost > 0) then
-          local r, g, b = DurrrabilityColors:GetThresholdColor(bagPercent)
+          local r, g, b = Durrrability:GetThresholdColor(bagPercent)
 
           tooltip:AddDoubleLine(string.format("%d%%  |cFFFFFF00Bags|t", bagPercent * 100), Durrrability:CopperToString(math.floor(bagCost)), r, g, b, 1, 1, 1)
         end
@@ -359,9 +359,9 @@ Durrrability.obj = DurrrabilityLDB:NewDataObject("Durrrability", {
 
       tooltip:AddLine(" ")
 
-      local r, g, b = DurrrabilityColors:GetThresholdColor(percent)
+      local r, g, b = Durrrability:GetThresholdColor(percent)
 			tooltip:AddDoubleLine("|cFFFFFFFF"..L["Average"].." :", string.format("%d%%", percent * 100), 1, 1, 1, r, g, b)
-      local r, g, b = DurrrabilityColors:GetThresholdColor(percentmin)
+      local r, g, b = Durrrability:GetThresholdColor(percentmin)
       tooltip:AddDoubleLine("|cFFFFFFFF"..L["Lowest"].." :", string.format("%d%%", percentmin * 100), 1, 1, 1, r, g, b)
 
       tooltip:AddLine(" ")
@@ -377,6 +377,16 @@ Durrrability.obj = DurrrabilityLDB:NewDataObject("Durrrability", {
     tooltip:AddLine(L["Right-hint"])
   end,
 })
+local updateTime, elapsed = 0.5, 0
+local ldbf = CreateFrame("frame")
+ldbf:SetScript("OnUpdate", function(self, elap)
+  elapsed = elapsed + elap
+  if elapsed < updateTime then return end
+
+  elapsed = 0
+  local ldbcost, ldbpercent, ldbpercentmin = Durrrability:GetRepairData()
+  Durrrability.obj.text = string.format("%d%%", ldbpercent * 100)
+end)
 
 -- Main update function
 function Durrrability:MainUpdate()
@@ -390,13 +400,12 @@ function Durrrability:MainUpdate()
     local totalcost, percent, percentmin  = self:GetRepairData()
 
     if percentmin then
-      self.obj.text = (string.format("|cff%s%d%%|r", DurrrabilityColors:GetThresholdHexColor(percentmin), percentmin * 100))
+      self.obj.text = (string.format("|cff%s%d%%|r", Durrrability:GetThresholdHexColor(percentmin), percentmin * 100))
     end
   end
 end
 
 -- Events
-
 function Durrrability:ScheduleUpdate()
   request = true
 end
@@ -635,8 +644,8 @@ end
 function Durrrability:WarnToRepair()
 	local totalcost, percent, percentmin  = Durrrability:GetRepairData()
 	if profileDB.warntoRepair and profileDB.warnThreshold >= percentmin*100 then
-		local hexColor = DurrrabilityColors:GetThresholdHexColor(percentmin)
-		local text = DurrrabilityColors:Colorize(hexColor, string.format("%d", percentmin * 100))
+		local hexColor = Durrrability:GetThresholdHexColor(percentmin)
+		local text = Durrrability:Colorize(hexColor, string.format("%d", percentmin * 100))
     DurrrabilityDialog:Spawn("Broker_DurabilityInfo_Warn", text)
 	end
 end
@@ -704,4 +713,81 @@ function Durrrability:CreateDialogs()
 		hide_on_escape = true,
 		show_while_dead = false,
 	})
+end
+
+function Durrrability:GetThresholdPercentage(quality, ...)
+  local n = select('#', ...)
+  if n <= 1 then
+    return Durrrability:GetThresholdPercentage(quality, 0, ... or 1)
+  end
+
+  local worst = ...
+  local best = select(n, ...)
+
+  if worst == best and quality == worst then
+    return 0.5
+  end
+
+  if worst <= best then
+    if quality <= worst then
+      return 0
+    elseif quality >= best then
+      return 1
+    end
+    local last = worst
+    for i = 2, n-1 do
+      local value = select(i, ...)
+      if quality <= value then
+        return ((i-2) + (quality - last) / (value - last)) / (n-1)
+      end
+      last = value
+    end
+
+    local value = select(n, ...)
+    return ((n-2) + (quality - last) / (value - last)) / (n-1)
+  else
+    if quality >= worst then
+      return 0
+    elseif quality <= best then
+      return 1
+    end
+    local last = worst
+    for i = 2, n-1 do
+      local value = select(i, ...)
+      if quality >= value then
+        return ((i-2) + (quality - last) / (value - last)) / (n-1)
+      end
+      last = value
+    end
+
+    local value = select(n, ...)
+    return ((n-2) + (quality - last) / (value - last)) / (n-1)
+  end
+end
+
+function Durrrability:GetThresholdColor(quality, ...)
+  if quality ~= quality --[[or quality == inf or quality == -inf]] then
+    return 1, 1, 1
+  end
+
+  local percent = Durrrability:GetThresholdPercentage(quality, ...)
+
+  if percent <= 0 then
+    return 1, 0, 0
+  elseif percent <= 0.5 then
+    return 1, percent*2, 0
+  elseif percent >= 1 then
+    return 0, 1, 0
+  else
+    return 2 - percent*2, 1, 0
+  end
+end
+
+function Durrrability:GetThresholdHexColor(quality, ...)
+	local r, g, b = self:GetThresholdColor(quality, ...)
+	return string.format("%02x%02x%02x", r*255, g*255, b*255)
+end
+
+function Durrrability:Colorize(hexColor, text)
+	return "|cff" .. tostring(hexColor or 'ffffff') .. tostring(text) .. "|r"
 end
