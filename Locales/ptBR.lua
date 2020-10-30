@@ -5,7 +5,7 @@ local L = l:NewLocale(me, "ptBR")
 if not L then return end
 
 -- CurseForge Language Substitions --
---@localization(locale="ptBR", format="lua_additive_table", handle-unlocalized="comment")@
+--@localization(locale="ptBR", format="lua_additive_table", handle-unlocalized="comment", handle-subnamespaces="concat")@
 -- End CurseForge Language Substitions --
 
 -- Last Editted By: @file-author@ - @file-date-iso@

@@ -21,6 +21,3 @@ The aim of Durrrability is to give you the ability to see when your stuff's bork
 **I'll add the completed localizations to the addon once all phrases are completed for a given language**
 
 ***(Any donations given through my addons go 100% to support my small dog rescue - K9 Trust, and are tax deductible as we are a recognized 501(c)(3) Charitable Organization.)***
-
-<!-- Last Edited By: @file-author@ - @file-date-iso@ -->
-<!-- @file-revision@ -->
