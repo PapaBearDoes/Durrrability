@@ -4,9 +4,7 @@ local l = LibStub("AceLocale-3.0")
 local L = l:NewLocale(me, "ptBR")
 if not L then return end
 
--- CurseForge Language Substitions --
 --@localization(locale="ptBR", format="lua_additive_table", handle-unlocalized="comment", handle-subnamespaces="concat")@
--- End CurseForge Language Substitions --
 
 --@do-not-package@
 --@end-do-not-package@
