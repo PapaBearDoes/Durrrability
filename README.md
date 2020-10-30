@@ -1,4 +1,17 @@
-# Durrrability
-Because everyone has that Durrr moment and have forgot to repair when we're able to.
-
+# Durrr(ability)
 This is a small LDB plugin for durability display.
+
+*Because everyone has had that Durrr moment and forgot to repair when we're able to.*
+
+The aim of Durrrability is to give you the ability to see when your stuff's borked.
+
+**Features**
+* Auto-Updating display on your chosen LDB Display
+* Show just the average percentage, or each item individually
+* Choose to figure in the equipment in your bags into the average percentage or not
+* Auto Repair
+  * Choose to use Guild Funds (*If Available*)
+    * Choose to use *ONLY* Guild Funds (*If Available*)
+  * Choose whether or not to auto-repair based on your current reputation with a particular vendors
+* Choose to have a Repair Warning pop up when you enter a "Rested" state (usually a city)
+  * Set the threshold where this warning fires
