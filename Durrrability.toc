@@ -3,6 +3,9 @@
 #Meta
 ## Title: Durrrability
 ## Author: @project-author@
+#@do-not-package@
+## Author: PapaBearDoes
+#@end-do-not-package@
 ## Notes: A Simple Durability Plugin for LDB Displays
 ## Notes-deDE: Ein einfaches Haltbarkeits-Plugin für LDB-Displays
 ## Notes-enUS: A Simple Durability Plugin for LDB Displays
@@ -16,6 +19,9 @@
 ## Notes-zhCN: 用于LDB显示器的简单耐用性插件
 ## Notes-zhTW: 用於LDB顯示器的簡單耐用性插件
 ## Version: @project-version@
+#@do-not-package@
+## Version: 1.0.0-beta
+#@end-do-not-package@
 
 # X-Meta
 ## X-Category: Data Broker, Miscellaneous
