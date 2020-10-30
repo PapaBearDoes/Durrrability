@@ -19,7 +19,7 @@
 
 # X-Meta
 ## X-Category: Data Broker, Miscellaneous
-## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask about anything else.
+## X-License: GPLv3
 ## X-Website: https://github.com/PapaBearDoes/Durrrability
 ## X-Curse-Project-ID: 416370
 

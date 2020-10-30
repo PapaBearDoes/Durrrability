@@ -11,7 +11,7 @@ local DurrrConfigDialog = LibStub("AceConfigDialog-3.0")
 local DurrrDB = LibStub("AceDB-3.0")
 local DurrrDBOptions = LibStub("AceDBOptions-3.0")
 local DurrrDialog = LibStub("LibDialog-1.0")
-local DurrrLDB = LibStub("LibDataBroker-1.1")
+local DLDB = LibStub("LibDataBroker-1.1")
 -- End Constants --
 
 -- Defaults --
@@ -48,7 +48,7 @@ local COST = 3
 local bagsCost = 0
 local bagsPercent = 0
 
-local combatState = true
+local combatState = false
 local merchantState = false
 local request = true
 
@@ -57,7 +57,7 @@ local DurrrDBDefaults = {
   profile = {
     showDetails = true,
     showBags = true,
-    updateCombat = true,
+    updateInCombat = false,
     repairFromGuild = true,
     repairFromGuildOnly = false,
     repairThreshold = 4,
@@ -65,7 +65,7 @@ local DurrrDBDefaults = {
     repairType = 1,
     alwaysAsk = false,
     warntoRepair = true,
-    warnThreshold = 50,
+    warnThreshold = 65,
   },
 }
 -- End Defaults --
@@ -73,7 +73,7 @@ local DurrrDBDefaults = {
 -- Options --
 Durrr.options = {
   type = "group",
-  name = me,
+  name = "Durrrability",
   args = {
     general = {
       order = 1,
@@ -83,7 +83,7 @@ Durrr.options = {
       args = {
         separator1 = {
           type = "header",
-          name = "LDB " .. L["Display Options"],
+          name = L["Display Options"],
           order = 1,
         },
         details = {
@@ -116,73 +116,19 @@ Durrr.options = {
           name = L["Update in combat."],
           desc = L["Toggle for in-combat updates !!!This *WILL* be CPU intensive if turned on!!!"],
           get = function()
-            return profileDB.updateCombat
+            return profileDB.updateInCombat
           end,
           set = function(key, value)
-            profileDB.updateCombat = value
+            profileDB.updateInCombat = value
           end,
         },
-        separator2 = {
+        separator3 = {
           type = "header",
-          name = L["Repair Options"],
+          name = L["Reputation Options"],
           order = 5,
         },
-        repairType = {
-          order = 6,
-          type = "select",
-          style = "dropdown",
-          name = L["Repair type:"],
-          desc = L["How should Durrrability handle item repairs at vendors?"],
-          get = function()
-            return profileDB.repairType
-          end,
-          set = function(key, value)
-            profileDB.repairType = value
-            Durrr:UpdateIcon()
-          end,
-          values = function()
-            return {
-              [0] = L["Do nothing"],
-              [1] = L["Auto repair"],
-              [2] = L["Ask me"],
-            }
-          end,
-        },
-        repairGuild = {
-          order = 7,
-          type = "toggle",
-          width = "full",
-          name = L["Use guild bank."],
-          desc = L["Toggle to repair using guild bank."],
-          get = function()
-            return profileDB.repairFromGuild
-          end,
-          set = function(key, value)
-            profileDB.repairFromGuild = value
-            Durrr:UpdateIcon()
-          end,
-          disabled = function()
-            return not (profileDB.repairType == 1)
-          end,
-        },
-        repairGuildOnly = {
-          order = 8,
-          type = "toggle",
-          width = "full",
-          name = L["Only use guild funds."],
-          desc = L["Toggle to not repair with your money if guild does not have enough."],
-          get = function()
-            return profileDB.repairFromGuildOnly
-          end,
-          set = function(key, value)
-            profileDB.repairFromGuildOnly = value
-          end,
-          disabled = function()
-            return ( profileDB.repairFromGuild == false or (not (profileDB.repairType == 1)) )
-          end,
-        },
-				factionThreshold = {
-					order = 9,
+        factionThreshold = {
+					order = 6,
 					type = "select",
 					style = "dropdown",
 					name = L["Minimum reputation:"],
@@ -207,8 +153,9 @@ Durrr.options = {
 					end,
 				},
 				askEverywhere = {
-					order = 10,
+					order = 7,
 					type = "toggle",
+          width = "full",
 					name = L["Ask me for input if lower"],
 					desc = L["Pop up a confirmation box for lower reputations."],
 					get = function()
@@ -221,13 +168,72 @@ Durrr.options = {
 						return profileDB.repairType == 0
 					end,
 				},
-				separator3 = {
+        separator2 = {
+          type = "header",
+          name = L["Repair Options"],
+          order = 8,
+        },
+        repairType = {
+          order = 9,
+          type = "select",
+          style = "dropdown",
+          name = L["Repair type:"],
+          desc = L["How should Durrrability handle item repairs at vendors?"],
+          get = function()
+            return profileDB.repairType
+          end,
+          set = function(key, value)
+            profileDB.repairType = value
+            Durrr:UpdateIcon()
+          end,
+          values = function()
+            return {
+              [0] = L["Do nothing"],
+              [1] = L["Auto repair"],
+              [2] = L["Ask me"],
+            }
+          end,
+        },
+        repairGuild = {
+          order = 10,
+          type = "toggle",
+          width = "full",
+          name = L["Use guild bank."],
+          desc = L["Toggle to repair using guild bank."],
+          get = function()
+            return profileDB.repairFromGuild
+          end,
+          set = function(key, value)
+            profileDB.repairFromGuild = value
+            Durrr:UpdateIcon()
+          end,
+          disabled = function()
+            return not (profileDB.repairType == 1)
+          end,
+        },
+        repairGuildOnly = {
+          order = 11,
+          type = "toggle",
+          width = "full",
+          name = L["Only use guild funds."],
+          desc = L["Toggle to not repair with your money if guild does not have enough."],
+          get = function()
+            return profileDB.repairFromGuildOnly
+          end,
+          set = function(key, value)
+            profileDB.repairFromGuildOnly = value
+          end,
+          disabled = function()
+            return ( profileDB.repairFromGuild == false or (not (profileDB.repairType == 1)) )
+          end,
+        },
+				separator4 = {
 					type = "header",
 					name = L["Warning Options"],
-					order = 11,
+					order = 12,
 				},
 				warn = {
-					order = 12,
+					order = 13,
 					type = "toggle",
 					name = L["Warn when in city."],
 					desc = L["Toggle to warn you to repair upon entering a city."],
@@ -244,7 +250,7 @@ Durrr.options = {
 					end,
 				},
 				warnThreshold = {
-					order = 13,
+					order = 14,
 					type = "range",
 					name = L["Warn Threshold"],
 					desc = L["Set maximum item durability to toggle the warning."],
@@ -265,11 +271,11 @@ function Durrr:SetupOptions()
   Durrr.options.args.profile = DurrrDBOptions:GetOptionsTable(Durrr.db)
   Durrr.options.args.profile.order = -2
 
-  DurrrConfig:RegisterOptionsTable(me, Durrr.options, nil)
+  DurrrConfig:RegisterOptionsTable("Durrrability", Durrr.options, nil)
 
   Durrr.optionsFrames = {}
-  Durrr.optionsFrames.general = DurrrConfigDialog:AddToBlizOptions(me, nil, nil, "general")
-  Durrr.optionsFrames.profile = DurrrConfigDialog:AddToBlizOptions(me, L["Profiles"], me, "profile")
+  Durrr.optionsFrames.general = DurrrConfigDialog:AddToBlizOptions("Durrrability", nil, nil, "general")
+  Durrr.optionsFrames.profile = DurrrConfigDialog:AddToBlizOptions("Durrrability", L["Profiles"], "Durrrability", "profile")
 end
 -- End Options --
 
@@ -317,14 +323,14 @@ end
 -- End Init Things --
 
 -- Do LDB object --
-DurrrLDB.obj = DurrrLDB:NewDataObject(me, {
+DurrrLDB = DLDB:NewDataObject("Durrrability", {
   type = "data source",
   label = L["Durability"],
   text = "",
   icon = "Interface\\MerchantFrame\\UI-Merchant-RepairIcons",
   iconCoords = repairIconCoords,
-  OnClick = function(frame, msg)
-    if msg == "RightButton" then
+  OnClick = function(frame, click)
+    if click == "RightButton" then
       Durrr:ShowConfig()
     end
     Durrr:MainUpdate()
@@ -332,7 +338,7 @@ DurrrLDB.obj = DurrrLDB:NewDataObject(me, {
   OnTooltipShow = function(tooltip)
     if not tooltip or not tooltip.AddLine then return end
 
-    tooltip:AddLine(me .. " " .. GetAddOnMetadata(me, "Version"))
+    tooltip:AddLine("Durrrability " .. GetAddOnMetadata("Durrrability", "Version"))
 
     local totalcost, percent, percentmin  = Durrr:GetRepairData()
     if totalcost <= 0 then
@@ -383,14 +389,14 @@ function Durrr:MainUpdate()
   if request then
     request = false
 
-    if (combatState == true) and (not profileDB.updateCombat) then
+    if (combatState == true) and (not profileDB.updateInCombat) then
       return
     end
 
     local totalcost, percent, percentmin  = Durrr:GetRepairData()
 
     if percentmin then
-      DurrrLDB.obj.text = (string.format("|cff%s%d%%|r", Durrr:GetThresholdHexColor(percentmin), percentmin * 100))
+      DurrrLDB.text = (string.format("|cff%s%d%%|r", Durrr:GetThresholdHexColor(percentmin), percentmin * 100))
     end
   end
 end
@@ -399,9 +405,9 @@ end
 -- LDB icon --
 function Durrr:UpdateIcon()
 	if profileDB.repairFromGuild and (profileDB.repairType == 1) then
-		DurrrLDB.obj.iconCoords = guildRepairIconCoords
+		DurrrLDB.iconCoords = guildRepairIconCoords
 	else
-		DurrrLDB.obj.iconCoords = repairIconCoords
+		DurrrLDB.iconCoords = repairIconCoords
 	end
 end
 -- End LDB icon --
