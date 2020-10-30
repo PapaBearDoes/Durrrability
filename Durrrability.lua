@@ -235,7 +235,7 @@ Durrr.options = {
 				warn = {
 					order = 13,
 					type = "toggle",
-					name = L["CityWarn"],
+					name = L["CityWarnConf"],
 					desc = L["CityWarnToggle"],
 					get = function()
 						return profileDB.warntoRepair
@@ -283,7 +283,8 @@ end
 function Durrr:OnInitialize()
   Durrr.db = DurrrDB:New("DurrrabilityDB", DurrrDBDefaults, true)
   if not Durrr.db then
-    print("Error: Database not loaded correctly. Exit WoW and delete Durrrability.lua found in your SavedVariables folder")
+    errorDB = L["ErrorDB"]
+    print(errorDB)
   end
 
   Durrr.db.RegisterCallback(Durrr, "OnProfileChanged", "OnProfileChanged")
