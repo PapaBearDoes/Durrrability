@@ -643,7 +643,7 @@ function Durrr:AutoRepairFromBank()
   elseif profileDB.repairFromGuildOnly then
     Durrr:Print("|cff00ff00[Durrrability]|r " .. L["It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds)."])
 	else
-		Durrr:Print("|cff00ff00[Durrrability]|r " .. L["It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds). We'll repair with your funds then.."])
+		Durrr:Print("|cff00ff00[Durrrability]|r " .. L["It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds). We'll repair with your funds then."])
 		Durrr:AutoRepair()
 	end
 end
