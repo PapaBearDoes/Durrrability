@@ -8,5 +8,8 @@ if not L then return end
 --@localization(locale="koKR", format="lua_additive_table", handle-unlocalized="comment", handle-subnamespaces="concat")@
 -- End CurseForge Language Substitions --
 
+--@do-not-package@
+--@end-do-not-package@
+
 -- Last Editted By: @file-author@ - @file-date-iso@
 -- @file-revision@
