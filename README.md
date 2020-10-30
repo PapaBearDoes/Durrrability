@@ -15,3 +15,5 @@ The aim of Durrrability is to give you the ability to see when your stuff's bork
   * Choose whether or not to auto-repair based on your current reputation with a particular vendors
 * Choose to have a Repair Warning pop up when you enter a "Rested" state (usually a city)
   * Set the threshold where this warning fires
+
+***(Any donations given through my addons go 100% to support my small dog rescue - K9 Trust, and are tax deductible as we are a recognized 501(c)(3) Charitable Organization.)***
