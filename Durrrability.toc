@@ -2,7 +2,7 @@
 
 #Meta
 ## Title: Durrrability
-## Author: PapaBearDoes
+## Author: @project-author@
 ## Notes: A Simple Durability Plugin for LDB Displays
 ## Notes-deDE: Ein einfaches Haltbarkeits-Plugin für LDB-Displays
 ## Notes-enUS: A Simple Durability Plugin for LDB Displays
@@ -15,7 +15,7 @@
 ## Notes-ruRU: Плагин Simple Durability для дисплеев LDB
 ## Notes-zhCN: 用于LDB显示器的简单耐用性插件
 ## Notes-zhTW: 用於LDB顯示器的簡單耐用性插件
-## Version: 1.0.0-alpha
+## Version: @project-version@
 
 # X-Meta
 ## X-Category: Data Broker, Miscellaneous
@@ -35,3 +35,6 @@ Locales\locales.xml
 
 # Load Main file
 Durrrability.lua
+
+# Last Editted By: @file-author@ - @file-date-iso@
+# @file-revision@

@@ -78,19 +78,19 @@ Durrr.options = {
     general = {
       order = 1,
       type = "group",
-      name = L["General Settings"],
+      name = L["GeneralSettings"],
       cmdInline = true,
       args = {
         separator1 = {
           type = "header",
-          name = L["Display Options"],
+          name = L["DisplayOptions"],
           order = 1,
         },
         details = {
           order = 2,
           type = "toggle",
-          name = L["Show each item."],
-          desc = L["Toggle to show detailed item durability."],
+          name = L["ShowEachItem"],
+          desc = L["ShowAllItemsToggle"],
           get = function()
             return profileDB.showDetails
           end,
@@ -101,8 +101,8 @@ Durrr.options = {
         bags = {
           order = 3,
           type = "toggle",
-          name = L["Show bags."],
-          desc = L["Toggle to show durability for items in bags."],
+          name = L["ShowBags"],
+          desc = L["ShowBagsToggle"],
           get = function()
             return profileDB.showBags
           end,
@@ -113,8 +113,8 @@ Durrr.options = {
         combat = {
           order = 4,
           type = "toggle",
-          name = L["Update in combat."],
-          desc = L["Toggle for in-combat updates !!!This *WILL* be CPU intensive if turned on!!!"],
+          name = L["InCombatUpdate"],
+          desc = L["InCombatToggle"],
           get = function()
             return profileDB.updateInCombat
           end,
@@ -124,15 +124,15 @@ Durrr.options = {
         },
         separator3 = {
           type = "header",
-          name = L["Reputation Options"],
+          name = L["RepOpts"],
           order = 5,
         },
         factionThreshold = {
 					order = 6,
 					type = "select",
 					style = "dropdown",
-					name = L["Minimum reputation:"],
-					desc = L["Minimum reputation level needed to automatically repair at vendors?"],
+					name = L["MinRep"],
+					desc = L["MinRepLevel"],
 					get = function()
 						return profileDB.repairThreshold
 					end,
@@ -156,8 +156,8 @@ Durrr.options = {
 					order = 7,
 					type = "toggle",
           width = "full",
-					name = L["Ask me for input if lower"],
-					desc = L["Pop up a confirmation box for lower reputations."],
+					name = L["AskIfLower"],
+					desc = L["LowRepConfirmPop"],
 					get = function()
 						return profileDB.alwaysAsk
 					end,
@@ -170,15 +170,15 @@ Durrr.options = {
 				},
         separator2 = {
           type = "header",
-          name = L["Repair Options"],
+          name = L["RepairOpts"],
           order = 8,
         },
         repairType = {
           order = 9,
           type = "select",
           style = "dropdown",
-          name = L["Repair type:"],
-          desc = L["How should Durrrability handle item repairs at vendors?"],
+          name = L["RepairType"],
+          desc = L["VendorRepairQuestion"],
           get = function()
             return profileDB.repairType
           end,
@@ -188,9 +188,9 @@ Durrr.options = {
           end,
           values = function()
             return {
-              [0] = L["Do nothing"],
-              [1] = L["Auto repair"],
-              [2] = L["Ask me"],
+              [0] = L["DoNothing"],
+              [1] = L["AutoRepair"],
+              [2] = L["Ask"],
             }
           end,
         },
@@ -198,8 +198,8 @@ Durrr.options = {
           order = 10,
           type = "toggle",
           width = "full",
-          name = L["Use guild bank."],
-          desc = L["Toggle to repair using guild bank."],
+          name = L["UseGuildFunds"],
+          desc = L["GuildFundsToggle"],
           get = function()
             return profileDB.repairFromGuild
           end,
@@ -215,8 +215,8 @@ Durrr.options = {
           order = 11,
           type = "toggle",
           width = "full",
-          name = L["Only use guild funds."],
-          desc = L["Toggle to not repair with your money if guild does not have enough."],
+          name = L["OnlyGuildFunds"],
+          desc = L["NoGuildGoldToggle"],
           get = function()
             return profileDB.repairFromGuildOnly
           end,
@@ -229,21 +229,21 @@ Durrr.options = {
         },
 				separator4 = {
 					type = "header",
-					name = L["Warning Options"],
+					name = L["WarningOpts"],
 					order = 12,
 				},
 				warn = {
 					order = 13,
 					type = "toggle",
-					name = L["Warn when in city."],
-					desc = L["Toggle to warn you to repair upon entering a city."],
+					name = L["CityWarn"],
+					desc = L["CityWarnToggle"],
 					get = function()
 						return profileDB.warntoRepair
 					end,
 					set = function(key, value)
 						profileDB.warntoRepair = value
 						if (value) then
-							Durrr:RegisterEvent("PLAYER_UPDATE_RESTING","OnUpdateResting")
+							Durrr:RegisterEvent("PLAYER_UPDATE_RESTING", "OnUpdateResting")
 						else
 							Durrr:UnregisterEvent("PLAYER_UPDATE_RESTING")
 						end
@@ -252,8 +252,8 @@ Durrr.options = {
 				warnThreshold = {
 					order = 14,
 					type = "range",
-					name = L["Warn Threshold"],
-					desc = L["Set maximum item durability to toggle the warning."],
+					name = L["WarnThreshold"],
+					desc = L["WarnMax"],
 					min = 0, max = 100, step = 1,
 					get = function()
 						return profileDB.warnThreshold
@@ -283,7 +283,7 @@ end
 function Durrr:OnInitialize()
   Durrr.db = DurrrDB:New("DurrrabilityDB", DurrrDBDefaults, true)
   if not Durrr.db then
-    print("Error: Database not loaded correctly.  Please exit out of WoW and delete Durrrability.lua found in: \\World of Warcraft\\WTF\\Account\\<Account Name>>\\SavedVariables\\")
+    print("Error: Database not loaded correctly. Exit WoW and delete Durrrability.lua found in your SavedVariables folder")
   end
 
   Durrr.db.RegisterCallback(Durrr, "OnProfileChanged", "OnProfileChanged")
@@ -300,16 +300,16 @@ function Durrr:OnInitialize()
 
   Durrr:CreateDialogs()
 
-  Durrr:RegisterEvent("PLAYER_DEAD","ScheduleUpdate")
-	Durrr:RegisterEvent("PLAYER_UNGHOST","ScheduleUpdate")
-	Durrr:RegisterEvent("UPDATE_INVENTORY_DURABILITY","ScheduleUpdate")
-	Durrr:RegisterEvent("PLAYER_REGEN_ENABLED","OnRegenEnable")
-	Durrr:RegisterEvent("PLAYER_REGEN_DISABLED","OnRegenDisable")
-	Durrr:RegisterEvent("MERCHANT_SHOW","OnMerchantShow")
-	Durrr:RegisterEvent("MERCHANT_CLOSED","OnMerchantClose")
+  Durrr:RegisterEvent("PLAYER_DEAD", "ScheduleUpdate")
+	Durrr:RegisterEvent("PLAYER_UNGHOST", "ScheduleUpdate")
+	Durrr:RegisterEvent("UPDATE_INVENTORY_DURABILITY", "ScheduleUpdate")
+	Durrr:RegisterEvent("PLAYER_REGEN_ENABLED", "OnRegenEnable")
+	Durrr:RegisterEvent("PLAYER_REGEN_DISABLED", "OnRegenDisable")
+	Durrr:RegisterEvent("MERCHANT_SHOW", "OnMerchantShow")
+	Durrr:RegisterEvent("MERCHANT_CLOSED", "OnMerchantClose")
 
   if (profileDB.warntoRepair) then
-    Durrr:RegisterEvent("PLAYER_UPDATE_RESTING","OnUpdateResting")
+    Durrr:RegisterEvent("PLAYER_UPDATE_RESTING", "OnUpdateResting")
     Durrr:ScheduleTimer("OnUpdateResting", 5)
   end
 
@@ -338,12 +338,12 @@ DurrrLDB = DLDB:NewDataObject("Durrrability", {
   OnTooltipShow = function(tooltip)
     if not tooltip or not tooltip.AddLine then return end
 
-    tooltip:AddLine("Durrrability " .. GetAddOnMetadata("Durrrability", "Version"))
+    tooltip:AddLine(L["AddonName"] .. " " .. GetAddOnMetadata("Durrrability", "Version"))
 
     local totalcost, percent, percentmin  = Durrr:GetRepairData()
     if totalcost <= 0 then
       tooltip:AddLine(" ")
-      tooltip:AddLine(L["Nothing's Broke!"], 0, 1, 0)
+      tooltip:AddLine(L["NoBroke"], 0, 1, 0)
     else
       if profileDB.showDetails then
         tooltip:AddLine(" ")
@@ -370,7 +370,7 @@ DurrrLDB = DLDB:NewDataObject("Durrrability", {
       tooltip:AddDoubleLine("|cFFFFFFFF"..L["Lowest"].." :", string.format("%d%%", percentmin * 100), 1, 1, 1, r, g, b)
 
       tooltip:AddLine(" ")
-			tooltip:AddLine("|cFFFFFFFF"..L["Your cost based on faction reputation:"])
+			tooltip:AddLine("|cFFFFFFFF"..L["RepCost"])
 			tooltip:AddDoubleLine("|cFFFFFF00".._G["FACTION_STANDING_LABEL4"], Durrr:CopperToString(math.floor(totalcost)))
 			tooltip:AddDoubleLine("|cFFAAFF00".._G["FACTION_STANDING_LABEL5"], Durrr:CopperToString(math.floor(totalcost*0.95)))
 			tooltip:AddDoubleLine("|cFF55FF00".._G["FACTION_STANDING_LABEL6"], Durrr:CopperToString(math.floor(totalcost*0.90)))
@@ -379,7 +379,8 @@ DurrrLDB = DLDB:NewDataObject("Durrrability", {
     end
 
     tooltip:AddLine(" ")
-    tooltip:AddLine(L["Right-hint"])
+    local rightClick = ("|cffeda55f" .. L["RightClick"] .. "|r " .. L["RightToolTip"])
+    tooltip:AddLine(rightClick)
   end,
 })
 -- End LDB object --
@@ -621,9 +622,9 @@ end
 function Durrr:AutoRepair()
   if canRepair == true then
 		RepairAllItems()
-		Durrr:Print("|cff00ff00[Durrrability]|r " .. L["Your items have been repaired for"] .. " " .. Durrr:CopperToString(repairAllCost))
+		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["RepairedPersonal"] .. " " .. Durrr:CopperToString(repairAllCost))
 	else
-		Durrr:Print("|cff00ff00[Durrrability]|r " .. L["Ahem ... It seems as though your card has been declined ... I would love to help, but sadly it seems that you need"] .. " " .. Durrr:CopperToString(repairAllCost))
+		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["CardDeclined"] .. " " .. Durrr:CopperToString(repairAllCost))
   end
 end
 -- End Auto repair - Self --
@@ -639,11 +640,11 @@ function Durrr:AutoRepairFromBank()
 	end
 	if canRepair == true and CanGuildBankRepair() and GuildBankWithdrawMoney >= repairAllCost then
 		RepairAllItems(1)
-		Durrr:Print("|cff00ff00[Durrrability]|r " .. L["Your items have been repaired using guild bank for"] .. " " .. Durrr:CopperToString(repairAllCost))
+		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["RepairedGuildFunds"] .. " " .. Durrr:CopperToString(repairAllCost))
   elseif profileDB.repairFromGuildOnly then
-    Durrr:Print("|cff00ff00[Durrrability]|r " .. L["It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds)."])
+    Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["NoGuildGold"])
 	else
-		Durrr:Print("|cff00ff00[Durrrability]|r " .. L["It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds). We'll repair with your funds then."])
+		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["NoGuildGoldUsePersonal"])
 		Durrr:AutoRepair()
 	end
 end
@@ -675,14 +676,14 @@ function Durrr:CreateDialogs()
 				text = L["Cancel"],
 			},
 			{
-				text = L["The guild"],
+				text = L["TheGuild"],
 				on_click = function(self, button, down)
 					Durrr:AutoRepairFromBank()
 				end,
 			},
 		},
 		on_show = function(self, data)
-			self.text:SetFormattedText(L["Who's paying for the repairs? It Costs %s"], Durrr:CopperToString(repairAllCost))
+			self.text:SetFormattedText(L["WhoPays"], Durrr:CopperToString(repairAllCost))
 		end,
 		hide_on_escape = true,
 		show_while_dead = false,
@@ -703,7 +704,7 @@ function Durrr:CreateDialogs()
 			},
 		},
 		on_show = function(self, data)
-			self.text:SetFormattedText(L["You reputation with this vendor is |cFFFFFF00%s|r. Auto repair requires %s. Do you stil want to repair?"], _G["FACTION_STANDING_LABEL"..data], _G["FACTION_STANDING_LABEL"..profileDB.repairThreshold])
+			self.text:SetFormattedText(L["YourRepIs"].."|cFFFFFF00%s|r. "..L["AutoRepairRequires"].." %s. "..L["RepairConfirm"], _G["FACTION_STANDING_LABEL" .. data], _G["FACTION_STANDING_LABEL" .. profileDB.repairThreshold])
 		end,
 		hide_on_escape = true,
 		show_while_dead = false,
@@ -718,7 +719,7 @@ function Durrr:CreateDialogs()
 			},
 		},
 		on_show = function(self, data)
-			self.text:SetFormattedText(L["Ahem ... It seems as though your card has been declined... I would love to help, but sadly it seems that you need"], data)
+			self.text:SetFormattedText(L["Card Declined"], data)
 		end,
 		hide_on_escape = true,
 		show_while_dead = false,
@@ -733,7 +734,7 @@ function Durrr:CreateDialogs()
 			},
 		},
 		on_show = function(self, data)
-			self.text:SetFormattedText(L["Bruh!!! Your gear is busted! Your most broken item is at %s percent.  Might want to think about repairing!"], data)
+			self.text:SetFormattedText(L["CityWarn"], data)
 		end,
 		hide_on_escape = true,
 		show_while_dead = false,
@@ -819,3 +820,6 @@ function Durrr:Colorize(hexColor, text)
 	return "|cff" .. tostring(hexColor or 'ffffff') .. tostring(text) .. "|r"
 end
 -- End Colors --
+
+-- Last Editted By: @file-author@ - @file-date-iso@
+-- @file-revision@

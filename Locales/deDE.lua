@@ -4,71 +4,149 @@ local l = LibStub("AceLocale-3.0")
 local L = l:NewLocale(me, "deDE")
 if not L then return end
 
-L["Ahem ... It seems as though your card has been declined... I would love to help, but sadly it seems that you need"] = ""
-L["Ask me for input if lower"] = ""
-L["Ask me"] = ""
-L["Auto repair"] = ""
-L["Average"] = ""
-L["Back"] = ""
-L["Bruh!!! Your gear is busted! Your most broken item is at %s percent.  Might want to think about repairing!"] = ""
-L["Cancel"] = ""
-L["Chest"] = ""
-L["Display Options"] = ""
-L["Do nothing"] = ""
-L["Durability"] = ""
-L["Feet"] = ""
-L["Finger0"] = ""
-L["Finger1"] = ""
-L["General Settings"] = ""
-L["Hands"] = ""
-L["Head"] = ""
-L["How should Durrrability handle item repairs at vendors?"] = ""
-L["It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds). We'll repair with your funds then."] = ""
-L["It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds)."] = ""
-L["Legs"] = ""
-L["Lowest"] = ""
-L["MainHand"] = ""
-L["Minimum reputation level needed to automatically repair at vendors?"] = ""
-L["Minimum reputation:"] = ""
-L["Myself"] = ""
-L["Neck"] = ""
-L["No"] = ""
-L["Nothing's Broke!"] = ""
-L["Ok"] = ""
-L["Only use Guild Funds."] = ""
-L["Pop up a confirmation box for lower reputations."] = ""
-L["Profiles"] = ""
-L["Ranged"] = ""
-L["Repair Options"] = ""
-L["Repair type:"] = ""
-L["Reputation Options"] = ""
-L["Right-hint"] = ""
-L["SecondaryHand"] = ""
-L["Set maximum item durability to toggle the warning."] = ""
-L["Shirt"] = ""
-L["Shoulder"] = ""
-L["Show bags."] = ""
-L["Show each item."] = ""
-L["Tabard"] = ""
-L["The guild"] = ""
-L["Toggle for in-combat updates !!!This *WILL* be CPU intensive if turned on!!!"] = ""
-L["Toggle to not repair with your money if guild does not have enough."] = ""
-L["Toggle to repair using guild bank."] = ""
-L["Toggle to show detailed item durability."] = ""
-L["Toggle to show durability for items in bags."] = ""
-L["Toggle to warn you to repair upon entering a city."] = ""
-L["Trinket0"] = ""
-L["Trinket1"] = ""
-L["Update in combat."] = ""
-L["Use guild bank."] = ""
-L["Waist"] = ""
-L["Warn Threshold"] = ""
-L["Warn when in city."] = ""
-L["Warning Options"] = ""
-L["Who will be paying for the repairs? It Costs %s"] = ""
-L["Wrist"] = ""
-L["Yes"] = ""
-L["You reputation with this vendor is |cFFFFFF00%s|r. Auto repair requires %s. Do you stil want to repair?"] = ""
-L["Your cost based on faction reputation:"] = ""
-L["Your items have been repaired for"] = ""
-L["Your items have been repaired using guild bank for"] = ""
+-- CurseForge Language Substitions --
+--@localization(locale="deDE", format="lua_additive_table", handle-unlocalized="comment")@
+-- End CurseForge Language Substitions --
+
+L = L or {}
+--[[Translation missing --]]
+--[[ L["AddonName"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Ask"] = ""--]]
+--[[Translation missing --]]
+--[[ L["AutoRepair"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Average"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Cancel"] = ""--]]
+--[[Translation missing --]]
+--[[ L["DoNothing"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Durability"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Lowest"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Myself"] = ""--]]
+--[[Translation missing --]]
+--[[ L["No"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Ok"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Profiles"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Ranged"] = ""--]]
+--[[Translation missing --]]
+--[[ L["RightClick"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Yes"] = ""--]]
+
+-- config
+--[[Translation missing --]]
+--[[ L["AskIfLower"] = ""--]]
+--[[Translation missing --]]
+--[[ L["CityWarn"] = ""--]]
+--[[Translation missing --]]
+--[[ L["CityWarnToggle"] = ""--]]
+--[[Translation missing --]]
+--[[ L["DisplayOptions"] = ""--]]
+--[[Translation missing --]]
+--[[ L["GeneralSettings"] = ""--]]
+--[[Translation missing --]]
+--[[ L["GuildFundsToggle"] = ""--]]
+--[[Translation missing --]]
+--[[ L["InCombatToggle"] = ""--]]
+--[[Translation missing --]]
+--[[ L["InCombatUpdate"] = ""--]]
+--[[Translation missing --]]
+--[[ L["LowRepConfirmPop"] = ""--]]
+--[[Translation missing --]]
+--[[ L["MinRep"] = ""--]]
+--[[Translation missing --]]
+--[[ L["MinRepLevel"] = ""--]]
+--[[Translation missing --]]
+--[[ L["NoGuildGoldToggle"] = ""--]]
+--[[Translation missing --]]
+--[[ L["OnlyGuildFunds"] = ""--]]
+--[[Translation missing --]]
+--[[ L["RepairOpts"] = ""--]]
+--[[Translation missing --]]
+--[[ L["RepairType"] = ""--]]
+--[[Translation missing --]]
+--[[ L["RepOpts"] = ""--]]
+--[[Translation missing --]]
+--[[ L["RightToolTip"] = ""--]]
+--[[Translation missing --]]
+--[[ L["ShowAllItemsToggle"] = ""--]]
+--[[Translation missing --]]
+--[[ L["ShowBags"] = ""--]]
+--[[Translation missing --]]
+--[[ L["ShowBagsToggle"] = ""--]]
+--[[Translation missing --]]
+--[[ L["ShowEachItem"] = ""--]]
+--[[Translation missing --]]
+--[[ L["UseGuildFunds"] = ""--]]
+--[[Translation missing --]]
+--[[ L["VendorRepairQuestion"] = ""--]]
+--[[Translation missing --]]
+--[[ L["WarningOpts"] = ""--]]
+--[[Translation missing --]]
+--[[ L["WarnMax"] = ""--]]
+--[[Translation missing --]]
+--[[ L["WarnThreshold"] = ""--]]
+
+-- dialog
+--[[Translation missing --]]
+--[[ L["AutoRepairRequires"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Card Declined"] = ""--]]
+--[[Translation missing --]]
+--[[ L["CityWarn"] = ""--]]
+--[[Translation missing --]]
+--[[ L["NoBroke"] = ""--]]
+--[[Translation missing --]]
+--[[ L["NoGuildGold"] = ""--]]
+--[[Translation missing --]]
+--[[ L["NoGuildGoldUsePersonal"] = ""--]]
+--[[Translation missing --]]
+--[[ L["RepairConfirm"] = ""--]]
+--[[Translation missing --]]
+--[[ L["RepairedGuildFunds"] = ""--]]
+--[[Translation missing --]]
+--[[ L["RepairedPersonal"] = ""--]]
+--[[Translation missing --]]
+--[[ L["RepCost"] = ""--]]
+--[[Translation missing --]]
+--[[ L["TheGuild"] = ""--]]
+--[[Translation missing --]]
+--[[ L["WhoPays"] = ""--]]
+--[[Translation missing --]]
+--[[ L["YourRepIs"] = ""--]]
+
+-- equipment
+--[[Translation missing --]]
+--[[ L["Back"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Chest"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Feet"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Hands"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Head"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Legs"] = ""--]]
+--[[Translation missing --]]
+--[[ L["MainHand"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Neck"] = ""--]]
+--[[Translation missing --]]
+--[[ L["SecondaryHand"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Shoulder"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Waist"] = ""--]]
+--[[Translation missing --]]
+--[[ L["Wrist"] = ""--]]
+
+-- Last Editted By: @file-author@ - @file-date-iso@
+-- @file-revision@

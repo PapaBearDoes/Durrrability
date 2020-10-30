@@ -1,5 +1,4 @@
 package-as: Durrrability
-
 enable-nolib-creation: no
 
 externals:
