@@ -1,14 +1,18 @@
-local _G = getfenv(0)
-
+-- Init This File --
 local me, ns = ...
 local Durrr = LibStub("LibInit"):NewAddon(ns, me, true, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
+local L = Durrr:GetLocale()
+-- End Init This File --
+
+-- Constants --
+local _G = getfenv(0)
 local DurrrConfig = LibStub("AceConfig-3.0")
 local DurrrConfigDialog = LibStub("AceConfigDialog-3.0")
 local DurrrDB = LibStub("AceDB-3.0")
 local DurrrDBOptions = LibStub("AceDBOptions-3.0")
 local DurrrDialog = LibStub("LibDialog-1.0")
 local DurrrLDB = LibStub("LibDataBroker-1.1")
-local L = Durrr:GetLocale()
+-- End Constants --
 
 -- Defaults --
 local slots = {
@@ -69,7 +73,7 @@ local DurrrDBDefaults = {
 -- Options --
 Durrr.options = {
   type = "group",
-  name = "Durrrability",
+  name = me,
   args = {
     general = {
       order = 1,
@@ -79,7 +83,7 @@ Durrr.options = {
       args = {
         separator1 = {
           type = "header",
-          name = L["Display Options"],
+          name = "LDB " .. L["Display Options"],
           order = 1,
         },
         details = {
@@ -261,11 +265,11 @@ function Durrr:SetupOptions()
   Durrr.options.args.profile = DurrrDBOptions:GetOptionsTable(Durrr.db)
   Durrr.options.args.profile.order = -2
 
-  DurrrConfig:RegisterOptionsTable("Durrrability", Durrr.options, nil)
+  DurrrConfig:RegisterOptionsTable(me, Durrr.options, nil)
 
   Durrr.optionsFrames = {}
-  Durrr.optionsFrames.general = DurrrConfigDialog:AddToBlizOptions("Durrrability", nil, nil, "general")
-  Durrr.optionsFrames.profile = DurrrConfigDialog:AddToBlizOptions("Durrrability", L["Profiles"], "Durrrability", "profile")
+  Durrr.optionsFrames.general = DurrrConfigDialog:AddToBlizOptions(me, nil, nil, "general")
+  Durrr.optionsFrames.profile = DurrrConfigDialog:AddToBlizOptions(me, L["Profiles"], me, "profile")
 end
 -- End Options --
 
@@ -328,7 +332,7 @@ DurrrLDB.obj = DurrrLDB:NewDataObject(me, {
   OnTooltipShow = function(tooltip)
     if not tooltip or not tooltip.AddLine then return end
 
-    tooltip:AddLine("Durrrability" .. " " .. GetAddOnMetadata("Durrrability", "Version"))
+    tooltip:AddLine(me .. " " .. GetAddOnMetadata(me, "Version"))
 
     local totalcost, percent, percentmin  = Durrr:GetRepairData()
     if totalcost <= 0 then
@@ -611,9 +615,9 @@ end
 function Durrr:AutoRepair()
   if canRepair == true then
 		RepairAllItems()
-		Durrr:Print("|cff00ff00[DurabilityInfo]|r " .. L["Your items have been repaired for"] .. " " .. Durrr:CopperToString(repairAllCost))
+		Durrr:Print("|cff00ff00[Durrrability]|r " .. L["Your items have been repaired for"] .. " " .. Durrr:CopperToString(repairAllCost))
 	else
-		Durrr:Print("|cff00ff00[DurabilityInfo]|r " .. L["Ahem ... It seems as though your card has been declined ... I would love to help, but sadly it seems that you need"] .. " " .. Durrr:CopperToString(repairAllCost))
+		Durrr:Print("|cff00ff00[Durrrability]|r " .. L["Ahem ... It seems as though your card has been declined ... I would love to help, but sadly it seems that you need"] .. " " .. Durrr:CopperToString(repairAllCost))
   end
 end
 -- End Auto repair - Self --
@@ -629,11 +633,11 @@ function Durrr:AutoRepairFromBank()
 	end
 	if canRepair == true and CanGuildBankRepair() and GuildBankWithdrawMoney >= repairAllCost then
 		RepairAllItems(1)
-		Durrr:Print("|cff00ff00[DurabilityInfo]|r " .. L["Your items have been repaired using guild bank for"] .. " " .. Durrr:CopperToString(repairAllCost))
+		Durrr:Print("|cff00ff00[Durrrability]|r " .. L["Your items have been repaired using guild bank for"] .. " " .. Durrr:CopperToString(repairAllCost))
   elseif profileDB.repairFromGuildOnly then
-    Durrr:Print("|cff00ff00[DurabilityInfo]|r " .. L["It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds)."])
+    Durrr:Print("|cff00ff00[Durrrability]|r " .. L["It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds)."])
 	else
-		Durrr:Print("|cff00ff00[DurabilityInfo]|r " .. L["It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds). We'll repair with your funds then.."])
+		Durrr:Print("|cff00ff00[Durrrability]|r " .. L["It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds). We'll repair with your funds then.."])
 		Durrr:AutoRepair()
 	end
 end
