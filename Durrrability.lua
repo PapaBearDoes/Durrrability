@@ -1,23 +1,16 @@
 local _G = getfenv(0)
 
-local Durrrability = LibStub("AceAddon-3.0"):NewAddon("Durrrability", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
-local L = LibStub("AceLocale-3.0"):GetLocale("Durrrability")
+local me, ns = ...
+local Durrr = LibStub("LibInit"):NewAddon(ns, me, true, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
+local DurrrConfig = LibStub("AceConfig-3.0")
+local DurrrConfigDialog = LibStub("AceConfigDialog-3.0")
+local DurrrDB = LibStub("AceDB-3.0")
+local DurrrDBOptions = LibStub("AceDBOptions-3.0")
+local DurrrDialog = LibStub("LibDialog-1.0")
+local DurrrLDB = LibStub("LibDataBroker-1.1")
+local L = Durrr:GetLocale()
 
-local DurrrabilityConfig = LibStub("AceConfig-3.0")
-local DurrrabilityConfigDialog = LibStub("AceConfigDialog-3.0")
-local DurrrabilityDB = LibStub("AceDB-3.0")
-local DurrrabilityDBOptions = LibStub("AceDBOptions-3.0")
-local DurrrabilityDialog = LibStub("LibDialog-1.0")
-local DurrrabilityLDB = LibStub:GetLibrary("LibDataBroker-1.1")
-
--- Defaults
-local ID = 6
-local SLOT = 4
-local NAME = 5
-local VAL = 1
-local MAX = 2
-local COST = 3
-
+-- Defaults --
 local slots = {
   {0, 0, 0, "Head", L["Head"], 0},
   {0, 0, 0, "Neck", L["Neck"], 0},
@@ -33,6 +26,21 @@ local slots = {
 	{0, 0, 0, "SecondaryHand", L["SecondaryHand"], 0},
 }
 
+local repairIconCoords = {0.28125, 0.5625, 0, 0.5625}
+local guildRepairIconCoords = {0.5625, 0.84375, 0, 0.5625}
+
+local hiddenFrame = CreateFrame("GameTooltip")
+hiddenFrame:SetOwner(WorldFrame, "ANCHOR_NONE")
+
+local repairAllCost, canRepair
+
+local ID = 6
+local SLOT = 4
+local NAME = 5
+local VAL = 1
+local MAX = 2
+local COST = 3
+
 local bagsCost = 0
 local bagsPercent = 0
 
@@ -40,14 +48,8 @@ local combatState = true
 local merchantState = false
 local request = true
 
-local hiddenFrame = CreateFrame("GameTooltip")
-  hiddenFrame:SetOwner(WorldFrame, "ANCHOR_NONE")
-
-local repairIconCoords = {0.28125, 0.5625, 0, 0.5625}
-local guildRepairIconCoords = {0.5625, 0.84375, 0, 0.5625}
-
 local profileDB
-local DurrrabilityDBDefaults = {
+local DurrrDBDefaults = {
   profile = {
     showDetails = true,
     showBags = true,
@@ -62,11 +64,10 @@ local DurrrabilityDBDefaults = {
     warnThreshold = 50,
   },
 }
+-- End Defaults --
 
-local repairAllCost, canRepair
-
--- Options
-Durrrability.options = {
+-- Options --
+Durrr.options = {
   type = "group",
   name = "Durrrability",
   args = {
@@ -111,10 +112,10 @@ Durrrability.options = {
           name = L["Update in combat."],
           desc = L["Toggle for in-combat updates !!!This *WILL* be CPU intensive if turned on!!!"],
           get = function()
-            return profileDB.updateInCombat
+            return profileDB.updateCombat
           end,
           set = function(key, value)
-            profileDB.updateInCombat = value
+            profileDB.updateCombat = value
           end,
         },
         separator2 = {
@@ -133,7 +134,7 @@ Durrrability.options = {
           end,
           set = function(key, value)
             profileDB.repairType = value
-            Durrrability:UpdateIcon()
+            Durrr:UpdateIcon()
           end,
           values = function()
             return {
@@ -154,7 +155,7 @@ Durrrability.options = {
           end,
           set = function(key, value)
             profileDB.repairFromGuild = value
-            Durrrability:UpdateIcon()
+            Durrr:UpdateIcon()
           end,
           disabled = function()
             return not (profileDB.repairType == 1)
@@ -164,7 +165,7 @@ Durrrability.options = {
           order = 8,
           type = "toggle",
           width = "full",
-          name = L["Only use guild bank."],
+          name = L["Only use guild funds."],
           desc = L["Toggle to not repair with your money if guild does not have enough."],
           get = function()
             return profileDB.repairFromGuildOnly
@@ -232,9 +233,9 @@ Durrrability.options = {
 					set = function(key, value)
 						profileDB.warntoRepair = value
 						if (value) then
-							Durrrability:RegisterEvent("PLAYER_UPDATE_RESTING","OnUpdateResting")
+							Durrr:RegisterEvent("PLAYER_UPDATE_RESTING","OnUpdateResting")
 						else
-							Durrrability:UnregisterEvent("PLAYER_UPDATE_RESTING")
+							Durrr:UnregisterEvent("PLAYER_UPDATE_RESTING")
 						end
 					end,
 				},
@@ -256,61 +257,63 @@ Durrrability.options = {
   },
 }
 
-function Durrrability:SetupOptions()
-  Durrrability.options.args.profile = DurrrabilityDBOptions:GetOptionsTable(self.db)
-  Durrrability.options.args.profile.order = -2
+function Durrr:SetupOptions()
+  Durrr.options.args.profile = DurrrDBOptions:GetOptionsTable(Durrr.db)
+  Durrr.options.args.profile.order = -2
 
-  DurrrabilityConfig:RegisterOptionsTable("Durrrability", Durrrability.options, nil)
+  DurrrConfig:RegisterOptionsTable("Durrrability", Durrr.options, nil)
 
-  self.optionsFrames = {}
-  self.optionsFrames.general = DurrrabilityConfigDialog:AddToBlizOptions("Durrrability", nil, nil, "general")
-  self.optionsFrames.profile = DurrrabilityConfigDialog:AddToBlizOptions("Durrrability", L["Profiles"], "Durrrability", "profile")
+  Durrr.optionsFrames = {}
+  Durrr.optionsFrames.general = DurrrConfigDialog:AddToBlizOptions("Durrrability", nil, nil, "general")
+  Durrr.optionsFrames.profile = DurrrConfigDialog:AddToBlizOptions("Durrrability", L["Profiles"], "Durrrability", "profile")
 end
+-- End Options --
 
--- Do The Things
-function Durrrability:OnInitialize()
-  self.db = DurrrabilityDB:New("DurrrabilityDB", DurrrabilityDBDefaults, true)
-  if not self.db then
-    print("Error: Database not loaded correctly.  Please exit out of WoW and delete Broker_DurabilityInfo.lua found in: \\World of Warcraft\\WTF\\Account\\<Account Name>>\\SavedVariables\\")
+-- Init Things --
+function Durrr:OnInitialize()
+  Durrr.db = DurrrDB:New("DurrrabilityDB", DurrrDBDefaults, true)
+  if not Durrr.db then
+    print("Error: Database not loaded correctly.  Please exit out of WoW and delete Durrrability.lua found in: \\World of Warcraft\\WTF\\Account\\<Account Name>>\\SavedVariables\\")
   end
 
-  self.db.RegisterCallback(self, "OnProfileChanged", "OnProfileChanged")
-  self.db.RegisterCallback(self, "OnProfileCopied", "OnProfileChanged")
-  self.db.RegisterCallback(self, "OnProfileReset", "OnProfileChanged")
+  Durrr.db.RegisterCallback(Durrr, "OnProfileChanged", "OnProfileChanged")
+  Durrr.db.RegisterCallback(Durrr, "OnProfileCopied", "OnProfileChanged")
+  Durrr.db.RegisterCallback(Durrr, "OnProfileReset", "OnProfileChanged")
 
-  profileDB = self.db.profile
-  self:SetupOptions()
+  profileDB = Durrr.db.profile
+  Durrr:SetupOptions()
 
   local index, item
   for index, item in pairs(slots) do
     slots[index][ID] = GetInventorySlotInfo(item[SLOT] .. "Slot")
   end
 
-  self:CreateDialogs()
+  Durrr:CreateDialogs()
 
-  self:RegisterEvent("PLAYER_DEAD","ScheduleUpdate")
-	self:RegisterEvent("PLAYER_UNGHOST","ScheduleUpdate")
-	self:RegisterEvent("UPDATE_INVENTORY_DURABILITY","ScheduleUpdate")
-	self:RegisterEvent("PLAYER_REGEN_ENABLED","OnRegenEnable")
-	self:RegisterEvent("PLAYER_REGEN_DISABLED","OnRegenDisable")
-	self:RegisterEvent("MERCHANT_SHOW","OnMerchantShow")
-	self:RegisterEvent("MERCHANT_CLOSED","OnMerchantClose")
+  Durrr:RegisterEvent("PLAYER_DEAD","ScheduleUpdate")
+	Durrr:RegisterEvent("PLAYER_UNGHOST","ScheduleUpdate")
+	Durrr:RegisterEvent("UPDATE_INVENTORY_DURABILITY","ScheduleUpdate")
+	Durrr:RegisterEvent("PLAYER_REGEN_ENABLED","OnRegenEnable")
+	Durrr:RegisterEvent("PLAYER_REGEN_DISABLED","OnRegenDisable")
+	Durrr:RegisterEvent("MERCHANT_SHOW","OnMerchantShow")
+	Durrr:RegisterEvent("MERCHANT_CLOSED","OnMerchantClose")
 
   if (profileDB.warntoRepair) then
-    self:RegisterEvent("PLAYER_UPDATE_RESTING","OnUpdateResting")
-    self:ScheduleTimer("OnUpdateResting", 5)
+    Durrr:RegisterEvent("PLAYER_UPDATE_RESTING","OnUpdateResting")
+    Durrr:ScheduleTimer("OnUpdateResting", 5)
   end
 
-  self:UpdateIcon()
-  self:ScheduleUpdate()
+  Durrr:UpdateIcon()
+  Durrr:ScheduleUpdate()
 end
 
-function Durrrability:OnEnable()
-  self:ScheduleRepeatingTimer("MainUpdate", 1)
+function Durrr:OnEnable()
+  Durrr:ScheduleRepeatingTimer("MainUpdate", 1)
 end
+-- End Init Things --
 
--- LDB object
-Durrrability.obj = DurrrabilityLDB:NewDataObject("Durrrability", {
+-- Do LDB object --
+DurrrLDB.obj = DurrrLDB:NewDataObject(me, {
   type = "data source",
   label = L["Durability"],
   text = "",
@@ -318,16 +321,16 @@ Durrrability.obj = DurrrabilityLDB:NewDataObject("Durrrability", {
   iconCoords = repairIconCoords,
   OnClick = function(frame, msg)
     if msg == "RightButton" then
-      Durrrability:ShowConfig()
+      Durrr:ShowConfig()
     end
-    Durrrability:MainUpdate()
+    Durrr:MainUpdate()
   end,
   OnTooltipShow = function(tooltip)
     if not tooltip or not tooltip.AddLine then return end
 
     tooltip:AddLine("Durrrability" .. " " .. GetAddOnMetadata("Durrrability", "Version"))
 
-    local totalcost, percent, percentmin  = Durrrability:GetRepairData()
+    local totalcost, percent, percentmin  = Durrr:GetRepairData()
     if totalcost <= 0 then
       tooltip:AddLine(" ")
       tooltip:AddLine(L["Nothing's Broke!"], 0, 1, 0)
@@ -337,122 +340,123 @@ Durrrability.obj = DurrrabilityLDB:NewDataObject("Durrrability", {
         for index, item in pairs(slots) do
           if item[MAX] > 0 and item[VAL] < item[MAX] then
             local p = item[VAL] / item[MAX]
-            local r, g, b = Durrrability:GetThresholdColor(p)
+            local r, g, b = Durrr:GetThresholdColor(p)
 
-            tooltip:AddDoubleLine(string.format("%d%%  |cFFFFFF00%s|t", p * 100, item[NAME]), Durrrability:CopperToString(math.floor(item[COST])), r, g, b, 1, 1, 1)
+            tooltip:AddDoubleLine(string.format("%d%%  |cFFFFFF00%s|t", p * 100, item[NAME]), Durrr:CopperToString(math.floor(item[COST])), r, g, b, 1, 1, 1)
           end
         end
         if profileDB.showBags and (bagCost > 0) then
-          local r, g, b = Durrrability:GetThresholdColor(bagPercent)
+          local r, g, b = Durrr:GetThresholdColor(bagPercent)
 
-          tooltip:AddDoubleLine(string.format("%d%%  |cFFFFFF00Bags|t", bagPercent * 100), Durrrability:CopperToString(math.floor(bagCost)), r, g, b, 1, 1, 1)
+          tooltip:AddDoubleLine(string.format("%d%%  |cFFFFFF00Bags|t", bagPercent * 100), Durrr:CopperToString(math.floor(bagCost)), r, g, b, 1, 1, 1)
         end
       end
 
       tooltip:AddLine(" ")
 
-      local r, g, b = Durrrability:GetThresholdColor(percent)
+      local r, g, b = Durrr:GetThresholdColor(percent)
 			tooltip:AddDoubleLine("|cFFFFFFFF"..L["Average"].." :", string.format("%d%%", percent * 100), 1, 1, 1, r, g, b)
-      local r, g, b = Durrrability:GetThresholdColor(percentmin)
+      local r, g, b = Durrr:GetThresholdColor(percentmin)
       tooltip:AddDoubleLine("|cFFFFFFFF"..L["Lowest"].." :", string.format("%d%%", percentmin * 100), 1, 1, 1, r, g, b)
 
       tooltip:AddLine(" ")
 			tooltip:AddLine("|cFFFFFFFF"..L["Your cost based on faction reputation:"])
-			tooltip:AddDoubleLine("|cFFFFFF00".._G["FACTION_STANDING_LABEL4"], Durrrability:CopperToString(math.floor(totalcost)))
-			tooltip:AddDoubleLine("|cFFAAFF00".._G["FACTION_STANDING_LABEL5"], Durrrability:CopperToString(math.floor(totalcost*0.95)))
-			tooltip:AddDoubleLine("|cFF55FF00".._G["FACTION_STANDING_LABEL6"], Durrrability:CopperToString(math.floor(totalcost*0.90)))
-			tooltip:AddDoubleLine("|cFF00FF00".._G["FACTION_STANDING_LABEL7"], Durrrability:CopperToString(math.floor(totalcost*0.85)))
-			tooltip:AddDoubleLine("|cFF00FFAA".._G["FACTION_STANDING_LABEL8"], Durrrability:CopperToString(math.floor(totalcost*0.80)))
+			tooltip:AddDoubleLine("|cFFFFFF00".._G["FACTION_STANDING_LABEL4"], Durrr:CopperToString(math.floor(totalcost)))
+			tooltip:AddDoubleLine("|cFFAAFF00".._G["FACTION_STANDING_LABEL5"], Durrr:CopperToString(math.floor(totalcost*0.95)))
+			tooltip:AddDoubleLine("|cFF55FF00".._G["FACTION_STANDING_LABEL6"], Durrr:CopperToString(math.floor(totalcost*0.90)))
+			tooltip:AddDoubleLine("|cFF00FF00".._G["FACTION_STANDING_LABEL7"], Durrr:CopperToString(math.floor(totalcost*0.85)))
+			tooltip:AddDoubleLine("|cFF00FFAA".._G["FACTION_STANDING_LABEL8"], Durrr:CopperToString(math.floor(totalcost*0.80)))
     end
 
     tooltip:AddLine(" ")
     tooltip:AddLine(L["Right-hint"])
   end,
 })
-updateTime, elapsed = 0.5, 0
--- ldbf = CreateFrame("frame")
-hiddenFrame:SetScript("OnUpdate",
-  function(self, elap)
-    elapsed = elapsed + elap
-    if elapsed < updateTime then
-      return
-    end
-    elapsed = 0
-    local ldbcost, ldbpercent, ldbpercentmin = Durrrability:GetRepairData()
-    Durrrability.obj.text = string.format("%d%%", ldbpercent * 100)
-  end
-)
+-- End LDB object --
 
--- Main update function
-function Durrrability:MainUpdate()
+-- LDB Update --
+function Durrr:MainUpdate()
   if request then
     request = false
 
-    if (combatState == true) and (not profileDB.updateInCombat) then
+    if (combatState == true) and (not profileDB.updateCombat) then
       return
     end
 
-    local totalcost, percent, percentmin  = self:GetRepairData()
+    local totalcost, percent, percentmin  = Durrr:GetRepairData()
 
     if percentmin then
-      self.obj.text = (string.format("|cff%s%d%%|r", Durrrability:GetThresholdHexColor(percentmin), percentmin * 100))
+      DurrrLDB.obj.text = (string.format("|cff%s%d%%|r", Durrr:GetThresholdHexColor(percentmin), percentmin * 100))
     end
   end
 end
+-- End LDB Update --
 
--- Events
-function Durrrability:ScheduleUpdate()
+-- LDB icon --
+function Durrr:UpdateIcon()
+	if profileDB.repairFromGuild and (profileDB.repairType == 1) then
+		DurrrLDB.obj.iconCoords = guildRepairIconCoords
+	else
+		DurrrLDB.obj.iconCoords = repairIconCoords
+	end
+end
+-- End LDB icon --
+
+-- Events --
+function Durrr:ScheduleUpdate()
   request = true
 end
 
-function Durrrability:OnMerchantShow()
+function Durrr:OnMerchantShow()
   merchantState = true
   if not CanMerchantRepair() then
     return
   end
-  self:AttemptToRepair()
+  Durrr:AttemptToRepair()
 end
 
-function Durrrability:OnMerchantClose()
+function Durrr:OnMerchantClose()
   merchantState = false
-  if DurrrabilityDialog:ActiveDialog("Durrrability_Confirm") then
-    DurrrabilityDialog:Dismiss("DurrrabilityInfo_Confirm")
+  if DurrrDialog:ActiveDialog("DurrrConfirm") then
+    DurrrDialog:Dismiss("DurrrConfirm")
   end
-  if DurrrabilityDialog:ActiveDialog("Durrrability_Dialog") then
-    DurrrabilityDialog:Dismiss("Durrrability_Dialog")
+  if DurrrDialog:ActiveDialog("DurrrDialog") then
+    DurrrDialog:Dismiss("DurrrDialog")
   end
 end
 
-function Durrrability:OnRegenEnable()
+function Durrr:OnRegenEnable()
   combatState = false
-  self:ScheduleUpdate()
+  Durrr:ScheduleUpdate()
 end
 
-function Durrrability:OnRegenDisable()
+function Durrr:OnRegenDisable()
   combatState = true
 end
 
-function Durrrability:OnUpdateResting()
+function Durrr:OnUpdateResting()
   if IsResting() then
-    self:WarnToRepair()
+    Durrr:WarnToRepair()
   end
 end
+-- End Events --
 
--- Functions
-function Durrrability:OnProfileChanged(event, database, newProfileKey)
+-- Profile Change Functions --
+function Durrr:OnProfileChanged(event, database, newProfileKey)
   profileDB = database.profile
 end
+-- End Profile Change Functions --
 
--- Open config window
-function Durrrability:ShowConfig()
-  -- call twice to workaround a bug in Blizzard's function
-  InterfaceOptionsFrame_OpenToCategory(Durrrability.optionsFrames.profile)
-	InterfaceOptionsFrame_OpenToCategory(Durrrability.optionsFrames.profile)
-	InterfaceOptionsFrame_OpenToCategory(Durrrability.optionsFrames.general)
+-- Config window --
+function Durrr:ShowConfig()
+  InterfaceOptionsFrame_OpenToCategory(Durrr.optionsFrames.profile)
+	InterfaceOptionsFrame_OpenToCategory(Durrr.optionsFrames.profile)
+	InterfaceOptionsFrame_OpenToCategory(Durrr.optionsFrames.general)
 end
+-- End Config window --
 
--- Show money with icons
-function Durrrability:CopperToString(c)
+-- Show coins with icons --
+function Durrr:CopperToString(c)
   local str = ""
   if not c or c < 0 then
     return str
@@ -474,9 +478,10 @@ function Durrrability:CopperToString(c)
 
 	return str
 end
+-- End Show coins with icons --
 
--- Update data structures
-function Durrrability:GetRepairData()
+-- Data Updates --
+function Durrr:GetRepairData()
 	local totalcost = 0
 	local percent = 0
 	local percentmin = 1
@@ -490,7 +495,7 @@ function Durrrability:GetRepairData()
 		local hasItem, hasCooldown, repairCost = hiddenFrame:SetInventoryItem("player", slots[index][ID])
 		if max then
 			if merchantState == true then
-				repairCost = self:MerchantCorrection(repairCost)
+				repairCost = Durrr:MerchantCorrection(repairCost)
 			end
 			total = total + max
 			current = current + val
@@ -515,7 +520,7 @@ function Durrrability:GetRepairData()
 				local hasCooldown, repairCost = hiddenFrame:SetBagItem(bag, slot)
 				if max then
 					if merchantState == true then
-						repairCost = self:MerchantCorrection(repairCost)
+						repairCost = Durrr:MerchantCorrection(repairCost)
 					end
 					bagTotal = bagTotal + max
 					bagCurrent = bagCurrent + val
@@ -541,9 +546,10 @@ function Durrrability:GetRepairData()
 
 	return totalcost, percent, percentmin
 end
+-- End Data Updates --
 
--- Remove faction discount
-function Durrrability:MerchantCorrection(value)
+-- Faction discount --
+function Durrr:MerchantCorrection(value)
 	local standing = UnitReaction("npc", "player")
 	if standing == 5 then
 		value = value * 100 / 95
@@ -556,58 +562,64 @@ function Durrrability:MerchantCorrection(value)
 	end
 	return value
 end
+-- End Faction discount --
 
--- Do some checks
-function Durrrability:AttemptToRepair()
+-- Checks --
+function Durrr:AttemptToRepair()
 	repairAllCost, canRepair = GetRepairAllCost()
 	if profileDB.repairType > 0 and repairAllCost > 0 then
 		local standing = UnitReaction("npc", "player")
 		if standing >= profileDB.repairThreshold then
-			self:DoRepair()
+			Durrr:DoRepair()
 		else
-			self:LowRepConfirmation()
+			Durrr:LowRepConfirmation()
 		end
 	end
 end
+-- End Checks --
 
--- Call repair functions
-function Durrrability:DoRepair()
+-- Repair functions --
+function Durrr:DoRepair()
 	if profileDB.repairType == 2 then
-		self:ShowDialog()
+		Durrr:ShowDialog()
 	elseif profileDB.repairType == 1 then
 		if profileDB.repairFromGuild then
-			self:AutoRepairFromBank()
+			Durrr:AutoRepairFromBank()
 		else
-			self:AutoRepair()
+			Durrr:AutoRepair()
 		end
 	end
 end
+-- End Repair functions --
 
--- Low reputation confirmation
-function Durrrability:LowRepConfirmation()
+-- Low rep confirm --
+function Durrr:LowRepConfirmation()
 	if (profileDB.alwaysAsk) then
 		local standing = UnitReaction("npc", "player")
-		DurrrabilityDialog:Spawn("Broker_DurabilityInfo_Confirm", standing)
+		DurrrDialog:Spawn("DurrrConfirm", standing)
 	end
 end
+-- End Low rep confirm --
 
--- Display popup for repair
-function Durrrability:ShowDialog()
-	DurrrabilityDialog:Spawn("Broker_DurabilityInfo_Dialog")
+-- Repair Popup --
+function Durrr:ShowDialog()
+	DurrrDialog:Spawn("DurrrDialog")
 end
+-- End Repair Popup --
 
--- Auto repair using own money
-function Durrrability:AutoRepair()
+-- Auto repair - Self --
+function Durrr:AutoRepair()
   if canRepair == true then
 		RepairAllItems()
-		Durrrability:Print("|cff00ff00[DurabilityInfo]|r " .. L["Your items have been repaired for"] .. " " .. self:CopperToString(repairAllCost))
+		Durrr:Print("|cff00ff00[DurabilityInfo]|r " .. L["Your items have been repaired for"] .. " " .. Durrr:CopperToString(repairAllCost))
 	else
-		Durrrability:Print("|cff00ff00[DurabilityInfo]|r " .. L["Ahem ... It seems as though your card has been declined ... I would love to help, but sadly it seems that you need"] .. " " .. self:CopperToString(repairAllCost))
+		Durrr:Print("|cff00ff00[DurabilityInfo]|r " .. L["Ahem ... It seems as though your card has been declined ... I would love to help, but sadly it seems that you need"] .. " " .. Durrr:CopperToString(repairAllCost))
   end
 end
+-- End Auto repair - Self --
 
--- Auto repair using guild money
-function Durrrability:AutoRepairFromBank()
+-- Auto repair - Guild --
+function Durrr:AutoRepairFromBank()
 	local GuildBankWithdrawMoney = GetGuildBankWithdrawMoney()
 	local GuildBankMoney = GetGuildBankMoney()
 	if GuildBankWithdrawMoney == -1 then
@@ -617,43 +629,36 @@ function Durrrability:AutoRepairFromBank()
 	end
 	if canRepair == true and CanGuildBankRepair() and GuildBankWithdrawMoney >= repairAllCost then
 		RepairAllItems(1)
-		Durrrability:Print("|cff00ff00[DurabilityInfo]|r " .. L["Your items have been repaired using guild bank for"] .. " " .. self:CopperToString(repairAllCost))
+		Durrr:Print("|cff00ff00[DurabilityInfo]|r " .. L["Your items have been repaired using guild bank for"] .. " " .. Durrr:CopperToString(repairAllCost))
   elseif profileDB.repairFromGuildOnly then
-    Durrrability:Print("|cff00ff00[DurabilityInfo]|r " .. L["It seems that you Guild bank does not have enough money\\n(or you're not allowed to use guild funds)."])
+    Durrr:Print("|cff00ff00[DurabilityInfo]|r " .. L["It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds)."])
 	else
-		Durrrability:Print("|cff00ff00[DurabilityInfo]|r " .. L["It seems that you Guild bank does not have enough money\\n(or you're not allowed to use guild funds). We'll repair with your funds then.."])
-		self:AutoRepair()
+		Durrr:Print("|cff00ff00[DurabilityInfo]|r " .. L["It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds). We'll repair with your funds then.."])
+		Durrr:AutoRepair()
 	end
 end
+-- End Auto repair - Guild --
 
--- Set LDB icon
-function Durrrability:UpdateIcon()
-	if profileDB.repairFromGuild and (profileDB.repairType == 1) then
-		self.obj.iconCoords = guildRepairIconCoords
-	else
-		self.obj.iconCoords = repairIconCoords
-	end
-end
-
--- Warn to repair if under a threshold
-function Durrrability:WarnToRepair()
-	local totalcost, percent, percentmin  = Durrrability:GetRepairData()
+-- Below Threshold Warning --
+function Durrr:WarnToRepair()
+	local totalcost, percent, percentmin  = Durrr:GetRepairData()
 	if profileDB.warntoRepair and profileDB.warnThreshold >= percentmin*100 then
-		local hexColor = Durrrability:GetThresholdHexColor(percentmin)
-		local text = Durrrability:Colorize(hexColor, string.format("%d", percentmin * 100))
-    DurrrabilityDialog:Spawn("Broker_DurabilityInfo_Warn", text)
+		local hexColor = Durrr:GetThresholdHexColor(percentmin)
+		local text = Durrr:Colorize(hexColor, string.format("%d", percentmin * 100))
+    DurrrDialog:Spawn("DurrrWarnToRepair", text)
 	end
 end
+-- End Below Threshold Warning --
 
--- Create static popup dialogs
-function Durrrability:CreateDialogs()
-	DurrrabilityDialog:Register("Durrrability_Dialog", {
+-- Dialog Popups --
+function Durrr:CreateDialogs()
+	DurrrDialog:Register("DurrrDialog", {
 		text = " ",
 		buttons = {
 			{
 				text = L["Myself"],
 				on_click = function(self, button, down)
-					Durrrability:AutoRepair()
+					Durrr:AutoRepair()
 				end,
 			},
 			{
@@ -662,25 +667,25 @@ function Durrrability:CreateDialogs()
 			{
 				text = L["The guild"],
 				on_click = function(self, button, down)
-					Durrrability:AutoRepairFromBank()
+					Durrr:AutoRepairFromBank()
 				end,
 			},
 		},
 		on_show = function(self, data)
-			self.text:SetFormattedText(L["Who's paying for the repairs?\nIt Costs %s"], Durrrability:CopperToString(repairAllCost))
+			self.text:SetFormattedText(L["Who's paying for the repairs? It Costs %s"], Durrr:CopperToString(repairAllCost))
 		end,
 		hide_on_escape = true,
 		show_while_dead = false,
 	})
 
-	DurrrabilityDialog:Register("Durrrability_Confirm", {
+	DurrrDialog:Register("DurrrConfirm", {
 		text = " ",
 		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
 		buttons = {
 			{
 				text = L["Yes"],
 				on_click = function(self, button, down)
-					Durrrability:DoRepair()
+					Durrr:DoRepair()
 				end,
 			},
 			{
@@ -688,13 +693,13 @@ function Durrrability:CreateDialogs()
 			},
 		},
 		on_show = function(self, data)
-			self.text:SetFormattedText(L["You reputation with this vendor is |cFFFFFF00%s|r. Auto repair requires %s.\\nDo you stil want to repair?"], _G["FACTION_STANDING_LABEL"..data], _G["FACTION_STANDING_LABEL"..profileDB.repairThreshold])
+			self.text:SetFormattedText(L["You reputation with this vendor is |cFFFFFF00%s|r. Auto repair requires %s. Do you stil want to repair?"], _G["FACTION_STANDING_LABEL"..data], _G["FACTION_STANDING_LABEL"..profileDB.repairThreshold])
 		end,
 		hide_on_escape = true,
 		show_while_dead = false,
 	})
 
-	DurrrabilityDialog:Register("Durrrability_Warn", {
+  DurrrDialog:Register("DurrrWarn", {
 		text = " ",
 		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
 		buttons = {
@@ -703,17 +708,34 @@ function Durrrability:CreateDialogs()
 			},
 		},
 		on_show = function(self, data)
-			self.text:SetFormattedText(L["Ahem ... It seems as though your card has been declined...\\nI would love to help, but sadly it seems that you need"], data)
+			self.text:SetFormattedText(L["Ahem ... It seems as though your card has been declined... I would love to help, but sadly it seems that you need"], data)
+		end,
+		hide_on_escape = true,
+		show_while_dead = false,
+	})
+
+  DurrrDialog:Register("DurrrWarnToRepair", {
+		text = " ",
+		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
+		buttons = {
+			{
+				text = L["Ok"],
+			},
+		},
+		on_show = function(self, data)
+			self.text:SetFormattedText(L["Bruh!!! Your gear is busted! Your most broken item is at %s percent.  Might want to think about repairing!"], data)
 		end,
 		hide_on_escape = true,
 		show_while_dead = false,
 	})
 end
+-- End Dialog Popups --
 
-function Durrrability:GetThresholdPercentage(quality, ...)
+-- Do Colors --
+function Durrr:GetThresholdPercentage(quality, ...)
   local n = select('#', ...)
   if n <= 1 then
-    return Durrrability:GetThresholdPercentage(quality, 0, ... or 1)
+    return Durrr:GetThresholdPercentage(quality, 0, ... or 1)
   end
 
   local worst = ...
@@ -760,12 +782,12 @@ function Durrrability:GetThresholdPercentage(quality, ...)
   end
 end
 
-function Durrrability:GetThresholdColor(quality, ...)
+function Durrr:GetThresholdColor(quality, ...)
   if quality ~= quality --[[or quality == inf or quality == -inf]] then
     return 1, 1, 1
   end
 
-  local percent = Durrrability:GetThresholdPercentage(quality, ...)
+  local percent = Durrr:GetThresholdPercentage(quality, ...)
 
   if percent <= 0 then
     return 1, 0, 0
@@ -778,11 +800,12 @@ function Durrrability:GetThresholdColor(quality, ...)
   end
 end
 
-function Durrrability:GetThresholdHexColor(quality, ...)
-	local r, g, b = self:GetThresholdColor(quality, ...)
+function Durrr:GetThresholdHexColor(quality, ...)
+	local r, g, b = Durrr:GetThresholdColor(quality, ...)
 	return string.format("%02x%02x%02x", r*255, g*255, b*255)
 end
 
-function Durrrability:Colorize(hexColor, text)
+function Durrr:Colorize(hexColor, text)
 	return "|cff" .. tostring(hexColor or 'ffffff') .. tostring(text) .. "|r"
 end
+-- End Colors --

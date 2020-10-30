@@ -1,4 +1,7 @@
-local L = LibStub("AceLocale-3.0"):NewLocale("Durrrability", "frFR")
+local me, ns = ...
+local lang = GetLocale()
+local l = LibStub("AceLocale-3.0")
+local L = l:NewLocale(me, "frFR")
 if not L then return end
 
 L["Ahem ... It seems as though your card has been declined...\\nI would love to help, but sadly it seems that you need"] = ""
