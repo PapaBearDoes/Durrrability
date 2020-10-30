@@ -1,8 +1,10 @@
 package-as: AddonStub
 
+enable-nolib-creation: no
+
 externals:
   Libraries\LibInit: https://github.com/alarofrunetotem/LibInit.git/LibInit
-  Libraries\LibDataBroker-1.1: http://github.com/tekkub/libdatabroker-1-1
+  Libraries\LibDialog-1.0: https://repos.curseforge.com/wow/libdialog-1-0
 
 license-output: LICENSE
 
