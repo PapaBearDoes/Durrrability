@@ -16,11 +16,10 @@ The aim of Durrr(ability) is to give you the ability to see when your stuff's bo
 * Choose to have a Repair Warning pop up when you enter a "Rested" state (usually a city)
   * Set the threshold where this warning fires
 * Choose to have a Repair Warning pop up when your durability falls below a threshold that you set
+  * Set the threshold where this warning fires
 
 **Localizations have been enabled for this addon, but I do not speak any other language other than English.**
 **Any assistance in this regard will be very helpful, and I will give you credit for helping!**
 **I'll add the completed localizations to the addon once all phrases are completed for a given language**
-
-
 
 ***(Any donations given through my addons go 100% to support my small dog rescue - K9 Trust, and are tax deductible as we are a recognized 501(c)(3) Charitable Organization.)***

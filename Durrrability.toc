@@ -42,7 +42,5 @@ Locales\locales.xml
 # Load Main files
 Durrrability.lua
 
-#DurrrabilityLDB.lua
-
 # Last Editted By: @file-author@ - @file-date-iso@
 # @file-revision@
