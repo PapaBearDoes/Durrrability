@@ -4,7 +4,7 @@ local l = LibStub("AceLocale-3.0")
 local L = l:NewLocale(me, "esMX")
 if not L then return end
 
---@localization(locale="enUS", format="lua_additive_table")@
+--@localization(locale="esMX", format="lua_additive_table")@
 
 --@do-not-package@
 L["AddonName"] = ""
