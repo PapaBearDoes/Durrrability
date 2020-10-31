@@ -33,8 +33,8 @@ local slots = {
 local repairIconCoords = {0.28125, 0.5625, 0, 0.5625}
 local guildRepairIconCoords = {0.5625, 0.84375, 0, 0.5625}
 
-local hiddenFrame = CreateFrame("GameTooltip")
-hiddenFrame:SetOwner(WorldFrame, "ANCHOR_NONE")
+local DurrrFrame = CreateFrame("GameTooltip")
+DurrrFrame:SetOwner(WorldFrame, "ANCHOR_NONE")
 
 local repairAllCost, canRepair
 
@@ -49,8 +49,8 @@ local bagsCost = 0
 local bagsPercent = 0
 
 local combatState = false
-local merchantState = false
-local request = true
+local vendorState = false
+local updateReq = true
 
 local profileDB
 local DurrrDBDefaults = {
@@ -243,7 +243,7 @@ Durrr.options = {
 					set = function(key, value)
 						profileDB.warntoRepair = value
 						if (value) then
-							Durrr:RegisterEvent("PLAYER_UPDATE_RESTING", "OnUpdateResting")
+							Durrr:RegisterEvent("PLAYER_UPDATE_RESTING", "OnRestUpdate")
 						else
 							Durrr:UnregisterEvent("PLAYER_UPDATE_RESTING")
 						end
@@ -283,7 +283,7 @@ end
 function Durrr:OnInitialize()
   Durrr.db = DurrrDB:New("DurrrabilityDB", DurrrDBDefaults, true)
   if not Durrr.db then
-    errorDB = L["ErrorDB"]
+    local errorDB = L["ErrorDB"]
     print(errorDB)
   end
 
@@ -304,14 +304,14 @@ function Durrr:OnInitialize()
   Durrr:RegisterEvent("PLAYER_DEAD", "ScheduleUpdate")
 	Durrr:RegisterEvent("PLAYER_UNGHOST", "ScheduleUpdate")
 	Durrr:RegisterEvent("UPDATE_INVENTORY_DURABILITY", "ScheduleUpdate")
-	Durrr:RegisterEvent("PLAYER_REGEN_ENABLED", "OnRegenEnable")
-	Durrr:RegisterEvent("PLAYER_REGEN_DISABLED", "OnRegenDisable")
-	Durrr:RegisterEvent("MERCHANT_SHOW", "OnMerchantShow")
-	Durrr:RegisterEvent("MERCHANT_CLOSED", "OnMerchantClose")
+	Durrr:RegisterEvent("PLAYER_REGEN_ENABLED", "OnRestEnable")
+	Durrr:RegisterEvent("PLAYER_REGEN_DISABLED", "OnRestDisable")
+	Durrr:RegisterEvent("MERCHANT_SHOW", "OnVendorShow")
+	Durrr:RegisterEvent("MERCHANT_CLOSED", "OnVendorClose")
 
   if (profileDB.warntoRepair) then
-    Durrr:RegisterEvent("PLAYER_UPDATE_RESTING", "OnUpdateResting")
-    Durrr:ScheduleTimer("OnUpdateResting", 5)
+    Durrr:RegisterEvent("PLAYER_UPDATE_RESTING", "OnRestUpdate")
+    Durrr:ScheduleTimer("OnRestUpdate", 5)
   end
 
   Durrr:UpdateIcon()
@@ -323,8 +323,21 @@ function Durrr:OnEnable()
 end
 -- End Init Things --
 
--- Do LDB object --
-DurrrLDB = DLDB:NewDataObject("Durrrability", {
+-- Profile Change Functions --
+function Durrr:OnProfileChanged(event, database, newProfileKey)
+  profileDB = database.profile
+end
+-- End Profile Change Functions --
+
+-- Config window --
+function Durrr:ShowConfig()
+	InterfaceOptionsFrame_OpenToCategory(Durrr.optionsFrames.profile)
+	InterfaceOptionsFrame_OpenToCategory(Durrr.optionsFrames.general)
+end
+-- End Config window --
+
+-- Do LDB stuff --
+local DurrrLDB = DLDB:NewDataObject("Durrrability", {
   type = "data source",
   label = L["Durability"],
   text = "",
@@ -341,8 +354,8 @@ DurrrLDB = DLDB:NewDataObject("Durrrability", {
 
     tooltip:AddLine(L["AddonName"] .. " " .. GetAddOnMetadata("Durrrability", "Version"))
 
-    local totalcost, percent, percentmin  = Durrr:GetRepairData()
-    if totalcost <= 0 then
+    local totalCost, percent, percentMin  = Durrr:GetRepairData()
+    if totalCost <= 0 then
       tooltip:AddLine(" ")
       tooltip:AddLine(L["NoBroke"], 0, 1, 0)
     else
@@ -353,58 +366,54 @@ DurrrLDB = DLDB:NewDataObject("Durrrability", {
             local p = item[VAL] / item[MAX]
             local r, g, b = Durrr:GetThresholdColor(p)
 
-            tooltip:AddDoubleLine(string.format("%d%%  |cFFFFFF00%s|t", p * 100, item[NAME]), Durrr:CopperToString(math.floor(item[COST])), r, g, b, 1, 1, 1)
+            tooltip:AddDoubleLine(string.format("%d%%  " .. Durrr:Colorize("%s", "yellow"), p * 100, item[NAME]), Durrr:Coins2Str(math.floor(item[COST])), r, g, b, 1, 1, 1)
           end
         end
         if profileDB.showBags and (bagCost > 0) then
           local r, g, b = Durrr:GetThresholdColor(bagPercent)
 
-          tooltip:AddDoubleLine(string.format("%d%%  |cFFFFFF00Bags|t", bagPercent * 100), Durrr:CopperToString(math.floor(bagCost)), r, g, b, 1, 1, 1)
+          tooltip:AddDoubleLine(string.format("%d%%  " .. Durrr:Colorize("Bags", "yellow"), bagPercent * 100), Durrr:Coins2Str(math.floor(bagCost)), r, g, b, 1, 1, 1)
         end
       end
 
       tooltip:AddLine(" ")
 
       local r, g, b = Durrr:GetThresholdColor(percent)
-			tooltip:AddDoubleLine("|cFFFFFFFF"..L["Average"].." :", string.format("%d%%", percent * 100), 1, 1, 1, r, g, b)
-      local r, g, b = Durrr:GetThresholdColor(percentmin)
-      tooltip:AddDoubleLine("|cFFFFFFFF"..L["Lowest"].." :", string.format("%d%%", percentmin * 100), 1, 1, 1, r, g, b)
+			tooltip:AddDoubleLine(Durrr:Colorize(L["Average"] .. " :", "white"), string.format("%d%%", percent * 100), 1, 1, 1, r, g, b)
+      local r, g, b = Durrr:GetThresholdColor(percentMin)
+      tooltip:AddDoubleLine(Durrr:Colorize(L["Lowest"] .. " :", "white"), string.format("%d%%", percentMin * 100), 1, 1, 1, r, g, b)
 
       tooltip:AddLine(" ")
-			tooltip:AddLine("|cFFFFFFFF"..L["RepCost"])
-			tooltip:AddDoubleLine("|cFFFFFF00".._G["FACTION_STANDING_LABEL4"], Durrr:CopperToString(math.floor(totalcost)))
-			tooltip:AddDoubleLine("|cFFAAFF00".._G["FACTION_STANDING_LABEL5"], Durrr:CopperToString(math.floor(totalcost*0.95)))
-			tooltip:AddDoubleLine("|cFF55FF00".._G["FACTION_STANDING_LABEL6"], Durrr:CopperToString(math.floor(totalcost*0.90)))
-			tooltip:AddDoubleLine("|cFF00FF00".._G["FACTION_STANDING_LABEL7"], Durrr:CopperToString(math.floor(totalcost*0.85)))
-			tooltip:AddDoubleLine("|cFF00FFAA".._G["FACTION_STANDING_LABEL8"], Durrr:CopperToString(math.floor(totalcost*0.80)))
+			tooltip:AddLine(Durrr:Colorize(L["RepCost"], "white"))
+			tooltip:AddDoubleLine(Durrr:Colorize(_G["FACTION_STANDING_LABEL4"], "yellow"), Durrr:Coins2Str(math.floor(totalCost)))
+			tooltip:AddDoubleLine(Durrr:Colorize(_G["FACTION_STANDING_LABEL5"], "aaff00"), Durrr:Coins2Str(math.floor(totalCost*0.95)))
+			tooltip:AddDoubleLine(Durrr:Colorize(_G["FACTION_STANDING_LABEL6"], "55ff00"), Durrr:Coins2Str(math.floor(totalCost*0.90)))
+			tooltip:AddDoubleLine(Durrr:Colorize(_G["FACTION_STANDING_LABEL7"], "00ff00"), Durrr:Coins2Str(math.floor(totalCost*0.85)))
+			tooltip:AddDoubleLine(Durrr:Colorize(_G["FACTION_STANDING_LABEL8"], "00ffaa"), Durrr:Coins2Str(math.floor(totalCost*0.80)))
     end
 
     tooltip:AddLine(" ")
-    local rightClick = ("|cffeda55f" .. L["RightClick"] .. "|r " .. L["RightToolTip"])
+    local rightClick = (Durrr:Colorize(L["RightClick"] .. " ", "eda55f") .. L["RightToolTip"])
     tooltip:AddLine(rightClick)
   end,
 })
--- End LDB object --
 
--- LDB Update --
 function Durrr:MainUpdate()
-  if request then
-    request = false
+  if updateReq then
+    updateReq = false
 
     if (combatState == true) and (not profileDB.updateInCombat) then
       return
     end
 
-    local totalcost, percent, percentmin  = Durrr:GetRepairData()
+    local totalCost, percent, percentMin  = Durrr:GetRepairData()
 
-    if percentmin then
-      DurrrLDB.text = (string.format("|cff%s%d%%|r", Durrr:GetThresholdHexColor(percentmin), percentmin * 100))
+    if percentMin then
+      DurrrLDB.text = (string.format(Durrr:Colorize("%d%%", "%s"), percentMin * 100, Durrr:GetThresholdHexColor(percentMin)))
     end
   end
 end
--- End LDB Update --
 
--- LDB icon --
 function Durrr:UpdateIcon()
 	if profileDB.repairFromGuild and (profileDB.repairType == 1) then
 		DurrrLDB.iconCoords = guildRepairIconCoords
@@ -412,23 +421,23 @@ function Durrr:UpdateIcon()
 		DurrrLDB.iconCoords = repairIconCoords
 	end
 end
--- End LDB icon --
+-- End LDB stuff --
 
 -- Events --
 function Durrr:ScheduleUpdate()
-  request = true
+  updateReq = true
 end
 
-function Durrr:OnMerchantShow()
-  merchantState = true
+function Durrr:OnVendorShow()
+  vendorState = true
   if not CanMerchantRepair() then
     return
   end
-  Durrr:AttemptToRepair()
+  Durrr:RepairAttempt()
 end
 
-function Durrr:OnMerchantClose()
-  merchantState = false
+function Durrr:OnVendorClose()
+  vendorState = false
   if DurrrDialog:ActiveDialog("DurrrConfirm") then
     DurrrDialog:Dismiss("DurrrConfirm")
   end
@@ -437,66 +446,52 @@ function Durrr:OnMerchantClose()
   end
 end
 
-function Durrr:OnRegenEnable()
+function Durrr:OnRestEnable()
   combatState = false
   Durrr:ScheduleUpdate()
 end
 
-function Durrr:OnRegenDisable()
+function Durrr:OnRestDisable()
   combatState = true
 end
 
-function Durrr:OnUpdateResting()
+function Durrr:OnRestUpdate()
   if IsResting() then
     Durrr:WarnToRepair()
   end
 end
 -- End Events --
 
--- Profile Change Functions --
-function Durrr:OnProfileChanged(event, database, newProfileKey)
-  profileDB = database.profile
-end
--- End Profile Change Functions --
-
--- Config window --
-function Durrr:ShowConfig()
-  InterfaceOptionsFrame_OpenToCategory(Durrr.optionsFrames.profile)
-	InterfaceOptionsFrame_OpenToCategory(Durrr.optionsFrames.profile)
-	InterfaceOptionsFrame_OpenToCategory(Durrr.optionsFrames.general)
-end
--- End Config window --
-
 -- Show coins with icons --
-function Durrr:CopperToString(c)
-  local str = ""
-  if not c or c < 0 then
-    return str
+function Durrr:Coins2Str(coins)
+  local string = ""
+  if not coins or coins < 0 then
+    return string
   end
 
-  if c >= 10000 then
-		local g = math.floor(c/10000)
-		c = c - g*10000
-		str = str.."|cFFFFD800"..g.."|r |TInterface\\MoneyFrame\\UI-GoldIcon.blp:0:0:0:0|t"
+  if coins >= 10000 then
+		local gold = math.floor(coins / 10000)
+		coins = coins - gold * 10000
+		string = string .. Durrr:Colorize(gold, "gold") .. " |TInterface\\MoneyFrame\\UI-GoldIcon.blp:0:0:0:0|t"
 	end
-	if c >= 100 then
-		local s = math.floor(c/100)
-		c = c - s*100
-		str = str.."|cFFC7C7C7"..s.."|r |TInterface\\MoneyFrame\\UI-SilverIcon.blp:0:0:0:0|t"
+	if coins >= 100 then
+		local silver = math.floor(coins / 100)
+		coins = coins - silver * 100
+		string = string .. Durrr:Colorize(silver, "silver") .. " |TInterface\\MoneyFrame\\UI-SilverIcon.blp:0:0:0:0|t"
 	end
-	if c >= 0 then
-		str = str.."|cFFEEA55F"..c.."|r |TInterface\\MoneyFrame\\UI-CopperIcon.blp:0:0:0:0|t"
+	if coins >= 0 then
+		string = string .. Durrr:Colorize(coins, "copper") .. " |TInterface\\MoneyFrame\\UI-CopperIcon.blp:0:0:0:0|t"
 	end
 
-	return str
+	return string
 end
 -- End Show coins with icons --
 
 -- Data Updates --
 function Durrr:GetRepairData()
-	local totalcost = 0
+	local totalCost = 0
 	local percent = 0
-	local percentmin = 1
+	local percentMin = 1
 
 	local total = 0
 	local current = 0
@@ -504,19 +499,19 @@ function Durrr:GetRepairData()
 
 	for index, item in pairs(slots) do
 		local val, max = GetInventoryItemDurability(slots[index][ID])
-		local hasItem, hasCooldown, repairCost = hiddenFrame:SetInventoryItem("player", slots[index][ID])
+		local hasItem, hasCooldown, repairCost = DurrrFrame:SetInventoryItem("player", slots[index][ID])
 		if max then
-			if merchantState == true then
-				repairCost = Durrr:MerchantCorrection(repairCost)
+			if vendorState == true then
+				repairCost = Durrr:VendorFix(repairCost)
 			end
 			total = total + max
 			current = current + val
-			totalcost = totalcost + repairCost
+			totalCost = totalCost + repairCost
 			slots[index][VAL] = val
 			slots[index][MAX] = max
 			slots[index][COST] = repairCost
-			percent = val/max
-			if percent < percentmin then percentmin = percent end
+			percent = val / max
+			if percent < percentMin then percentMin = percent end
 		else
 			slots [index][MAX] = 0
 		end
@@ -526,19 +521,19 @@ function Durrr:GetRepairData()
 	if profileDB.showBags then
 		bagCost = 0;
 		for bag = 0, 4 do
-			local nrslots = GetContainerNumSlots(bag)
-			for slot = 1, nrslots do
+			local numSlots = GetContainerNumSlots(bag)
+			for slot = 1, numSlots do
 				local val, max = GetContainerItemDurability(bag, slot)
-				local hasCooldown, repairCost = hiddenFrame:SetBagItem(bag, slot)
+				local hasCooldown, repairCost = DurrrFrame:SetBagItem(bag, slot)
 				if max then
-					if merchantState == true then
-						repairCost = Durrr:MerchantCorrection(repairCost)
+					if vendorState == true then
+						repairCost = Durrr:VendorFix(repairCost)
 					end
 					bagTotal = bagTotal + max
 					bagCurrent = bagCurrent + val
 					bagCost = bagCost + repairCost
-					percent = val/max
-					if percent < percentmin then percentmin = percent end
+					percent = val / max
+					if percent < percentMin then percentMin = percent end
 				end
 			end
 		end
@@ -547,7 +542,7 @@ function Durrr:GetRepairData()
 		else
 			bagPercent = 1
 		end
-		totalcost = totalcost + bagCost
+		totalCost = totalCost + bagCost
 	end
 
 	current = current + bagCurrent
@@ -556,12 +551,12 @@ function Durrr:GetRepairData()
 		percent = current/total
 	end
 
-	return totalcost, percent, percentmin
+	return totalCost, percent, percentMin
 end
 -- End Data Updates --
 
 -- Faction discount --
-function Durrr:MerchantCorrection(value)
+function Durrr:VendorFix(value)
 	local standing = UnitReaction("npc", "player")
 	if standing == 5 then
 		value = value * 100 / 95
@@ -577,7 +572,7 @@ end
 -- End Faction discount --
 
 -- Checks --
-function Durrr:AttemptToRepair()
+function Durrr:RepairAttempt()
 	repairAllCost, canRepair = GetRepairAllCost()
 	if profileDB.repairType > 0 and repairAllCost > 0 then
 		local standing = UnitReaction("npc", "player")
@@ -623,9 +618,9 @@ end
 function Durrr:AutoRepair()
   if canRepair == true then
 		RepairAllItems()
-		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["RepairedPersonal"] .. " " .. Durrr:CopperToString(repairAllCost))
+		Durrr:Print(Durrr:Colorize("[" .. L["AddonName"] .. "]", "green") .. L["RepairedPersonal"] .. " " .. Durrr:Coins2Str(repairAllCost))
 	else
-		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["CardDeclined"] .. " " .. Durrr:CopperToString(repairAllCost))
+		Durrr:Print(Durrr:Colorize("["..L["AddonName"].."]", "green") .. L["CardDeclined"] .. " " .. Durrr:Coins2Str(repairAllCost))
   end
 end
 -- End Auto repair - Self --
@@ -641,11 +636,11 @@ function Durrr:AutoRepairFromBank()
 	end
 	if canRepair == true and CanGuildBankRepair() and GuildBankWithdrawMoney >= repairAllCost then
 		RepairAllItems(1)
-		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["RepairedGuildFunds"] .. " " .. Durrr:CopperToString(repairAllCost))
+		Durrr:Print(Durrr:Colorize("["..L["AddonName"].."]", "green") .. L["RepairedGuildFunds"] .. " " .. Durrr:Coins2Str(repairAllCost))
   elseif profileDB.repairFromGuildOnly then
-    Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["NoGuildGold"])
+    Durrr:Print(Durrr:Colorize("["..L["AddonName"].."]", "green") .. L["NoGuildGold"])
 	else
-		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["NoGuildGoldUsePersonal"])
+		Durrr:Print(Durrr:Colorize("["..L["AddonName"].."]", "green") .. L["NoGuildGoldUsePersonal"])
 		Durrr:AutoRepair()
 	end
 end
@@ -653,11 +648,9 @@ end
 
 -- Below Threshold Warning --
 function Durrr:WarnToRepair()
-	local totalcost, percent, percentmin  = Durrr:GetRepairData()
-	if profileDB.warntoRepair and profileDB.warnThreshold >= percentmin*100 then
-		local hexColor = Durrr:GetThresholdHexColor(percentmin)
-		local text = Durrr:Colorize(hexColor, string.format("%d", percentmin * 100))
-    DurrrDialog:Spawn("DurrrWarnToRepair", text)
+	local totalCost, percent, percentMin  = Durrr:GetRepairData()
+	if profileDB.warntoRepair and profileDB.warnThreshold >= percentMin * 100 then
+    DurrrDialog:Spawn("DurrrWarnToRepair", Durrr:Colorize(string.format("%d", percentMin * 100), Durrr:GetThresholdHexColor(percentMin)))
 	end
 end
 -- End Below Threshold Warning --
@@ -665,81 +658,80 @@ end
 -- Dialog Popups --
 function Durrr:CreateDialogs()
 	DurrrDialog:Register("DurrrDialog", {
-		text = " ",
-		buttons = {
-			{
-				text = L["Myself"],
-				on_click = function(self, button, down)
-					Durrr:AutoRepair()
-				end,
-			},
-			{
-				text = L["Cancel"],
-			},
-			{
-				text = L["TheGuild"],
-				on_click = function(self, button, down)
-					Durrr:AutoRepairFromBank()
-				end,
-			},
-		},
-		on_show = function(self, data)
-      local whoPaysText = L["WhoPays"] .. " %s"
-			self.text:SetFormattedText(whoPaysText, Durrr:CopperToString(repairAllCost))
-		end,
-		hide_on_escape = true,
-		show_while_dead = false,
-	})
+    text = "",
+    buttons = {
+      {
+        text = L["Myself"],
+        on_click = function(self, button, down)
+          Durrr:AutoRepair()
+        end
+      },
+      {
+        text = L["Cancel"]
+      },
+      {
+        text = L["TheGuild"],
+        on_click = function(self, button, down)
+          Durrr:AutoRepairFromBank()
+        end
+      },
+    },
+    on_show = function(self, data)
+			self.text:SetFormattedText(L["WhoPays"] .. " %s", Durrr:Coins2Str(repairAllCost))
+    end,
+    hide_on_escape = true,
+    show_while_dead = false
+  })
 
 	DurrrDialog:Register("DurrrConfirm", {
-		text = " ",
+		text = "",
 		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
 		buttons = {
 			{
 				text = L["Yes"],
 				on_click = function(self, button, down)
 					Durrr:DoRepair()
-				end,
+				end
 			},
 			{
-				text = L["No"],
+				text = L["No"]
 			},
 		},
 		on_show = function(self, data)
-			self.text:SetFormattedText(L["YourRepIs"].."|cFFFFFF00%s|r. "..L["AutoRepairRequires"].." %s. "..L["RepairConfirm"], _G["FACTION_STANDING_LABEL" .. data], _G["FACTION_STANDING_LABEL" .. profileDB.repairThreshold])
+			self.text:SetFormattedText(L["YourRepIs"] .. Durrr:Colorize("%s", "yellow") .. L["AutoRepairRequires"] .. " %s. " .. L["RepairConfirm"], _G["FACTION_STANDING_LABEL" .. data], _G["FACTION_STANDING_LABEL" .. profileDB.repairThreshold])
 		end,
 		hide_on_escape = true,
-		show_while_dead = false,
+		show_while_dead = false
 	})
 
   DurrrDialog:Register("DurrrWarn", {
-		text = " ",
+		text = "",
 		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
 		buttons = {
 			{
-				text = L["Ok"],
+				text = L["Ok"]
 			},
 		},
 		on_show = function(self, data)
 			self.text:SetFormattedText(L["Card Declined"], data)
 		end,
 		hide_on_escape = true,
-		show_while_dead = false,
+		show_while_dead = false
 	})
 
   DurrrDialog:Register("DurrrWarnToRepair", {
-		text = " ",
+		text = "",
 		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
 		buttons = {
 			{
-				text = L["Ok"],
+				text = L["Ok"]
 			},
 		},
 		on_show = function(self, data)
 			self.text:SetFormattedText(L["CityWarn"], data)
 		end,
 		hide_on_escape = true,
-		show_while_dead = false,
+		show_while_dead = false
 	})
 end
 -- End Dialog Popups --
@@ -765,16 +757,16 @@ function Durrr:GetThresholdPercentage(quality, ...)
       return 1
     end
     local last = worst
-    for i = 2, n-1 do
+    for i = 2, n - 1 do
       local value = select(i, ...)
       if quality <= value then
-        return ((i-2) + (quality - last) / (value - last)) / (n-1)
+        return ((i - 2) + (quality - last) / (value - last)) / (n - 1)
       end
       last = value
     end
 
     local value = select(n, ...)
-    return ((n-2) + (quality - last) / (value - last)) / (n-1)
+    return ((n - 2) + (quality - last) / (value - last)) / (n - 1)
   else
     if quality >= worst then
       return 0
@@ -782,21 +774,21 @@ function Durrr:GetThresholdPercentage(quality, ...)
       return 1
     end
     local last = worst
-    for i = 2, n-1 do
+    for i = 2, n - 1 do
       local value = select(i, ...)
       if quality >= value then
-        return ((i-2) + (quality - last) / (value - last)) / (n-1)
+        return ((i - 2) + (quality - last) / (value - last)) / (n - 1)
       end
       last = value
     end
 
     local value = select(n, ...)
-    return ((n-2) + (quality - last) / (value - last)) / (n-1)
+    return ((n - 2) + (quality - last) / (value - last)) / (n - 1)
   end
 end
 
 function Durrr:GetThresholdColor(quality, ...)
-  if quality ~= quality --[[or quality == inf or quality == -inf]] then
+  if quality ~= quality then
     return 1, 1, 1
   end
 
@@ -805,21 +797,17 @@ function Durrr:GetThresholdColor(quality, ...)
   if percent <= 0 then
     return 1, 0, 0
   elseif percent <= 0.5 then
-    return 1, percent*2, 0
+    return 1, percent * 2, 0
   elseif percent >= 1 then
     return 0, 1, 0
   else
-    return 2 - percent*2, 1, 0
+    return 2 - percent * 2, 1, 0
   end
 end
 
 function Durrr:GetThresholdHexColor(quality, ...)
 	local r, g, b = Durrr:GetThresholdColor(quality, ...)
-	return string.format("%02x%02x%02x", r*255, g*255, b*255)
-end
-
-function Durrr:Colorize(hexColor, text)
-	return "|cff" .. tostring(hexColor or 'ffffff') .. tostring(text) .. "|r"
+	return string.format("%02x%02x%02x", r * 255, g * 255, b * 255)
 end
 -- End Colors --
 

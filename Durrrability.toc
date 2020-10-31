@@ -39,8 +39,10 @@ Libraries\LibDialog-1.0\lib.xml
 # Load Languages
 Locales\locales.xml
 
-# Load Main file
+# Load Main files
 Durrrability.lua
+
+#DurrrabilityLDB.lua
 
 # Last Editted By: @file-author@ - @file-date-iso@
 # @file-revision@
