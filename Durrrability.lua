@@ -52,7 +52,7 @@ local combatState = false
 local vendorState = false
 local updateReq = true
 
-local profileDB
+local DurrrDBprofile
 local DurrrDBDefaults = {
   profile = {
     showDetails = true,
@@ -66,6 +66,8 @@ local DurrrDBDefaults = {
     alwaysAsk = false,
     warntoRepair = true,
     warnThreshold = 65,
+    critWarntoRepair = true,
+    critWarnThreshold = 25,
   },
 }
 -- End Defaults --
@@ -92,10 +94,10 @@ Durrr.options = {
           name = L["ShowEachItem"],
           desc = L["ShowAllItemsToggle"],
           get = function()
-            return profileDB.showDetails
+            return DurrrDBprofile.showDetails
           end,
           set = function(key, value)
-            profileDB.showDetails = value
+            DurrrDBprofile.showDetails = value
           end,
         },
         bags = {
@@ -104,10 +106,10 @@ Durrr.options = {
           name = L["ShowBags"],
           desc = L["ShowBagsToggle"],
           get = function()
-            return profileDB.showBags
+            return DurrrDBprofile.showBags
           end,
           set = function(key, value)
-            profileDB.showBags = value
+            DurrrDBprofile.showBags = value
           end,
         },
         combat = {
@@ -116,10 +118,10 @@ Durrr.options = {
           name = L["InCombatUpdate"],
           desc = L["InCombatToggle"],
           get = function()
-            return profileDB.updateInCombat
+            return DurrrDBprofile.updateInCombat
           end,
           set = function(key, value)
-            profileDB.updateInCombat = value
+            DurrrDBprofile.updateInCombat = value
           end,
         },
         separator3 = {
@@ -134,10 +136,10 @@ Durrr.options = {
 					name = L["MinRep"],
 					desc = L["MinRepLevel"],
 					get = function()
-						return profileDB.repairThreshold
+						return DurrrDBprofile.repairThreshold
 					end,
 					set = function(key, value)
-						profileDB.repairThreshold = value
+						DurrrDBprofile.repairThreshold = value
 					end,
 					values = function()
 						return {
@@ -149,7 +151,7 @@ Durrr.options = {
 						}
 					end,
 					disabled = function()
-						return profileDB.repairType == 0
+						return DurrrDBprofile.repairType == 0
 					end,
 				},
 				askEverywhere = {
@@ -159,13 +161,13 @@ Durrr.options = {
 					name = L["AskIfLower"],
 					desc = L["LowRepConfirmPop"],
 					get = function()
-						return profileDB.alwaysAsk
+						return DurrrDBprofile.alwaysAsk
 					end,
 					set = function(key, value)
-						profileDB.alwaysAsk = value
+						DurrrDBprofile.alwaysAsk = value
 					end,
 					disabled = function()
-						return profileDB.repairType == 0
+						return DurrrDBprofile.repairType == 0
 					end,
 				},
         separator2 = {
@@ -180,10 +182,10 @@ Durrr.options = {
           name = L["RepairType"],
           desc = L["VendorRepairQuestion"],
           get = function()
-            return profileDB.repairType
+            return DurrrDBprofile.repairType
           end,
           set = function(key, value)
-            profileDB.repairType = value
+            DurrrDBprofile.repairType = value
             Durrr:UpdateIcon()
           end,
           values = function()
@@ -201,14 +203,14 @@ Durrr.options = {
           name = L["UseGuildFunds"],
           desc = L["GuildFundsToggle"],
           get = function()
-            return profileDB.repairFromGuild
+            return DurrrDBprofile.repairFromGuild
           end,
           set = function(key, value)
-            profileDB.repairFromGuild = value
+            DurrrDBprofile.repairFromGuild = value
             Durrr:UpdateIcon()
           end,
           disabled = function()
-            return not (profileDB.repairType == 1)
+            return not (DurrrDBprofile.repairType == 1)
           end,
         },
         repairGuildOnly = {
@@ -218,13 +220,13 @@ Durrr.options = {
           name = L["OnlyGuildFunds"],
           desc = L["NoGuildGoldToggle"],
           get = function()
-            return profileDB.repairFromGuildOnly
+            return DurrrDBprofile.repairFromGuildOnly
           end,
           set = function(key, value)
-            profileDB.repairFromGuildOnly = value
+            DurrrDBprofile.repairFromGuildOnly = value
           end,
           disabled = function()
-            return ( profileDB.repairFromGuild == false or (not (profileDB.repairType == 1)) )
+            return ( DurrrDBprofile.repairFromGuild == false or (not (DurrrDBprofile.repairType == 1)) )
           end,
         },
 				separator4 = {
@@ -238,10 +240,10 @@ Durrr.options = {
 					name = L["CityWarnConf"],
 					desc = L["CityWarnToggle"],
 					get = function()
-						return profileDB.warntoRepair
+						return DurrrDBprofile.warntoRepair
 					end,
 					set = function(key, value)
-						profileDB.warntoRepair = value
+						DurrrDBprofile.warntoRepair = value
 						if (value) then
 							Durrr:RegisterEvent("PLAYER_UPDATE_RESTING", "OnRestUpdate")
 						else
@@ -256,10 +258,50 @@ Durrr.options = {
 					desc = L["WarnMax"],
 					min = 0, max = 100, step = 1,
 					get = function()
-						return profileDB.warnThreshold
+						return DurrrDBprofile.warnThreshold
 					end,
 					set = function(key, value)
-						profileDB.warnThreshold = value
+						DurrrDBprofile.warnThreshold = value
+					end,
+        },
+        separator5 = {
+					type = "header",
+					name = L["CritWarningOpts"],
+					order = 15,
+				},
+				critWarn = {
+					order = 16,
+					type = "toggle",
+          width = "full",
+					name = L["CritWarnConf"],
+					desc = L["CritWarnToggle"],
+					get = function()
+						return DurrrDBprofile.critWarntoRepair
+					end,
+					set = function(key, value)
+						DurrrDBprofile.critWarntoRepair = value
+						if (value) then
+              Durrr:RegisterEvent("ZONE_CHANGED", "OnCritUpdate")
+              Durrr:RegisterEvent("ZONE_CHANGED_INDOORS", "OnCritUpdate")
+              Durrr:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnCritUpdate")
+						else
+              Durrr:RegisterEvent("ZONE_CHANGED")
+              Durrr:RegisterEvent("ZONE_CHANGED_INDOORS")
+              Durrr:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+						end
+					end,
+				},
+				critWarnThreshold = {
+					order = 17,
+					type = "range",
+					name = L["WarnThreshold"],
+					desc = L["WarnMax"],
+					min = 0, max = 100, step = 1,
+					get = function()
+						return DurrrDBprofile.critWarnThreshold
+					end,
+					set = function(key, value)
+						DurrrDBprofile.critWarnThreshold = value
 					end,
         },
       },
@@ -291,7 +333,7 @@ function Durrr:OnInitialize()
   Durrr.db.RegisterCallback(Durrr, "OnProfileCopied", "OnProfileChanged")
   Durrr.db.RegisterCallback(Durrr, "OnProfileReset", "OnProfileChanged")
 
-  profileDB = Durrr.db.profile
+  DurrrDBprofile = Durrr.db.profile
   Durrr:SetupOptions()
 
   local index, item
@@ -308,10 +350,20 @@ function Durrr:OnInitialize()
 	Durrr:RegisterEvent("PLAYER_REGEN_DISABLED", "OnRestDisable")
 	Durrr:RegisterEvent("MERCHANT_SHOW", "OnVendorShow")
 	Durrr:RegisterEvent("MERCHANT_CLOSED", "OnVendorClose")
+  Durrr:RegisterEvent("ZONE_CHANGED", "OnCritUpdate")
+  Durrr:RegisterEvent("ZONE_CHANGED_INDOORS", "OnCritUpdate")
+  Durrr:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnCritUpdate")
 
-  if (profileDB.warntoRepair) then
+  if (DurrrDBprofile.warntoRepair) then
     Durrr:RegisterEvent("PLAYER_UPDATE_RESTING", "OnRestUpdate")
     Durrr:ScheduleTimer("OnRestUpdate", 5)
+  end
+-- Figure out this timer thing!!!!
+  if (DurrrDBprofile.critWarntoRepair) then
+    Durrr:RegisterEvent("ZONE_CHANGED", "OnCritUpdate")
+    Durrr:RegisterEvent("ZONE_CHANGED_INDOORS", "OnCritUpdate")
+    Durrr:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnCritUpdate")
+    Durrr:ScheduleTimer("OnCritUpdate", 5)
   end
 
   Durrr:UpdateIcon()
@@ -325,7 +377,7 @@ end
 
 -- Profile Change Functions --
 function Durrr:OnProfileChanged(event, database, newProfileKey)
-  profileDB = database.profile
+  DurrrDBprofile = database.profile
 end
 -- End Profile Change Functions --
 
@@ -359,7 +411,7 @@ local DurrrLDB = DLDB:NewDataObject("Durrrability", {
       tooltip:AddLine(" ")
       tooltip:AddLine(L["NoBroke"], 0, 1, 0)
     else
-      if profileDB.showDetails then
+      if DurrrDBprofile.showDetails then
         tooltip:AddLine(" ")
         for index, item in pairs(slots) do
           if item[MAX] > 0 and item[VAL] < item[MAX] then
@@ -369,7 +421,7 @@ local DurrrLDB = DLDB:NewDataObject("Durrrability", {
             tooltip:AddDoubleLine(string.format("%d%%  " .. Durrr:Colorize("%s", "yellow"), p * 100, item[NAME]), Durrr:Coins2Str(math.floor(item[COST])), r, g, b, 1, 1, 1)
           end
         end
-        if profileDB.showBags and (bagCost > 0) then
+        if DurrrDBprofile.showBags and (bagCost > 0) then
           local r, g, b = Durrr:GetThresholdColor(bagPercent)
 
           tooltip:AddDoubleLine(string.format("%d%%  " .. Durrr:Colorize("Bags", "yellow"), bagPercent * 100), Durrr:Coins2Str(math.floor(bagCost)), r, g, b, 1, 1, 1)
@@ -402,7 +454,7 @@ function Durrr:MainUpdate()
   if updateReq then
     updateReq = false
 
-    if (combatState == true) and (not profileDB.updateInCombat) then
+    if (combatState == true) and (not DurrrDBprofile.updateInCombat) then
       return
     end
 
@@ -415,7 +467,7 @@ function Durrr:MainUpdate()
 end
 
 function Durrr:UpdateIcon()
-	if profileDB.repairFromGuild and (profileDB.repairType == 1) then
+	if DurrrDBprofile.repairFromGuild and (DurrrDBprofile.repairType == 1) then
 		DurrrLDB.iconCoords = guildRepairIconCoords
 	else
 		DurrrLDB.iconCoords = repairIconCoords
@@ -425,6 +477,9 @@ end
 
 -- Events --
 function Durrr:ScheduleUpdate()
+  if (DurrrDBprofile.critWarntoRepair) then
+    Durrr:CritWarnToRepair()
+  end
   updateReq = true
 end
 
@@ -448,6 +503,9 @@ end
 
 function Durrr:OnRestEnable()
   combatState = false
+  if (DurrrDBprofile.critWarntoRepair) then
+    Durrr:CritWarnToRepair()
+  end
   Durrr:ScheduleUpdate()
 end
 
@@ -458,7 +516,16 @@ end
 function Durrr:OnRestUpdate()
   if IsResting() then
     Durrr:WarnToRepair()
+  elseif (DurrrDBprofile.critWarntoRepair) then
+    Durrr:CritWarnToRepair()
   end
+end
+
+function Durrr:OnCritUpdate()
+  if (DurrrDBprofile.critWarntoRepair) then
+    Durrr:CritWarnToRepair()
+  end
+  Durrr:ScheduleUpdate()
 end
 -- End Events --
 
@@ -518,7 +585,7 @@ function Durrr:GetRepairData()
 	end
 
 	local bagTotal, bagCurrent = 0, 0
-	if profileDB.showBags then
+	if DurrrDBprofile.showBags then
 		bagCost = 0;
 		for bag = 0, 4 do
 			local numSlots = GetContainerNumSlots(bag)
@@ -574,9 +641,9 @@ end
 -- Checks --
 function Durrr:RepairAttempt()
 	repairAllCost, canRepair = GetRepairAllCost()
-	if profileDB.repairType > 0 and repairAllCost > 0 then
+	if DurrrDBprofile.repairType > 0 and repairAllCost > 0 then
 		local standing = UnitReaction("npc", "player")
-		if standing >= profileDB.repairThreshold then
+		if standing >= DurrrDBprofile.repairThreshold then
 			Durrr:DoRepair()
 		else
 			Durrr:LowRepConfirmation()
@@ -587,10 +654,10 @@ end
 
 -- Repair functions --
 function Durrr:DoRepair()
-	if profileDB.repairType == 2 then
+	if DurrrDBprofile.repairType == 2 then
 		Durrr:ShowDialog()
-	elseif profileDB.repairType == 1 then
-		if profileDB.repairFromGuild then
+	elseif DurrrDBprofile.repairType == 1 then
+		if DurrrDBprofile.repairFromGuild then
 			Durrr:AutoRepairFromBank()
 		else
 			Durrr:AutoRepair()
@@ -601,7 +668,7 @@ end
 
 -- Low rep confirm --
 function Durrr:LowRepConfirmation()
-	if (profileDB.alwaysAsk) then
+	if (DurrrDBprofile.alwaysAsk) then
 		local standing = UnitReaction("npc", "player")
 		DurrrDialog:Spawn("DurrrConfirm", standing)
 	end
@@ -637,7 +704,7 @@ function Durrr:AutoRepairFromBank()
 	if canRepair == true and CanGuildBankRepair() and GuildBankWithdrawMoney >= repairAllCost then
 		RepairAllItems(1)
 		Durrr:Print(Durrr:Colorize("["..L["AddonName"].."]", "green") .. L["RepairedGuildFunds"] .. " " .. Durrr:Coins2Str(repairAllCost))
-  elseif profileDB.repairFromGuildOnly then
+  elseif DurrrDBprofile.repairFromGuildOnly then
     Durrr:Print(Durrr:Colorize("["..L["AddonName"].."]", "green") .. L["NoGuildGold"])
 	else
 		Durrr:Print(Durrr:Colorize("["..L["AddonName"].."]", "green") .. L["NoGuildGoldUsePersonal"])
@@ -646,11 +713,18 @@ function Durrr:AutoRepairFromBank()
 end
 -- End Auto repair - Guild --
 
--- Below Threshold Warning --
+-- Below Threshold Warnings --
 function Durrr:WarnToRepair()
 	local totalCost, percent, percentMin  = Durrr:GetRepairData()
-	if profileDB.warntoRepair and profileDB.warnThreshold >= percentMin * 100 then
+	if DurrrDBprofile.warntoRepair and DurrrDBprofile.warnThreshold >= percentMin * 100 then
     DurrrDialog:Spawn("DurrrWarnToRepair", Durrr:Colorize(string.format("%d", percentMin * 100), Durrr:GetThresholdHexColor(percentMin)))
+	end
+end
+
+function Durrr:CritWarnToRepair()
+	local totalCost, percent, percentMin  = Durrr:GetRepairData()
+	if DurrrDBprofile.critWarntoRepair and DurrrDBprofile.critWarnThreshold >= percentMin * 100 then
+    DurrrDialog:Spawn("DurrrCritWarnToRepair", Durrr:Colorize(string.format("%d", percentMin * 100), Durrr:GetThresholdHexColor(percentMin)))
 	end
 end
 -- End Below Threshold Warning --
@@ -698,7 +772,7 @@ function Durrr:CreateDialogs()
 			},
 		},
 		on_show = function(self, data)
-			self.text:SetFormattedText(L["YourRepIs"] .. Durrr:Colorize("%s", "yellow") .. L["AutoRepairRequires"] .. " %s. " .. L["RepairConfirm"], _G["FACTION_STANDING_LABEL" .. data], _G["FACTION_STANDING_LABEL" .. profileDB.repairThreshold])
+			self.text:SetFormattedText(L["YourRepIs"] .. Durrr:Colorize("%s", "yellow") .. L["AutoRepairRequires"] .. " %s. " .. L["RepairConfirm"], _G["FACTION_STANDING_LABEL" .. data], _G["FACTION_STANDING_LABEL" .. DurrrDBprofile.repairThreshold])
 		end,
 		hide_on_escape = true,
 		show_while_dead = false
@@ -719,20 +793,35 @@ function Durrr:CreateDialogs()
 		show_while_dead = false
 	})
 
-  DurrrDialog:Register("DurrrWarnToRepair", {
-		text = "",
-		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
-		buttons = {
-			{
-				text = L["Ok"]
-			},
-		},
-		on_show = function(self, data)
-			self.text:SetFormattedText(L["CityWarn"], data)
-		end,
-		hide_on_escape = true,
-		show_while_dead = false
-	})
+    DurrrDialog:Register("DurrrWarnToRepair", {
+  		text = "",
+  		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
+  		buttons = {
+  			{
+  				text = L["Ok"]
+  			},
+  		},
+  		on_show = function(self, data)
+  			self.text:SetFormattedText(L["CityWarn"], data)
+  		end,
+  		hide_on_escape = true,
+  		show_while_dead = false
+  	})
+
+      DurrrDialog:Register("DurrrCritWarnToRepair", {
+    		text = "",
+    		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
+    		buttons = {
+    			{
+    				text = L["Ok"]
+    			},
+    		},
+    		on_show = function(self, data)
+    			self.text:SetFormattedText(L["CritWarn"], data)
+    		end,
+    		hide_on_escape = true,
+    		show_while_dead = false
+    	})
 end
 -- End Dialog Popups --
 

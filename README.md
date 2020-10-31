@@ -15,6 +15,7 @@ The aim of Durrr(ability) is to give you the ability to see when your stuff's bo
   * Choose whether or not to auto-repair based on your current reputation with a particular vendors
 * Choose to have a Repair Warning pop up when you enter a "Rested" state (usually a city)
   * Set the threshold where this warning fires
+* Choose to have a Repair Warning pop up when your durability falls below a threshold that you set
 
 **Localizations have been enabled for this addon, but I do not speak any other language other than English.**
 **Any assistance in this regard will be very helpful, and I will give you credit for helping!**
