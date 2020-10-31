@@ -16,18 +16,18 @@ local DLDB = LibStub("LibDataBroker-1.1")
 
 -- Defaults --
 local slots = {
-  {0, 0, 0, "Head", L["Head"], 0},
-  {0, 0, 0, "Neck", L["Neck"], 0},
+  {0, 0, 0, "equipment/Head", L["Head"], 0},
+  {0, 0, 0, "equipment/Neck", L["Neck"], 0},
 	{0, 0, 0, "Shoulder", L["Shoulder"], 0},
-	{0, 0, 0, "Back", L["Back"], 0},
-	{0, 0, 0, "Chest", L["Chest"], 0},
-	{0, 0, 0, "Wrist", L["Wrist"], 0},
-	{0, 0, 0, "Hands", L["Hands"], 0},
-	{0, 0, 0, "Waist", L["Waist"], 0},
-	{0, 0, 0, "Legs", L["Legs"], 0},
-	{0, 0, 0, "Feet", L["Feet"], 0},
-	{0, 0, 0, "MainHand", L["MainHand"], 0},
-	{0, 0, 0, "SecondaryHand", L["SecondaryHand"], 0},
+	{0, 0, 0, "equipment/Back", L["Back"], 0},
+	{0, 0, 0, "equipment/Chest", L["Chest"], 0},
+	{0, 0, 0, "equipment/Wrist", L["Wrist"], 0},
+	{0, 0, 0, "equipment/Hands", L["Hands"], 0},
+	{0, 0, 0, "equipment/Waist", L["Waist"], 0},
+	{0, 0, 0, "equipment/Legs", L["Legs"], 0},
+	{0, 0, 0, "equipment/Feet", L["Feet"], 0},
+	{0, 0, 0, "equipment/MainHand", L["MainHand"], 0},
+	{0, 0, 0, "equipment/SecondaryHand", L["SecondaryHand"], 0},
 }
 
 local repairIconCoords = {0.28125, 0.5625, 0, 0.5625}
@@ -78,19 +78,19 @@ Durrr.options = {
     general = {
       order = 1,
       type = "group",
-      name = L["GeneralSettings"],
+      name = L["config/GeneralSettings"],
       cmdInline = true,
       args = {
         separator1 = {
           type = "header",
-          name = L["DisplayOptions"],
+          name = L["config/DisplayOptions"],
           order = 1,
         },
         details = {
           order = 2,
           type = "toggle",
-          name = L["ShowEachItem"],
-          desc = L["ShowAllItemsToggle"],
+          name = L["config/ShowEachItem"],
+          desc = L["config/ShowAllItemsToggle"],
           get = function()
             return profileDB.showDetails
           end,
@@ -101,8 +101,8 @@ Durrr.options = {
         bags = {
           order = 3,
           type = "toggle",
-          name = L["ShowBags"],
-          desc = L["ShowBagsToggle"],
+          name = L["config/ShowBags"],
+          desc = L["config/ShowBagsToggle"],
           get = function()
             return profileDB.showBags
           end,
@@ -113,8 +113,8 @@ Durrr.options = {
         combat = {
           order = 4,
           type = "toggle",
-          name = L["InCombatUpdate"],
-          desc = L["InCombatToggle"],
+          name = L["config/InCombatUpdate"],
+          desc = L["config/InCombatToggle"],
           get = function()
             return profileDB.updateInCombat
           end,
@@ -124,15 +124,15 @@ Durrr.options = {
         },
         separator3 = {
           type = "header",
-          name = L["RepOpts"],
+          name = L["config/RepOpts"],
           order = 5,
         },
         factionThreshold = {
 					order = 6,
 					type = "select",
 					style = "dropdown",
-					name = L["MinRep"],
-					desc = L["MinRepLevel"],
+					name = L["config/MinRep"],
+					desc = L["config/MinRepLevel"],
 					get = function()
 						return profileDB.repairThreshold
 					end,
@@ -156,8 +156,8 @@ Durrr.options = {
 					order = 7,
 					type = "toggle",
           width = "full",
-					name = L["AskIfLower"],
-					desc = L["LowRepConfirmPop"],
+					name = L["config/AskIfLower"],
+					desc = L["config/LowRepConfirmPop"],
 					get = function()
 						return profileDB.alwaysAsk
 					end,
@@ -170,15 +170,15 @@ Durrr.options = {
 				},
         separator2 = {
           type = "header",
-          name = L["RepairOpts"],
+          name = L["config/RepairOpts"],
           order = 8,
         },
         repairType = {
           order = 9,
           type = "select",
           style = "dropdown",
-          name = L["RepairType"],
-          desc = L["VendorRepairQuestion"],
+          name = L["config/RepairType"],
+          desc = L["config/VendorRepairQuestion"],
           get = function()
             return profileDB.repairType
           end,
@@ -198,8 +198,8 @@ Durrr.options = {
           order = 10,
           type = "toggle",
           width = "full",
-          name = L["UseGuildFunds"],
-          desc = L["GuildFundsToggle"],
+          name = L["config/UseGuildFunds"],
+          desc = L["config/GuildFundsToggle"],
           get = function()
             return profileDB.repairFromGuild
           end,
@@ -215,8 +215,8 @@ Durrr.options = {
           order = 11,
           type = "toggle",
           width = "full",
-          name = L["OnlyGuildFunds"],
-          desc = L["NoGuildGoldToggle"],
+          name = L["config/OnlyGuildFunds"],
+          desc = L["config/NoGuildGoldToggle"],
           get = function()
             return profileDB.repairFromGuildOnly
           end,
@@ -229,14 +229,14 @@ Durrr.options = {
         },
 				separator4 = {
 					type = "header",
-					name = L["WarningOpts"],
+					name = L["config/WarningOpts"],
 					order = 12,
 				},
 				warn = {
 					order = 13,
 					type = "toggle",
-					name = L["CityWarnConf"],
-					desc = L["CityWarnToggle"],
+					name = L["config/CityWarnConf"],
+					desc = L["config/CityWarnToggle"],
 					get = function()
 						return profileDB.warntoRepair
 					end,
@@ -252,8 +252,8 @@ Durrr.options = {
 				warnThreshold = {
 					order = 14,
 					type = "range",
-					name = L["WarnThreshold"],
-					desc = L["WarnMax"],
+					name = L["config/WarnThreshold"],
+					desc = L["config/WarnMax"],
 					min = 0, max = 100, step = 1,
 					get = function()
 						return profileDB.warnThreshold
@@ -283,7 +283,7 @@ end
 function Durrr:OnInitialize()
   Durrr.db = DurrrDB:New("DurrrabilityDB", DurrrDBDefaults, true)
   if not Durrr.db then
-    errorDB = L["ErrorDB"]
+    errorDB = L["dialog/ErrorDB"]
     print(errorDB)
   end
 
@@ -344,7 +344,7 @@ DurrrLDB = DLDB:NewDataObject("Durrrability", {
     local totalcost, percent, percentmin  = Durrr:GetRepairData()
     if totalcost <= 0 then
       tooltip:AddLine(" ")
-      tooltip:AddLine(L["NoBroke"], 0, 1, 0)
+      tooltip:AddLine(L["dialog/NoBroke"], 0, 1, 0)
     else
       if profileDB.showDetails then
         tooltip:AddLine(" ")
@@ -371,7 +371,7 @@ DurrrLDB = DLDB:NewDataObject("Durrrability", {
       tooltip:AddDoubleLine("|cFFFFFFFF"..L["Lowest"].." :", string.format("%d%%", percentmin * 100), 1, 1, 1, r, g, b)
 
       tooltip:AddLine(" ")
-			tooltip:AddLine("|cFFFFFFFF"..L["RepCost"])
+			tooltip:AddLine("|cFFFFFFFF"..L["dialog/RepCost"])
 			tooltip:AddDoubleLine("|cFFFFFF00".._G["FACTION_STANDING_LABEL4"], Durrr:CopperToString(math.floor(totalcost)))
 			tooltip:AddDoubleLine("|cFFAAFF00".._G["FACTION_STANDING_LABEL5"], Durrr:CopperToString(math.floor(totalcost*0.95)))
 			tooltip:AddDoubleLine("|cFF55FF00".._G["FACTION_STANDING_LABEL6"], Durrr:CopperToString(math.floor(totalcost*0.90)))
@@ -380,7 +380,7 @@ DurrrLDB = DLDB:NewDataObject("Durrrability", {
     end
 
     tooltip:AddLine(" ")
-    local rightClick = ("|cffeda55f" .. L["RightClick"] .. "|r " .. L["RightToolTip"])
+    local rightClick = ("|cffeda55f" .. L["RightClick"] .. "|r " .. L["config/RightToolTip"])
     tooltip:AddLine(rightClick)
   end,
 })
@@ -623,9 +623,9 @@ end
 function Durrr:AutoRepair()
   if canRepair == true then
 		RepairAllItems()
-		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["RepairedPersonal"] .. " " .. Durrr:CopperToString(repairAllCost))
+		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["dialog/RepairedPersonal"] .. " " .. Durrr:CopperToString(repairAllCost))
 	else
-		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["CardDeclined"] .. " " .. Durrr:CopperToString(repairAllCost))
+		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["dialog/CardDeclined"] .. " " .. Durrr:CopperToString(repairAllCost))
   end
 end
 -- End Auto repair - Self --
@@ -641,11 +641,11 @@ function Durrr:AutoRepairFromBank()
 	end
 	if canRepair == true and CanGuildBankRepair() and GuildBankWithdrawMoney >= repairAllCost then
 		RepairAllItems(1)
-		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["RepairedGuildFunds"] .. " " .. Durrr:CopperToString(repairAllCost))
+		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["dialog/RepairedGuildFunds"] .. " " .. Durrr:CopperToString(repairAllCost))
   elseif profileDB.repairFromGuildOnly then
-    Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["NoGuildGold"])
+    Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["dialog/NoGuildGold"])
 	else
-		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["NoGuildGoldUsePersonal"])
+		Durrr:Print("|cff00ff00["..L["AddonName"].."]|r " .. L["dialog/NoGuildGoldUsePersonal"])
 		Durrr:AutoRepair()
 	end
 end
@@ -677,14 +677,15 @@ function Durrr:CreateDialogs()
 				text = L["Cancel"],
 			},
 			{
-				text = L["TheGuild"],
+				text = L["dialog/TheGuild"],
 				on_click = function(self, button, down)
 					Durrr:AutoRepairFromBank()
 				end,
 			},
 		},
 		on_show = function(self, data)
-			self.text:SetFormattedText(L["WhoPays"], Durrr:CopperToString(repairAllCost))
+      local whoPaysText = L["dialog/WhoPays"] .. " %s"
+			self.text:SetFormattedText(whoPaysText, Durrr:CopperToString(repairAllCost))
 		end,
 		hide_on_escape = true,
 		show_while_dead = false,
@@ -705,7 +706,7 @@ function Durrr:CreateDialogs()
 			},
 		},
 		on_show = function(self, data)
-			self.text:SetFormattedText(L["YourRepIs"].."|cFFFFFF00%s|r. "..L["AutoRepairRequires"].." %s. "..L["RepairConfirm"], _G["FACTION_STANDING_LABEL" .. data], _G["FACTION_STANDING_LABEL" .. profileDB.repairThreshold])
+			self.text:SetFormattedText(L["dialog/YourRepIs"].."|cFFFFFF00%s|r. "..L["dialog/AutoRepairRequires"].." %s. "..L["dialog/RepairConfirm"], _G["FACTION_STANDING_LABEL" .. data], _G["FACTION_STANDING_LABEL" .. profileDB.repairThreshold])
 		end,
 		hide_on_escape = true,
 		show_while_dead = false,
@@ -735,7 +736,7 @@ function Durrr:CreateDialogs()
 			},
 		},
 		on_show = function(self, data)
-			self.text:SetFormattedText(L["CityWarn"], data)
+			self.text:SetFormattedText(L["dialog/CityWarn"], data)
 		end,
 		hide_on_escape = true,
 		show_while_dead = false,
