@@ -16,18 +16,18 @@ local DLDB = LibStub("LibDataBroker-1.1")
 
 -- Defaults --
 local slots = {
-  {0, 0, 0, "equipment/Head", L["Head"], 0},
-  {0, 0, 0, "equipment/Neck", L["Neck"], 0},
-	{0, 0, 0, "Shoulder", L["Shoulder"], 0},
-	{0, 0, 0, "equipment/Back", L["Back"], 0},
-	{0, 0, 0, "equipment/Chest", L["Chest"], 0},
-	{0, 0, 0, "equipment/Wrist", L["Wrist"], 0},
-	{0, 0, 0, "equipment/Hands", L["Hands"], 0},
-	{0, 0, 0, "equipment/Waist", L["Waist"], 0},
-	{0, 0, 0, "equipment/Legs", L["Legs"], 0},
-	{0, 0, 0, "equipment/Feet", L["Feet"], 0},
-	{0, 0, 0, "equipment/MainHand", L["MainHand"], 0},
-	{0, 0, 0, "equipment/SecondaryHand", L["SecondaryHand"], 0},
+  {0, 0, 0, "Head", L["equipment/Head"], 0},
+  {0, 0, 0, "Neck", L["equipment/Neck"], 0},
+	{0, 0, 0, "Shoulder", L["equipment/Shoulder"], 0},
+	{0, 0, 0, "Back", L["equipment/Back"], 0},
+	{0, 0, 0, "Chest", L["equipment/Chest"], 0},
+	{0, 0, 0, "Wrist", L["equipment/Wrist"], 0},
+	{0, 0, 0, "Hands", L["equipment/Hands"], 0},
+	{0, 0, 0, "Waist", L["equipment/Waist"], 0},
+	{0, 0, 0, "Legs", L["equipment/Legs"], 0},
+	{0, 0, 0, "Feet", L["equipment/Feet"], 0},
+	{0, 0, 0, "MainHand", L["equipment/MainHand"], 0},
+	{0, 0, 0, "SecondaryHand", L["equipment/SecondaryHand"], 0},
 }
 
 local repairIconCoords = {0.28125, 0.5625, 0, 0.5625}
