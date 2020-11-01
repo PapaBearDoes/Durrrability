@@ -1,20 +1,20 @@
---                                  \\\\///
---                                 /       \
---                               (| (.)(.) |)
--- .---------------------------.OOOo--()--oOOO.---------------------------.
--- |                                                                      |
--- |  @file-author@'s Durrrability Addon for World of Warcraft
--- ########################################################################
--- ## Let's init this file shall we?
+--[[
+                                      \\\\///
+                                     /       \
+                                   (| (.)(.) |)
+     .---------------------------.OOOo--()--oOOO.---------------------------.
+     |                                                                      |
+     |  @file-author@'s Durrrability Addon for World of Warcraft
+     ######################################################################## ]]
+--   ## Let's init this file shall we?
 -- Imports
 local _G = _G
 --Durrr = select(2, ...)
 local me, ns = ...
 -- End Imports
 
--- ########################################################################
--- ########################################################################
--- ## Do All The Things!!!
+--[[ ######################################################################## ]]
+--   ## Do All The Things!!!
 local addon = LibStub("LibInit"):NewAddon(ns, "Durrrability", true, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
 local L = addon:GetLocale()
 
@@ -156,6 +156,9 @@ function addon:UpdateProfileDelayed()
   addon:UpdateOptions()
 end
 
+function addon:OnProfileReset()
+end
+
 -- Events --
 function addon:ScheduleUpdate()
   if (addon.db.profile.critWarntoRepair) then
@@ -210,12 +213,13 @@ function addon:OnCritUpdate()
 end
 -- End Events --
 
--- ########################################################################
--- |  Last Editted By: @file-author@ - @file-date-iso@
--- |  @file-revision@
--- |                                                                      |
--- '-------------------------.oooO----------------------------------------|
---                           (    )     Oooo.
---                            \  (     (    )
---                             \__)     )  /
---                                     (__/
+--[[
+     ########################################################################
+     |  Last Editted By: @file-author@ - @file-date-iso@
+     |  @file-revision@
+     |                                                                      |
+     '-------------------------.oooO----------------------------------------|
+                              (    )     Oooo.
+                              \  (     (    )
+                               \__)     )  /
+                                       (__/                                   ]]

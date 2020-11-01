@@ -1,11 +1,12 @@
---                                  \\\\///
---                                 /       \
---                               (| (.)(.) |)
--- .---------------------------.OOOo--()--oOOO.---------------------------.
--- |                                                                      |
--- |  @file-author@'s Durrrability Addon for World of Warcraft
--- ########################################################################
--- ## Let's init this file shall we?
+--[[
+                                      \\\\///
+                                     /       \
+                                   (| (.)(.) |)
+     .---------------------------.OOOo--()--oOOO.---------------------------.
+     |                                                                      |
+     |  @file-author@'s Durrrability Addon for World of Warcraft
+     ######################################################################## ]]
+--   ## Let's init this file shall we?
 -- Imports
 local _G = _G
 --Durrr = select(2, ...)
@@ -13,10 +14,8 @@ local me, ns = ...
 local addon = ns
 local L = addon:GetLocale()
 -- End Imports
-
--- ########################################################################
--- ########################################################################
--- ## Do All The Things!!!
+--[[ ######################################################################## ]]
+--   ## Do All The Things!!!
 DurrrOptions = {
   type = "group",
   name = "Durrrability",
@@ -276,12 +275,13 @@ function addon:UpdateOptions()
   LibStub("AceConfigRegistry-3.0"):NotifyChange("Durrrability")
 end
 
--- ########################################################################
--- |  Last Editted By: @file-author@ - @file-date-iso@
--- |  @file-revision@
--- |                                                                      |
--- '-------------------------.oooO----------------------------------------|
---                           (    )     Oooo.
---                            \  (     (    )
---                             \__)     )  /
---                                     (__/
+--[[
+     ########################################################################
+     |  Last Editted By: @file-author@ - @file-date-iso@
+     |  @file-revision@
+     |                                                                      |
+     '-------------------------.oooO----------------------------------------|
+                              (    )     Oooo.
+                              \  (     (    )
+                               \__)     )  /
+                                       (__/                                   ]]

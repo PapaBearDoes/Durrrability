@@ -1,8 +1,21 @@
+--[[
+                                      \\\\///
+                                     /       \
+                                   (| (.)(.) |)
+     .---------------------------.OOOo--()--oOOO.---------------------------.
+     |                                                                      |
+     |  @file-author@'s Durrrability Addon for World of Warcraft
+     ######################################################################## ]]
+--   ## Let's init this file shall we?
+-- Imports
 local me, ns = ...
 local lang = GetLocale()
 local l = LibStub("AceLocale-3.0")
 local L = l:NewLocale(me, "ptBR")
 if not L then return end
+-- End Imports
+--[[ ######################################################################## ]]
+--   ## Do All The Things!!!
 
 --@localization(locale="ptBR", format="lua_additive_table")@
 
@@ -82,5 +95,13 @@ L["Waist"] = ""
 L["Wrist"] = ""
 --@end-do-not-package@
 
--- Last Editted By: @file-author@ - @file-date-iso@
--- @file-revision@
+--[[
+     ########################################################################
+     |  Last Editted By: @file-author@ - @file-date-iso@
+     |  @file-revision@
+     |                                                                      |
+     '-------------------------.oooO----------------------------------------|
+                              (    )     Oooo.
+                              \  (     (    )
+                               \__)     )  /
+                                       (__/                                   ]]

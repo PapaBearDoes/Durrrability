@@ -1,3 +1,11 @@
+<!--
+                                 \\\\///
+                                /       \
+                              (| (.)(.) |)
+.===========================.OOOo==()==oOOO.===========================.
+|                                                                      |
+|  PapaBearDoes' Durrrability Addon for World of Warcraft              |
+######################################################################## -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
   <Script file="enUS.lua"/>
@@ -12,6 +20,12 @@
   <Script file="zhCN.lua"/>
   <Script file="zhTW.lua"/>
 </Ui>
-
-<!-- Last Editted By: @file-author@ - @file-date-iso@ -->
-<!-- @file-revision@ -->
+<!--
+########################################################################
+|  Last Editted By: @file-author@ - @file-date-iso@
+|  @file-revision@
+'=======================.oooO==========================================|
+                       (    )     Oooo.
+                        \  (     (    )
+                         \__)     )  /
+                                 (__/                                    -->
