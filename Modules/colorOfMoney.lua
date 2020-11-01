@@ -40,6 +40,7 @@ function addon:Coins2Str(coins)
 	return string
 end
 -- End Show coins with icons --
+
 -- Data Updates --
 function addon:GetRepairData()
 	local totalCost = 0
@@ -123,6 +124,7 @@ function addon:VendorFix(value)
 	return value
 end
 -- End Faction discount --
+
 -- Do Colors --
 function addon:GetThresholdPercentage(quality, ...)
   local n = select('#', ...)
