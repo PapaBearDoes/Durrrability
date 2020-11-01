@@ -17,185 +17,185 @@ local L = addon:GetLocale()
 --[[ ######################################################################## ]]
 --   ## Do All The Things!!!
 -- Show coins with icons --
-function addon:Coins2Str(coins)
-  local string = ""
-  if not coins or coins < 0 then
-    return string
+function addon:Coins2Str(Durrr_coins)
+  local Durrr_string = ""
+  if not Durrr_coins or Durrr_coins < 0 then
+    return Durrr_string
   end
 
-  if coins >= 10000 then
-		local gold = math.floor(coins / 10000)
-		coins = coins - gold * 10000
-		string = string .. addon:Colorize(gold, "gold") .. " |TInterface\\MoneyFrame\\UI-GoldIcon.blp:0:0:0:0|t"
+  if Durrr_coins >= 10000 then
+		local Durrr_gold = math.floor(Durrr_coins / 10000)
+		Durrr_coins = Durrr_coins - Durrr_gold * 10000
+		Durrr_string = Durrr_string .. addon:Colorize(Durrr_gold, "gold") .. " |TInterface\\MoneyFrame\\UI-GoldIcon.blp:0:0:0:0|t"
 	end
-	if coins >= 100 then
-		local silver = math.floor(coins / 100)
-		coins = coins - silver * 100
-		string = string .. addon:Colorize(silver, "silver") .. " |TInterface\\MoneyFrame\\UI-SilverIcon.blp:0:0:0:0|t"
+	if Durrr_coins >= 100 then
+		local Durrr_silver = math.floor(Durrr_coins / 100)
+		Durrr_coins = Durrr_coins - Durrr_silver * 100
+		Durrr_string = Durrr_string .. addon:Colorize(Durrr_silver, "silver") .. " |TInterface\\MoneyFrame\\UI-SilverIcon.blp:0:0:0:0|t"
 	end
-	if coins >= 0 then
-		string = string .. addon:Colorize(coins, "copper") .. " |TInterface\\MoneyFrame\\UI-CopperIcon.blp:0:0:0:0|t"
+	if Durrr_coins >= 0 then
+		Durrr_string = Durrr_string .. addon:Colorize(Durrr_coins, "copper") .. " |TInterface\\MoneyFrame\\UI-CopperIcon.blp:0:0:0:0|t"
 	end
 
-	return string
+	return Durrr_string
 end
--- End Show coins with icons --
+-- End Show Durrr_coins with icons --
 
 -- Data Updates --
 function addon:GetRepairData()
-	local totalCost = 0
-	local percent = 0
-	local percentMin = 1
+	local Durrr_totalCost = 0
+	local Durrr_percent = 0
+	local Durrr_percentMin = 1
 
-	local total = 0
-	local current = 0
-	local index, item
+	local Durrr_total = 0
+	local Durrr_current = 0
+	local Durrr_index, Durrr_item
 
-	for index, item in pairs(Durrr_slots) do
-		local val, max = GetInventoryItemDurability(Durrr_slots[index][Durrr_ID])
-		local hasItem, hasCooldown, repairCost = DurrrFrame:SetInventoryItem("player", Durrr_slots[index][Durrr_ID])
-		if max then
+	for Durrr_index, Durrr_item in pairs(Durrr_slots) do
+		local Durrr_val, Durrr_max = GetInventoryItemDurability(Durrr_slots[Durrr_index][Durrr_ID])
+		local hasItem, hasCooldown, Durrr_repairCost = Durrr_frame:SetInventoryItem("player", Durrr_slots[Durrr_index][Durrr_ID])
+		if Durrr_max then
 			if Durrr_vendorState == true then
-				repairCost = addon:VendorFix(repairCost)
+				Durrr_repairCost = addon:VendorFix(repairCost)
 			end
-			total = total + max
-			current = current + val
-			totalCost = totalCost + repairCost
-			Durrr_slots[index][Durrr_VAL] = val
-			Durrr_slots[index][Durrr_MAX] = max
-			Durrr_slots[index][Durrr_COST] = repairCost
-			percent = val / max
-			if percent < percentMin then percentMin = percent end
+			Durrr_total = Durrr_total + Durrr_max
+			Durrr_current = Durrr_current + Durrr_val
+			Durrr_totalCost = Durrr_totalCost + Durrr_repairCost
+			Durrr_slots[Durrr_index][Durrr_VAL] = Durrr_val
+			Durrr_slots[Durrr_index][Durrr_MAX] = Durrr_max
+			Durrr_slots[Durrr_index][Durrr_COST] = Durrr_repairCost
+			Durrr_percent = Durrr_val / Durrr_max
+			if Durrr_percent < Durrr_percentMin then Durrr_percentMin = Durrr_percent end
 		else
-			Durrr_slots[index][Durrr_MAX] = 0
+			Durrr_slots[Durrr_index][Durrr_MAX] = 0
 		end
 	end
 
-	local bagTotal, bagCurrent = 0, 0
+	local Durrr_bagTotal, Durrr_bagCurrent = 0, 0
 	if addon.db.profile.showBags then
-		bagCost = 0;
-		for bag = 0, 4 do
-			local numSlots = GetContainerNumSlots(bag)
-			for slot = 1, numSlots do
-				local val, max = GetContainerItemDurability(bag, slot)
-				local hasCooldown, repairCost = DurrrFrame:SetBagItem(bag, slot)
-				if max then
+		Durrr_bagCost = 0;
+		for Durrr_bag = 0, 4 do
+			local Durrr_numSlots = GetContainerNumSlots(Durrr_bag)
+			for Durrr_slot = 1, Durrr_numSlots do
+				local Durrr_val, Durrr_max = GetContainerItemDurability(Durrr_bag, Durrr_slot)
+				local hasCooldown, Durrr_repairCost = Durrr_frame:SetBagItem(Durrr_bag, Durrr_slot)
+				if Durrr_max then
 					if Durrr_vendorState == true then
-						repairCost = addon:VendorFix(repairCost)
+						Durrr_repairCost = addon:VendorFix(Durrr_repairCost)
 					end
-					bagTotal = bagTotal + max
-					bagCurrent = bagCurrent + val
-					bagCost = bagCost + repairCost
-					percent = val / max
-					if percent < percentMin then percentMin = percent end
+					Durrr_bagTotal = Durrr_bagTotal + Durrr_max
+					Durrr_bagCurrent = Durrr_bagCurrent + Durrr_val
+					Durrr_bagCost = Durrr_bagCost + Durrr_repairCost
+					Durrr_percent = Durrr_val / Durrr_max
+					if Durrr_percent < Durrr_percentMin then Durrr_percentMin = Durrr_percent end
 				end
 			end
 		end
-		if bagTotal > 0 then
-			bagPercent = bagCurrent / bagTotal
+		if Durrr_bagTotal > 0 then
+			Durrr_bagPercent = Durrr_bagCurrent / Durrr_bagTotal
 		else
-			bagPercent = 1
+			Durrr_bagPercent = 1
 		end
-		totalCost = totalCost + bagCost
+		Durrr_totalCost = Durrr_totalCost + Durrr_bagCost
 	end
 
-	current = current + bagCurrent
-	total = total + bagTotal
-	if total then
-		percent = current/total
+	Durrr_current = Durrr_current + Durrr_bagCurrent
+	Durrr_total = Durrr_total + Durrr_bagTotal
+	if Durrr_total then
+		Durrr_percent = Durrr_current/Durrr_total
 	end
 
-	return totalCost, percent, percentMin
+	return Durrr_totalCost, Durrr_percent, Durrr_percentMin
 end
 -- End Data Updates --
 
 -- Faction discount --
-function addon:VendorFix(value)
-	local standing = UnitReaction("npc", "player")
-	if standing == 5 then
-		value = value * 100 / 95
-	elseif standing == 6 then
-		value = value * 10 / 9
-	elseif standing == 7 then
-		value = value * 100 / 85
-	elseif standing == 8 then
-		value = value * 10 / 8
+function addon:VendorFix(Durrr_value)
+	local Durrr_standing = UnitReaction("npc", "player")
+	if Durrr_standing == 5 then
+		Durrr_value = Durrr_value * 100 / 95
+	elseif Durrr_standing == 6 then
+		Durrr_value = Durrr_value * 10 / 9
+	elseif Durrr_standing == 7 then
+		Durrr_value = Durrr_value * 100 / 85
+	elseif Durrr_standing == 8 then
+		Durrr_value = Durrr_value * 10 / 8
 	end
-	return value
+	return Durrr_value
 end
 -- End Faction discount --
 
 -- Do Colors --
-function addon:GetThresholdPercentage(quality, ...)
+function addon:GetThresholdPercentage(Durrr_quality, ...)
   local n = select('#', ...)
   if n <= 1 then
-    return addon:GetThresholdPercentage(quality, 0, ... or 1)
+    return addon:GetThresholdPercentage(Durrr_quality, 0, ... or 1)
   end
 
-  local worst = ...
-  local best = select(n, ...)
+  local Durrr_worst = ...
+  local Durrr_best = select(n, ...)
 
-  if worst == best and quality == worst then
+  if Durrr_worst == Durrr_best and Durrr_quality == Durrr_worst then
     return 0.5
   end
 
-  if worst <= best then
-    if quality <= worst then
+  if Durrr_worst <= Durrr_best then
+    if Durrr_quality <= Durrr_worst then
       return 0
-    elseif quality >= best then
+    elseif Durrr_quality >= Durrr_best then
       return 1
     end
-    local last = worst
+    local Durrr_last = Durrr_worst
     for i = 2, n - 1 do
-      local value = select(i, ...)
-      if quality <= value then
-        return ((i - 2) + (quality - last) / (value - last)) / (n - 1)
+      local Durrr_value = select(i, ...)
+      if Durrr_quality <= Durrr_value then
+        return ((i - 2) + (Durrr_quality - Durrr_last) / (Durrr_value - Durrr_last)) / (n - 1)
       end
-      last = value
+      Durrr_last = Durrr_value
     end
 
-    local value = select(n, ...)
-    return ((n - 2) + (quality - last) / (value - last)) / (n - 1)
+    local Durrr_value = select(n, ...)
+    return ((n - 2) + (Durrr_quality - Durrr_last) / (Durrr_value - Durrr_last)) / (n - 1)
   else
-    if quality >= worst then
+    if Durrr_quality >= Durrr_worst then
       return 0
-    elseif quality <= best then
+    elseif Durrr_quality <= Durrr_best then
       return 1
     end
-    local last = worst
+    local Durrr_last = Durrr_worst
     for i = 2, n - 1 do
-      local value = select(i, ...)
-      if quality >= value then
-        return ((i - 2) + (quality - last) / (value - last)) / (n - 1)
+      local Durrr_value = select(i, ...)
+      if Durrr_quality >= Durrr_value then
+        return ((i - 2) + (Durrr_quality - Durrr_last) / (Durrr_value - Durrr_last)) / (n - 1)
       end
-      last = value
+      Durrr_last = Durrr_value
     end
 
-    local value = select(n, ...)
-    return ((n - 2) + (quality - last) / (value - last)) / (n - 1)
+    local Durrr_value = select(n, ...)
+    return ((n - 2) + (Durrr_quality - Durrr_last) / (Durrr_value - Durrr_last)) / (n - 1)
   end
 end
 
-function addon:GetThresholdColor(quality, ...)
-  if quality ~= quality then
+function addon:GetThresholdColor(Durrr_quality, ...)
+  if Durrr_quality ~= Durrr_quality then
     return 1, 1, 1
   end
 
-  local percent = addon:GetThresholdPercentage(quality, ...)
+  local Durrr_percent = addon:GetThresholdPercentage(Durrr_quality, ...)
 
-  if percent <= 0 then
+  if Durrr_percent <= 0 then
     return 1, 0, 0
-  elseif percent <= 0.5 then
-    return 1, percent * 2, 0
-  elseif percent >= 1 then
+  elseif Durrr_percent <= 0.5 then
+    return 1, Durrr_percent * 2, 0
+  elseif Durrr_percent >= 1 then
     return 0, 1, 0
   else
-    return 2 - percent * 2, 1, 0
+    return 2 - Durrr_percent * 2, 1, 0
   end
 end
 
-function addon:GetThresholdHexColor(quality, ...)
-	local r, g, b = addon:GetThresholdColor(quality, ...)
+function addon:GetThresholdHexColor(Durrr_quality, ...)
+	local r, g, b = addon:GetThresholdColor(Durrr_quality, ...)
 	return string.format("%02x%02x%02x", r * 255, g * 255, b * 255)
 end
 -- End Colors --

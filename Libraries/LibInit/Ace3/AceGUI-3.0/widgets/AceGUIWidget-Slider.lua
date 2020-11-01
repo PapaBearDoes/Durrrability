@@ -23,7 +23,7 @@ Support functions
 -------------------------------------------------------------------------------]]
 local function UpdateText(self)
 	local value = self.value or 0
-	if self.ispercent then
+	if self.isDurrr_percent then
 		self.editbox:SetText(("%s%%"):format(floor(value * 1000 + 0.5) / 10))
 	else
 		self.editbox:SetText(floor(value * 100 + 0.5) / 100)
@@ -32,7 +32,7 @@ end
 
 local function UpdateLabels(self)
 	local min, max = (self.min or 0), (self.max or 100)
-	if self.ispercent then
+	if self.isDurrr_percent then
 		self.lowtext:SetFormattedText("%s%%", (min * 100))
 		self.hightext:SetFormattedText("%s%%", (max * 100))
 	else
@@ -99,7 +99,7 @@ end
 local function EditBox_OnEnterPressed(frame)
 	local self = frame.obj
 	local value = frame:GetText()
-	if self.ispercent then
+	if self.isDurrr_percent then
 		value = value:gsub('%%', '')
 		value = tonumber(value) / 100
 	else
@@ -191,7 +191,7 @@ local methods = {
 	end,
 
 	["SetIsPercent"] = function(self, value)
-		self.ispercent = value
+		self.isDurrr_percent = value
 		UpdateLabels(self)
 		UpdateText(self)
 	end

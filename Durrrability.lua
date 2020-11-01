@@ -9,17 +9,15 @@
 --   ## Let's init this file shall we?
 -- Imports
 local _G = _G
---Durrr = select(2, ...)
 local me, ns = ...
+local addon = LibStub("LibInit"):NewAddon(ns, "Durrrability", true, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
+local L = addon:GetLocale()
 -- End Imports
 
 --[[ ######################################################################## ]]
 --   ## Do All The Things!!!
-local addon = LibStub("LibInit"):NewAddon(ns, "Durrrability", true, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
-local L = addon:GetLocale()
-
-enableTasks = {}
-
+-- Define Globals
+Durrr_enableTasks = {}
 Durrr_ID = 6
 Durrr_SLOT = 4
 Durrr_NAME = 5
@@ -33,6 +31,8 @@ Durrr_bagsPercent = 0
 Durrr_combatState = false
 Durrr_vendorState = false
 Durrr_updateReq = true
+Durrr_frame = CreateFrame("GameTooltip")
+Durrr_frame:SetOwner(WorldFrame, "ANCHOR_NONE")
 Durrr_slots = {
   {0, 0, 0, "Head", L["Head"], 0},
   {0, 0, 0, "Neck", L["Neck"], 0},
@@ -47,11 +47,7 @@ Durrr_slots = {
   {0, 0, 0, "MainHand", L["MainHand"], 0},
   {0, 0, 0, "SecondaryHand", L["SecondaryHand"], 0},
 }
-
-DurrrFrame = CreateFrame("GameTooltip")
-DurrrFrame:SetOwner(WorldFrame, "ANCHOR_NONE")
-
-local defaults = {
+local Durrr_dbDefaults = {
   profile = {
     showDetails = true,
     showBags = true,
@@ -73,19 +69,19 @@ local defaults = {
 }
 
 function addon:OnInitialize()
-  addon.db = LibStub("AceDB-3.0"):New("DurrrabilityDB", defaults, "Default")
+  addon.db = LibStub("AceDB-3.0"):New("DurrrabilityDB", Durrr_dbDefaults, "Default")
   if not addon.db then
-    local errorDB = L["ErrorDB"]
-    print(errorDB)
+    local Durrr_errorDB = L["ErrorDB"]
+    print(Durrr_errorDB)
   end
 
   addon.db.RegisterCallback(self, "OnProfileChanged", "UpdateProfile")
   addon.db.RegisterCallback(self, "OnProfileCopied", "UpdateProfile")
   addon.db.RegisterCallback(self, "OnProfileReset", "UpdateProfile")
 
-  local index, item
-  for index, item in pairs(Durrr_slots) do
-    Durrr_slots[index][Durrr_ID] = GetInventorySlotInfo(item[Durrr_SLOT] .. "Slot")
+  local Durrr_index, Durrr_item
+  for Durrr_index, Durrr_item in pairs(Durrr_slots) do
+    Durrr_slots[Durrr_index][Durrr_ID] = GetInventorySlotInfo(Durrr_item[Durrr_SLOT] .. "Slot")
   end
 
   addon:CreateDialogs()
@@ -105,7 +101,8 @@ function addon:OnInitialize()
     addon:RegisterEvent("PLAYER_UPDATE_RESTING", "OnRestUpdate")
     addon:ScheduleTimer("OnRestUpdate", 5)
   end
--- Figure out this timer thing!!!!
+
+  -- Figure out this timer thing!!!!
   if (addon.db.profile.critWarntoRepair) then
     addon:RegisterEvent("ZONE_CHANGED", "OnCritUpdate")
     addon:RegisterEvent("ZONE_CHANGED_INDOORS", "OnCritUpdate")
@@ -120,10 +117,10 @@ function addon:OnInitialize()
 end
 
 function addon:OnEnable()
-  for i, v in ipairs(enableTasks) do
+  for i, v in ipairs(Durrr_enableTasks) do
     v(self)
   end
-  EnableTasks = nil
+  Durrr_enableTasks = nil
 
   addon:ScheduleRepeatingTimer("MainUpdate", 1)
 end
@@ -158,60 +155,6 @@ end
 
 function addon:OnProfileReset()
 end
-
--- Events --
-function addon:ScheduleUpdate()
-  if (addon.db.profile.critWarntoRepair) then
-    addon:CritWarnToRepair()
-  end
-  Durrr_updateReq = true
-end
-
-function addon:OnVendorShow()
-  Durrr_vendorState = true
-  if not CanMerchantRepair() then
-    return
-  end
-  addon:RepairAttempt()
-end
-
-function addon:OnVendorClose()
-  Durrr_vendorState = false
-  if DurrrDialog:ActiveDialog("DurrrConfirm") then
-    DurrrDialog:Dismiss("DurrrConfirm")
-  end
-  if DurrrDialog:ActiveDialog("DurrrDialog") then
-    DurrrDialog:Dismiss("DurrrDialog")
-  end
-end
-
-function addon:OnRestEnable()
-  Durrr_combatState = false
-  if (addon.db.profile.critWarntoRepair) then
-    addon:CritWarnToRepair()
-  end
-  addon:ScheduleUpdate()
-end
-
-function addon:OnRestDisable()
-  Durrr_combatState = true
-end
-
-function addon:OnRestUpdate()
-  if IsResting() then
-    addon:WarnToRepair()
-  elseif (addon.db.profile.critWarntoRepair) then
-    addon:CritWarnToRepair()
-  end
-end
-
-function addon:OnCritUpdate()
-  if (addon.db.profile.critWarntoRepair) then
-    addon:CritWarnToRepair()
-  end
-  addon:ScheduleUpdate()
-end
--- End Events --
 
 --[[
      ########################################################################

@@ -16,9 +16,8 @@ local L = addon:GetLocale()
 -- End Imports
 --[[ ######################################################################## ]]
 --   ## Do All The Things!!!
-local Durrr_Dialog = LibStub("LibDialog-1.0")
-
 -- Dialog Popups --
+Durrr_Dialog = LibStub("LibDialog-1.0")
 function addon:CreateDialogs()
 	Durrr_Dialog:Register("Durrr_Dialog", {
     text = "",

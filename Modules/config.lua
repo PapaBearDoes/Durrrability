@@ -252,16 +252,16 @@ DurrrOptions = {
   },
 }
 
-tinsert(enableTasks, function(self)
+tinsert(Durrr_enableTasks, function(self)
   DurrrOptions.args.profile = LibStub("AceDBOptions-3.0"):GetOptionsTable(addon.db)
   DurrrOptions.args.profile.order = -2
 
   LibStub("AceConfig-3.0"):RegisterOptionsTable("Durrrability", DurrrOptions, nil)
 
-  local DurrrDialog = LibStub("AceConfigDialog-3.0")
+  --local Durrr_Dialog = LibStub("AceConfigDialog-3.0")
   optionFrames = {}
-  optionFrames.general = DurrrDialog:AddToBlizOptions("Durrrability", nil, nil, "general")
-  optionFrames.profile = DurrrDialog:AddToBlizOptions("Durrrability", L["Profiles"], "Durrrability", "profile")
+  optionFrames.general = Durrr_Dialog:AddToBlizOptions("Durrrability", nil, nil, "general")
+  optionFrames.profile = Durrr_Dialog:AddToBlizOptions("Durrrability", L["Profiles"], "Durrrability", "profile")
 end)
 
 -- Config window --

@@ -16,8 +16,8 @@ local L = addon:GetLocale()
 -- End Imports
 --[[ ######################################################################## ]]
 --   ## Do All The Things!!!
-local repairIconCoords = {0.28125, 0.5625, 0, 0.5625}
-local guildRepairIconCoords = {0.5625, 0.84375, 0, 0.5625}
+local Durrr_repairIconCoords = {0.28125, 0.5625, 0, 0.5625}
+local Durrr_repairIconCoords = {0.5625, 0.84375, 0, 0.5625}
 
 -- Do LDB stuff --
 local DLDB = LibStub("LibDataBroker-1.1")
@@ -26,7 +26,7 @@ local DurrrLDB = DLDB:NewDataObject("Durrrability", {
   label = L["Durability"],
   text = "",
   icon = "Interface\\MerchantFrame\\UI-Merchant-RepairIcons",
-  iconCoords = repairIconCoords,
+  iconCoords = Durrr_repairIconCoords,
   OnClick = function(frame, click)
     if click == "RightButton" then
       addon:ShowConfig()
@@ -38,19 +38,19 @@ local DurrrLDB = DLDB:NewDataObject("Durrrability", {
 
     tooltip:AddLine(L["AddonName"] .. " " .. GetAddOnMetadata("Durrrability", "Version"))
 
-    local totalCost, percent, percentMin  = addon:GetRepairData()
-    if totalCost <= 0 then
+    local Durrr_totalCost, Durrr_percent, Durrr_percentMin  = addon:GetRepairData()
+    if Durrr_totalCost <= 0 then
       tooltip:AddLine(" ")
       tooltip:AddLine(L["NoBroke"], 0, 1, 0)
     else
       if addon.db.profile.showDetails then
         tooltip:AddLine(" ")
-        for index, item in pairs(Durrr_slots) do
-          if item[Durrr_MAX] > 0 and item[Durrr_VAL] < item[Durrr_MAX] then
-            local p = item[Durrr_VAL] / item[Durrr_MAX]
+        for Durrr_index, Durrr_item in pairs(Durrr_slots) do
+          if Durrr_item[Durrr_MAX] > 0 and Durrr_item[Durrr_VAL] < Durrr_item[Durrr_MAX] then
+            local p = Durrr_item[Durrr_VAL] / Durrr_item[Durrr_MAX]
             local r, g, b = addon:GetThresholdColor(p)
 
-            tooltip:AddDoubleLine(string.format("%d%%  " .. addon:Colorize("%s", "yellow"), p * 100, item[Durrr_NAME]), addon:Coins2Str(math.floor(item[Durrr_COST])), r, g, b, 1, 1, 1)
+            tooltip:AddDoubleLine(string.format("%d%%  " .. addon:Colorize("%s", "yellow"), p * 100, Durrr_item[Durrr_NAME]), addon:Coins2Str(math.floor(Durrr_item[Durrr_COST])), r, g, b, 1, 1, 1)
           end
         end
         if addon.db.profile.showBags and (bagCost > 0) then
@@ -62,18 +62,18 @@ local DurrrLDB = DLDB:NewDataObject("Durrrability", {
 
       tooltip:AddLine(" ")
 
-      local r, g, b = addon:GetThresholdColor(percent)
-			tooltip:AddDoubleLine(addon:Colorize(L["Average"] .. " :", "white"), string.format("%d%%", percent * 100), 1, 1, 1, r, g, b)
-      local r, g, b = addon:GetThresholdColor(percentMin)
-      tooltip:AddDoubleLine(addon:Colorize(L["Lowest"] .. " :", "white"), string.format("%d%%", percentMin * 100), 1, 1, 1, r, g, b)
+      local r, g, b = addon:GetThresholdColor(Durrr_percent)
+			tooltip:AddDoubleLine(addon:Colorize(L["Average"] .. " :", "white"), string.format("%d%%", Durrr_percent * 100), 1, 1, 1, r, g, b)
+      local r, g, b = addon:GetThresholdColor(Durrr_percentMin)
+      tooltip:AddDoubleLine(addon:Colorize(L["Lowest"] .. " :", "white"), string.format("%d%%", Durrr_percentMin * 100), 1, 1, 1, r, g, b)
 
       tooltip:AddLine(" ")
 			tooltip:AddLine(addon:Colorize(L["RepCost"], "white"))
-			tooltip:AddDoubleLine(addon:Colorize(_G["FACTION_STANDING_LABEL4"], "yellow"), addon:Coins2Str(math.floor(totalCost)))
-			tooltip:AddDoubleLine(addon:Colorize(_G["FACTION_STANDING_LABEL5"], "aaff00"), addon:Coins2Str(math.floor(totalCost*0.95)))
-			tooltip:AddDoubleLine(addon:Colorize(_G["FACTION_STANDING_LABEL6"], "55ff00"), addon:Coins2Str(math.floor(totalCost*0.90)))
-			tooltip:AddDoubleLine(addon:Colorize(_G["FACTION_STANDING_LABEL7"], "00ff00"), addon:Coins2Str(math.floor(totalCost*0.85)))
-			tooltip:AddDoubleLine(addon:Colorize(_G["FACTION_STANDING_LABEL8"], "00ffaa"), addon:Coins2Str(math.floor(totalCost*0.80)))
+			tooltip:AddDoubleLine(addon:Colorize(_G["FACTION_STANDING_LABEL4"], "yellow"), addon:Coins2Str(math.floor(Durrr_totalCost)))
+			tooltip:AddDoubleLine(addon:Colorize(_G["FACTION_STANDING_LABEL5"], "aaff00"), addon:Coins2Str(math.floor(Durrr_totalCost*0.95)))
+			tooltip:AddDoubleLine(addon:Colorize(_G["FACTION_STANDING_LABEL6"], "55ff00"), addon:Coins2Str(math.floor(Durrr_totalCost*0.90)))
+			tooltip:AddDoubleLine(addon:Colorize(_G["FACTION_STANDING_LABEL7"], "00ff00"), addon:Coins2Str(math.floor(Durrr_totalCost*0.85)))
+			tooltip:AddDoubleLine(addon:Colorize(_G["FACTION_STANDING_LABEL8"], "00ffaa"), addon:Coins2Str(math.floor(Durrr_totalCost*0.80)))
     end
 
     tooltip:AddLine(" ")
@@ -90,19 +90,19 @@ function addon:MainUpdate()
       return
     end
 
-    local totalCost, percent, percentMin  = addon:GetRepairData()
+    local Durrr_totalCost, Durrr_percent, Durrr_percentMin  = addon:GetRepairData()
 
-    if percentMin then
-      DurrrLDB.text = (string.format(addon:Colorize("%d%%", "%s"), percentMin * 100, addon:GetThresholdHexColor(percentMin)))
+    if Durrr_percentMin then
+      DurrrLDB.text = (string.format(addon:Colorize("%d%%", "%s"), Durrr_percentMin * 100, addon:GetThresholdHexColor(Durrr_percentMin)))
     end
   end
 end
 
 function addon:UpdateIcon()
 	if addon.db.profile.repairFromGuild and (addon.db.profile.repairType == 1) then
-		DurrrLDB.iconCoords = guildRepairIconCoords
+		DurrrLDB.iconCoords = Durrr_repairIconCoords
 	else
-		DurrrLDB.iconCoords = repairIconCoords
+		DurrrLDB.iconCoords = Durrr_repairIconCoords
 	end
 end
 -- End LDB stuff --

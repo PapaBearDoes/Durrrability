@@ -673,9 +673,9 @@ function lib:GetBagSlotCount()
 	return free,total
 end
 
---- Returns unit's health as a normalized percent value
+--- Returns unit's health as a normalized Durrr_percent value
 -- @tparam string unit A standard unit name
--- @treturn number health as percent value
+-- @treturn number health as Durrr_percent value
 function lib:Health(unit)
 		local totale=UnitHealthMax(unit) or 1
 		local corrente=UnitHealth(unit) or 1

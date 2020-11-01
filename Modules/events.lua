@@ -62,11 +62,11 @@ end
 
 function addon:OnVendorClose()
   Durrr_vendorState = false
-  if DurrrDialog:ActiveDialog("DurrrConfirm") then
-    DurrrDialog:Dismiss("DurrrConfirm")
+  if Durrr_Dialog:ActiveDialog("DurrrConfirm") then
+    Durrr_Dialog:Dismiss("DurrrConfirm")
   end
-  if DurrrDialog:ActiveDialog("DurrrDialog") then
-    DurrrDialog:Dismiss("DurrrDialog")
+  if Durrr_Dialog:ActiveDialog("Durrr_Dialog") then
+    Durrr_Dialog:Dismiss("Durrr_Dialog")
   end
 end
 
