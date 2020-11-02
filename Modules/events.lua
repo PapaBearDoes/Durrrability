@@ -72,9 +72,6 @@ end
 
 function addon:OnRestEnable()
   Durrr_combatState = false
-  if (addon.db.profile.critWarntoRepair) then
-    addon:CritWarnToRepair()
-  end
   addon:ScheduleUpdate()
 end
 
@@ -82,19 +79,12 @@ function addon:OnRestDisable()
   Durrr_combatState = true
 end
 
-function addon:OnRestUpdate()
+function addon:OnWarnUpdate()
   if IsResting() then
     addon:WarnToRepair()
   elseif (addon.db.profile.critWarntoRepair) then
     addon:CritWarnToRepair()
   end
-end
-
-function addon:OnCritUpdate()
-  if (addon.db.profile.critWarntoRepair) then
-    addon:CritWarnToRepair()
-  end
-  addon:ScheduleUpdate()
 end
 -- End Events --
 

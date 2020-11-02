@@ -188,7 +188,7 @@ Durrr_options = {
 					set = function(key, value)
 						addon.db.profile.warntoRepair = value
 						if (value) then
-							addon:RegisterEvent("PLAYER_UPDATE_RESTING", "OnRestUpdate")
+							addon:RegisterEvent("PLAYER_UPDATE_RESTING", "OnWarnUpdate")
 						else
 							addon:UnregisterEvent("PLAYER_UPDATE_RESTING")
 						end
@@ -224,9 +224,9 @@ Durrr_options = {
 					set = function(key, value)
 						addon.db.profile.critWarntoRepair = value
 --[[						if (value) then
-              addon:RegisterEvent("ZONE_CHANGED", "OnCritUpdate")
-              addon:RegisterEvent("ZONE_CHANGED_INDOORS", "OnCritUpdate")
-              addon:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnCritUpdate")
+              addon:RegisterEvent("ZONE_CHANGED", "OnWarnUpdate")
+              addon:RegisterEvent("ZONE_CHANGED_INDOORS", "OnWarnUpdate")
+              addon:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnWarnUpdate")
 						else
               addon:RegisterEvent("ZONE_CHANGED")
               addon:RegisterEvent("ZONE_CHANGED_INDOORS")

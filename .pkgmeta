@@ -5,6 +5,17 @@ externals:
   Libraries\LibInit: https://github.com/alarofrunetotem/LibInit.git/LibInit
   Libraries\LibDialog-1.0: https://repos.curseforge.com/wow/libdialog-1-0
 
+ignore:
+  - .git
+  - .gitattributes
+  - .gitignore
+  - template.lua
+  - Modules\core.lua
+
+dependencies:
+  - LibInit
+  - LibDialog-1.0
+
 license-output: LICENSE
 
 tools-used:

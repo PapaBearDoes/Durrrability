@@ -93,21 +93,12 @@ function addon:OnInitialize()
 	addon:RegisterEvent("PLAYER_REGEN_DISABLED", "OnRestDisable")
 	addon:RegisterEvent("MERCHANT_SHOW", "OnVendorShow")
 	addon:RegisterEvent("MERCHANT_CLOSED", "OnVendorClose")
-  addon:RegisterEvent("ZONE_CHANGED", "OnCritUpdate")
-  addon:RegisterEvent("ZONE_CHANGED_INDOORS", "OnCritUpdate")
-  addon:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnCritUpdate")
+  addon:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnWarnUpdate")
 
-  if (addon.db.profile.warntoRepair) then
-    addon:RegisterEvent("PLAYER_UPDATE_RESTING", "OnRestUpdate")
-    addon:ScheduleTimer("OnRestUpdate", 5)
-  end
-
-  -- Figure out this timer thing!!!!
-  if (addon.db.profile.critWarntoRepair) then
-    addon:RegisterEvent("ZONE_CHANGED", "OnCritUpdate")
-    addon:RegisterEvent("ZONE_CHANGED_INDOORS", "OnCritUpdate")
-    addon:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnCritUpdate")
-    addon:ScheduleTimer("OnCritUpdate", 5)
+  if (addon.db.profile.warntoRepair or addon.db.profile.critWarntoRepair) then
+    addon:RegisterEvent("PLAYER_UPDATE_RESTING", "OnWarnUpdate")
+    addon:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnWarnUpdate")
+    addon:ScheduleTimer("OnWarnUpdate", 5)
   end
 
   addon:UpdateIcon()

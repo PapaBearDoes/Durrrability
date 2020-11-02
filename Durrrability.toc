@@ -6,6 +6,10 @@
 #@do-not-package@
 ## Author: PapaBearDoes
 #@end-do-not-package@
+## Version: @project-version@
+#@do-not-package@
+## Version: 1.0.0-beta
+#@end-do-not-package@
 ## Notes: A Simple Durability Plugin for LDB Displays
 ## Notes-deDE: Ein einfaches Haltbarkeits-Plugin für LDB-Displays
 ## Notes-enUS: A Simple Durability Plugin for LDB Displays
@@ -18,32 +22,29 @@
 ## Notes-ruRU: Плагин Simple Durability для дисплеев LDB
 ## Notes-zhCN: 用于LDB显示器的简单耐用性插件
 ## Notes-zhTW: 用於LDB顯示器的簡單耐用性插件
-## Version: @project-version@
-#@do-not-package@
-## Version: 1.0.0-beta
-#@end-do-not-package@
+## Dependencies: LibInit, LibDialog-1.0
 
-# X-Meta
+#X-Meta
 ## X-Category: Data Broker, Miscellaneous
 ## X-License: GPLv3
 ## X-Website: https://github.com/PapaBearDoes/Durrrability
 ## X-Curse-Project-ID: 416370
 
-# Functionality
+#Functionality
 ## SavedVariables: DurrrabilityDB
 
-# Load Libraries
+#Load Libraries
 Libraries\LibInit\Libinit.xml
 Libraries\LibDialog-1.0\lib.xml
 
-# Load Languages
+#Load Languages
 Locales\locales.xml
 
-# Load Main Files
+#Load Main Files
 Durrrability.lua
 
-# Load the rest
+#Load the rest
 Modules/includes.xml
 
-# Last Editted By: @file-author@ - @file-date-iso@
-# @file-revision@
+#Last Editted By: @file-author@ - @file-date-iso@
+#@file-revision@
