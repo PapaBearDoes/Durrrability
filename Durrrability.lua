@@ -10,7 +10,7 @@
 -- Imports
 local _G = _G
 local me, ns = ...
-local addon = LibStub("LibInit"):NewAddon(ns, "Durrrability", true, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
+local addon = LibStub("LibInit"):NewAddon(ns, me, true, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
 local L = addon:GetLocale()
 -- End Imports
 
@@ -18,35 +18,35 @@ local L = addon:GetLocale()
 --   ## Do All The Things!!!
 -- Define Globals
 Durrr_enableTasks = {}
-Durrr_ID = 6
-Durrr_SLOT = 4
-Durrr_NAME = 5
-Durrr_VAL = 1
-Durrr_MAX = 2
-Durrr_COST = 3
-Durrr_repairAllCost = nil
-Durrr_canRepair = nil
-Durrr_bagsCost = 0
-Durrr_bagsPercent = 0
-Durrr_combatState = false
-Durrr_vendorState = false
-Durrr_updateReq = true
+Durrr_globals = {
+  ID = 6,
+  SLOT = 4,
+  NAME = 5,
+  VAL = 1,
+  MAX = 2,
+  COST = 3,
+  repairAllCost = nil,
+  canRepair = false,
+  combatState = false,
+  vendorState = false,
+  updateReq = true,
+  slots = {
+    {0, 0, 0, "Head", L["Head"], 0},
+    {0, 0, 0, "Neck", L["Neck"], 0},
+    {0, 0, 0, "Shoulder", L["Shoulder"], 0},
+    {0, 0, 0, "Back", L["Back"], 0},
+    {0, 0, 0, "Chest", L["Chest"], 0},
+    {0, 0, 0, "Wrist", L["Wrist"], 0},
+    {0, 0, 0, "Hands", L["Hands"], 0},
+    {0, 0, 0, "Waist", L["Waist"], 0},
+    {0, 0, 0, "Legs", L["Legs"], 0},
+    {0, 0, 0, "Feet", L["Feet"], 0},
+    {0, 0, 0, "MainHand", L["MainHand"], 0},
+    {0, 0, 0, "SecondaryHand", L["SecondaryHand"], 0},
+  }
+}
 Durrr_frame = CreateFrame("GameTooltip")
 Durrr_frame:SetOwner(WorldFrame, "ANCHOR_NONE")
-Durrr_slots = {
-  {0, 0, 0, "Head", L["Head"], 0},
-  {0, 0, 0, "Neck", L["Neck"], 0},
-  {0, 0, 0, "Shoulder", L["Shoulder"], 0},
-  {0, 0, 0, "Back", L["Back"], 0},
-  {0, 0, 0, "Chest", L["Chest"], 0},
-  {0, 0, 0, "Wrist", L["Wrist"], 0},
-  {0, 0, 0, "Hands", L["Hands"], 0},
-  {0, 0, 0, "Waist", L["Waist"], 0},
-  {0, 0, 0, "Legs", L["Legs"], 0},
-  {0, 0, 0, "Feet", L["Feet"], 0},
-  {0, 0, 0, "MainHand", L["MainHand"], 0},
-  {0, 0, 0, "SecondaryHand", L["SecondaryHand"], 0},
-}
 local Durrr_dbDefaults = {
   profile = {
     showDetails = true,
@@ -79,9 +79,9 @@ function addon:OnInitialize()
   addon.db.RegisterCallback(self, "OnProfileCopied", "UpdateProfile")
   addon.db.RegisterCallback(self, "OnProfileReset", "UpdateProfile")
 
-  local Durrr_index, Durrr_item
-  for Durrr_index, Durrr_item in pairs(Durrr_slots) do
-    Durrr_slots[Durrr_index][Durrr_ID] = GetInventorySlotInfo(Durrr_item[Durrr_SLOT] .. "Slot")
+  local i, item
+  for i, item in pairs(Durrr_globals.slots) do
+    Durrr_globals.slots[i][Durrr_globals.ID] = GetInventorySlotInfo(item[Durrr_globals.SLOT] .. "Slot")
   end
 
   addon:CreateDialogs()
@@ -93,8 +93,6 @@ function addon:OnInitialize()
 	addon:RegisterEvent("PLAYER_REGEN_DISABLED", "OnRestDisable")
 	addon:RegisterEvent("MERCHANT_SHOW", "OnVendorShow")
 	addon:RegisterEvent("MERCHANT_CLOSED", "OnVendorClose")
-  addon:RegisterEvent("ZONE_CHANGED", "OnWarnUpdate")
-  addon:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnWarnUpdate")
 
   if (addon.db.profile.warntoRepair or addon.db.profile.critWarntoRepair) then
     addon:RegisterEvent("PLAYER_UPDATE_RESTING", "OnWarnUpdate")

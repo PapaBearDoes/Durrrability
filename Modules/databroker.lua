@@ -45,12 +45,12 @@ local Durrr_LDB = DLDB:NewDataObject("Durrrability", {
     else
       if addon.db.profile.showDetails then
         tooltip:AddLine(" ")
-        for Durrr_index, Durrr_item in pairs(Durrr_slots) do
-          if Durrr_item[Durrr_MAX] > 0 and Durrr_item[Durrr_VAL] < Durrr_item[Durrr_MAX] then
-            local p = Durrr_item[Durrr_VAL] / Durrr_item[Durrr_MAX]
+        for Durrr_index, Durrr_item in pairs(Durrr_globals.slots) do
+          if Durrr_item[Durrr_globals.MAX] > 0 and Durrr_item[Durrr_globals.VAL] < Durrr_item[Durrr_globals.MAX] then
+            local p = Durrr_item[Durrr_globals.VAL] / Durrr_item[Durrr_globals.MAX]
             local r, g, b = addon:GetThresholdColor(p)
 
-            tooltip:AddDoubleLine(string.format("%d%%  " .. addon:Colorize("%s", "yellow"), p * 100, Durrr_item[Durrr_NAME]), addon:Coins2Str(math.floor(Durrr_item[Durrr_COST])), r, g, b, 1, 1, 1)
+            tooltip:AddDoubleLine(string.format("%d%%  " .. addon:Colorize("%s", "yellow"), p * 100, Durrr_item[Durrr_globals.NAME]), addon:Coins2Str(math.floor(Durrr_item[Durrr_globals.COST])), r, g, b, 1, 1, 1)
           end
         end
         if addon.db.profile.showBags and (Durrr_bagCost > 0) then
@@ -82,10 +82,10 @@ local Durrr_LDB = DLDB:NewDataObject("Durrrability", {
 })
 
 function addon:MainUpdate()
-  if Durrr_updateReq then
-    Durrr_updateReq = false
+  if Durrr_globals.updateReq then
+    Durrr_globals.updateReq = false
 
-    if (Durrr_combatState == true) and (not addon.db.profile.updateInCombat) then
+    if (Durrr_globals.combatState == true) and (not addon.db.profile.updateInCombat) then
       return
     end
 

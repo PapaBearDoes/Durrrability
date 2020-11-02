@@ -39,7 +39,7 @@ function addon:CreateDialogs()
       },
     },
     on_show = function(self, data)
-			self.text:SetFormattedText(L["WhoPays"] .. " %s", addon:Coins2Str(Durrr_repairAllCost))
+			self.text:SetFormattedText(L["WhoPays"] .. " %s", addon:Coins2Str(Durrr_globals.repairAllCost))
     end,
     hide_on_escape = true,
     show_while_dead = false
@@ -126,11 +126,11 @@ end
 
 -- Auto repair - Self --
 function addon:AutoRepair()
-  if Durrr_canRepair == true then
+  if Durrr_globals.canRepair == true then
 		RepairAllItems()
-		addon:Print(addon:Colorize("[" .. L["AddonName"] .. "]", "green") .. L["RepairedPersonal"] .. " " .. addon:Coins2Str(Durrr_repairAllCost))
+		addon:Print(addon:Colorize("[" .. L["AddonName"] .. "]", "green") .. L["RepairedPersonal"] .. " " .. addon:Coins2Str(Durrr_globals.repairAllCost))
 	else
-		addon:Print(addon:Colorize("["..L["AddonName"].."]", "green") .. L["CardDeclined"] .. " " .. addon:Coins2Str(Durrr_repairAllCost))
+		addon:Print(addon:Colorize("["..L["AddonName"].."]", "green") .. L["CardDeclined"] .. " " .. addon:Coins2Str(Durrr_globals.repairAllCost))
   end
 end
 -- End Auto repair - Self --
@@ -144,9 +144,9 @@ function addon:AutoRepairFromBank()
 	else
 		Durrr_guildBankWithdrawMoney = min(Durrr_guildBankWithdrawMoney, Durrr_guildBankMoney)
 	end
-	if Durrr_canRepair == true and CanGuildBankRepair() and Durrr_guildBankWithdrawMoney >= Durrr_repairAllCost then
+	if Durrr_globals.canRepair == true and CanGuildBankRepair() and Durrr_guildBankWithdrawMoney >= Durrr_globals.repairAllCost then
 		RepairAllItems(1)
-		addon:Print(addon:Colorize("["..L["AddonName"].."]", "green") .. L["RepairedGuildFunds"] .. " " .. addon:Coins2Str(Durrr_repairAllCost))
+		addon:Print(addon:Colorize("["..L["AddonName"].."]", "green") .. L["RepairedGuildFunds"] .. " " .. addon:Coins2Str(Durrr_globals.repairAllCost))
   elseif addon.db.profile.repairFromGuildOnly then
     addon:Print(addon:Colorize("["..L["AddonName"].."]", "green") .. L["NoGuildGold"])
 	else
@@ -178,8 +178,8 @@ end
 
 -- Checks --
 function addon:RepairAttempt()
-	Durrr_repairAllCost, Durrr_canRepair = GetRepairAllCost()
-	if addon.db.profile.repairType > 0 and Durrr_repairAllCost > 0 then
+	Durrr_globals.repairAllCost, Durrr_globals.canRepair = GetRepairAllCost()
+	if addon.db.profile.repairType > 0 and Durrr_globals.repairAllCost > 0 then
 		local Durrr_standing = UnitReaction("npc", "player")
 		if Durrr_standing >= addon.db.profile.repairThreshold then
 			addon:DoRepair()

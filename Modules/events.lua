@@ -25,16 +25,16 @@ function addon:OnProfileChanged(event, database, newProfileKey)
 end
 
 function addon:UpdateProfileDelayed()
-  for Durrr_timerKey, Durrr_timerValue in addon:IterateModules() do
-    if Durrr_timerValue.db.profile.on then
-      if Durrr_timerValue:IsEnabled() then
-        Durrr_timerValue:Disable()
-        Durrr_timerValue:Enable()
+  for timerKey, timerValue in addon:IterateModules() do
+    if timerValue.db.profile.on then
+      if timerValue:IsEnabled() then
+        timerValue:Disable()
+        timerValue:Enable()
       else
-        Durrr_timerValue:Enable()
+        timerValue:Enable()
       end
     else
-      Durrr_timerValue:Disable()
+      timerValue:Disable()
     end
   end
 
@@ -49,11 +49,11 @@ function addon:ScheduleUpdate()
   if (addon.db.profile.critWarntoRepair) then
     addon:WarnToRepair()
   end
-  Durrr_updateReq = true
+  Durrr_globals.updateReq = true
 end
 
 function addon:OnVendorShow()
-  Durrr_vendorState = true
+  Durrr_globals.vendorState = true
   if not CanMerchantRepair() then
     return
   end
@@ -61,7 +61,7 @@ function addon:OnVendorShow()
 end
 
 function addon:OnVendorClose()
-  Durrr_vendorState = false
+  Durrr_globals.vendorState = false
   if Durrr_Dialog:ActiveDialog("Durrr_Confirm") then
     Durrr_Dialog:Dismiss("Durrr_Confirm")
   end
@@ -71,12 +71,12 @@ function addon:OnVendorClose()
 end
 
 function addon:OnRestEnable()
-  Durrr_combatState = false
+  Durrr_globals.combatState = false
   addon:ScheduleUpdate()
 end
 
 function addon:OnRestDisable()
-  Durrr_combatState = true
+  Durrr_globals.combatState = true
 end
 
 function addon:OnWarnUpdate()

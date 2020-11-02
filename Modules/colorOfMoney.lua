@@ -51,23 +51,23 @@ function addon:GetRepairData()
 	local Durrr_current = 0
 	local Durrr_index, Durrr_item
 
-	for Durrr_index, Durrr_item in pairs(Durrr_slots) do
-		local Durrr_val, Durrr_max = GetInventoryItemDurability(Durrr_slots[Durrr_index][Durrr_ID])
-		local hasItem, hasCooldown, Durrr_repairCost = Durrr_frame:SetInventoryItem("player", Durrr_slots[Durrr_index][Durrr_ID])
+	for Durrr_index, Durrr_item in pairs(Durrr_globals.slots) do
+		local Durrr_val, Durrr_max = GetInventoryItemDurability(Durrr_globals.slots[Durrr_index][Durrr_globals.ID])
+		local hasItem, hasCooldown, Durrr_repairCost = Durrr_frame:SetInventoryItem("player", Durrr_globals.slots[Durrr_index][Durrr_globals.ID])
 		if Durrr_max then
-			if Durrr_vendorState == true then
+			if Durrr_globals.vendorState == true then
 				Durrr_repairCost = addon:VendorFix(repairCost)
 			end
 			Durrr_total = Durrr_total + Durrr_max
 			Durrr_current = Durrr_current + Durrr_val
 			Durrr_totalCost = Durrr_totalCost + Durrr_repairCost
-			Durrr_slots[Durrr_index][Durrr_VAL] = Durrr_val
-			Durrr_slots[Durrr_index][Durrr_MAX] = Durrr_max
-			Durrr_slots[Durrr_index][Durrr_COST] = Durrr_repairCost
+			Durrr_globals.slots[Durrr_index][Durrr_globals.VAL] = Durrr_val
+			Durrr_globals.slots[Durrr_index][Durrr_globals.MAX] = Durrr_max
+			Durrr_globals.slots[Durrr_index][Durrr_globals.COST] = Durrr_repairCost
 			Durrr_percent = Durrr_val / Durrr_max
 			if Durrr_percent < Durrr_percentMin then Durrr_percentMin = Durrr_percent end
 		else
-			Durrr_slots[Durrr_index][Durrr_MAX] = 0
+			Durrr_globals.slots[Durrr_index][Durrr_globals.MAX] = 0
 		end
 	end
 
@@ -80,7 +80,7 @@ function addon:GetRepairData()
 				local Durrr_val, Durrr_max = GetContainerItemDurability(Durrr_bag, Durrr_slot)
 				local hasCooldown, Durrr_repairCost = Durrr_frame:SetBagItem(Durrr_bag, Durrr_slot)
 				if Durrr_max then
-					if Durrr_vendorState == true then
+					if Durrr_globals.vendorState == true then
 						Durrr_repairCost = addon:VendorFix(Durrr_repairCost)
 					end
 					Durrr_bagTotal = Durrr_bagTotal + Durrr_max
