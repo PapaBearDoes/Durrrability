@@ -17,7 +17,7 @@ local L = addon:GetLocale()
 --[[ ######################################################################## ]]
 --   ## Do All The Things!!!
 -- Dialog Popups --
-Durrr_Dialog = LibStub("LibDialog-1.0")
+local Durrr_Dialog = LibStub("LibDialog-1.0")
 function addon:CreateDialogs()
 	Durrr_Dialog:Register("Durrr_Dialog", {
     text = "",
@@ -45,7 +45,7 @@ function addon:CreateDialogs()
     show_while_dead = false
   })
 
-	Durrr_Dialog:Register("DurrrConfirm", {
+	Durrr_Dialog:Register("Durrr_Confirm", {
 		text = "",
 		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
 		buttons = {
@@ -66,7 +66,7 @@ function addon:CreateDialogs()
 		show_while_dead = false
 	})
 
-  Durrr_Dialog:Register("DurrrWarn", {
+  Durrr_Dialog:Register("Durrr_Warn", {
 		text = "",
 		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
 		buttons = {
@@ -116,10 +116,10 @@ end
 -- Below Threshold Warnings --
 function addon:WarnToRepair()
 	local Durrr_totalCost, Durrr_percent, Durrr_percentMin = addon:GetRepairData()
-	if addon.db.profile.warntoRepair and addon.db.profile.warnThreshold >= Durrr_percentMin * 100 then
-    Durrr_Dialog:Spawn("Durrr_WarnToRepair", addon:Colorize(string.format("%d", Durrr_percentMin * 100), addon:GetThresholdHexColor(Durrr_percentMin)))
-	elseif addon.db.profile.critWarntoRepair and addon.db.profile.critWarnThreshold >= Durrr_percentMin * 100 then
+	if addon.db.profile.critWarntoRepair and addon.db.profile.critWarnThreshold >= Durrr_percentMin * 100 then
     Durrr_Dialog:Spawn("Durrr_CritWarnToRepair", addon:Colorize(string.format("%d", Durrr_percentMin * 100), addon:GetThresholdHexColor(Durrr_percentMin)))
+	elseif addon.db.profile.warntoRepair and addon.db.profile.warnThreshold >= Durrr_percentMin * 100 then
+    Durrr_Dialog:Spawn("Durrr_WarnToRepair", addon:Colorize(string.format("%d", Durrr_percentMin * 100), addon:GetThresholdHexColor(Durrr_percentMin)))
 	end
 end
 -- End Below Threshold Warning --

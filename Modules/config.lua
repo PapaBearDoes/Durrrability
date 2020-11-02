@@ -223,15 +223,13 @@ Durrr_options = {
 					end,
 					set = function(key, value)
 						addon.db.profile.critWarntoRepair = value
---[[						if (value) then
+						if (value) then
               addon:RegisterEvent("ZONE_CHANGED", "OnWarnUpdate")
-              addon:RegisterEvent("ZONE_CHANGED_INDOORS", "OnWarnUpdate")
               addon:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnWarnUpdate")
 						else
               addon:RegisterEvent("ZONE_CHANGED")
-              addon:RegisterEvent("ZONE_CHANGED_INDOORS")
               addon:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-						end]]
+						end
 					end,
 				},
 				critWarnThreshold = {
@@ -258,7 +256,7 @@ tinsert(Durrr_enableTasks, function(self)
 
   LibStub("AceConfig-3.0"):RegisterOptionsTable("Durrrability", Durrr_options, nil)
 
-  --local Durrr_Dialog = LibStub("AceConfigDialog-3.0")
+  local Durrr_Dialog = LibStub("AceConfigDialog-3.0")
   Durrr_optionFrames = {}
   Durrr_optionFrames.general = Durrr_Dialog:AddToBlizOptions("Durrrability", nil, nil, "general")
   Durrr_optionFrames.profile = Durrr_Dialog:AddToBlizOptions("Durrrability", L["Profiles"], "Durrrability", "profile")

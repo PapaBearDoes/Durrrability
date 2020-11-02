@@ -12,7 +12,7 @@ ignore:
   - template.lua
   - Modules\core.lua
 
-dependencies:
+optional-dependencies:
   - LibInit
   - LibDialog-1.0
 

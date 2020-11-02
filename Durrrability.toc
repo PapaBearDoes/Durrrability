@@ -22,7 +22,7 @@
 ## Notes-ruRU: Плагин Simple Durability для дисплеев LDB
 ## Notes-zhCN: 用于LDB显示器的简单耐用性插件
 ## Notes-zhTW: 用於LDB顯示器的簡單耐用性插件
-## Dependencies: LibInit, LibDialog-1.0
+## OptionalDeps: LibInit, LibDialog-1.0
 
 #X-Meta
 ## X-Category: Data Broker, Miscellaneous

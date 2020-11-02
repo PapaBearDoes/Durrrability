@@ -47,7 +47,7 @@ end
 -- Events --
 function addon:ScheduleUpdate()
   if (addon.db.profile.critWarntoRepair) then
-    addon:CritWarnToRepair()
+    addon:WarnToRepair()
   end
   Durrr_updateReq = true
 end
@@ -62,8 +62,8 @@ end
 
 function addon:OnVendorClose()
   Durrr_vendorState = false
-  if Durrr_Dialog:ActiveDialog("DurrrConfirm") then
-    Durrr_Dialog:Dismiss("DurrrConfirm")
+  if Durrr_Dialog:ActiveDialog("Durrr_Confirm") then
+    Durrr_Dialog:Dismiss("Durrr_Confirm")
   end
   if Durrr_Dialog:ActiveDialog("Durrr_Dialog") then
     Durrr_Dialog:Dismiss("Durrr_Dialog")
@@ -83,7 +83,7 @@ function addon:OnWarnUpdate()
   if IsResting() then
     addon:WarnToRepair()
   elseif (addon.db.profile.critWarntoRepair) then
-    addon:CritWarnToRepair()
+    addon:WarnToRepair()
   end
 end
 -- End Events --
