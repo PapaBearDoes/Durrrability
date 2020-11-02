@@ -20,6 +20,7 @@ if not L then return end
 --@localization(locale="enUS", format="lua_additive_table")@
 
 --@do-not-package@
+L["ItWillCost"] = "It will cost %s"
 L["AddonName"] = "Durrrability"
 L["Ask"] = "Ask me"
 L["AutoRepair"] = "AutoRepair"

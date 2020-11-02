@@ -19,7 +19,7 @@ local L = addon:GetLocale()
 -- Dialog Popups --
 local Durrr_Dialog = LibStub("LibDialog-1.0")
 function addon:CreateDialogs()
-	Durrr_Dialog:Register("Durrr_Dialog", {
+	Durrr_Dialog:Register("Durrr_WhoPays", {
     text = "",
     buttons = {
       {
@@ -39,7 +39,7 @@ function addon:CreateDialogs()
       },
     },
     on_show = function(self, data)
-			self.text:SetFormattedText(L["WhoPays"] .. " %s", addon:Coins2Str(Durrr_globals.repairAllCost))
+			self.text:SetFormattedText(L["WhoPays"], addon:Coins2Str(Durrr_globals.repairAllCost))
     end,
     hide_on_escape = true,
     show_while_dead = false
@@ -60,7 +60,8 @@ function addon:CreateDialogs()
 			},
 		},
 		on_show = function(self, data)
-			self.text:SetFormattedText(L["YourRepIs"] .. addon:Colorize("%s", "yellow") .. L["AutoRepairRequires"] .. " %s. " .. L["RepairConfirm"], _G["FACTION_STANDING_LABEL" .. data], _G["FACTION_STANDING_LABEL" .. addon.db.profile.repairThreshold])
+			local text = L["YourRepIs"] .. addon:Colorize(" %s.\n", Durrr_globals.repColor[data]) .. L["AutoRepairRequires"] .. addon:Colorize(" %s.\n", Durrr_globals.repColor[addon.db.profile.repairThreshold]) .. L["RepairConfirm"] .. "\n" .. L["ItWillCost"]
+			self.text:SetFormattedText(text, _G["FACTION_STANDING_LABEL" .. data], _G["FACTION_STANDING_LABEL" .. addon.db.profile.repairThreshold], addon:Coins2Str(Durrr_globals.repairAllCost))
 		end,
 		hide_on_escape = true,
 		show_while_dead = false
@@ -172,7 +173,7 @@ end
 
 -- Repair Popup --
 function addon:ShowDialog()
-	Durrr_Dialog:Spawn("Durrr_Dialog")
+	Durrr_Dialog:Spawn("Durrr_WhoPays")
 end
 -- End Repair Popup --
 
@@ -180,7 +181,7 @@ end
 function addon:RepairAttempt()
 	Durrr_globals.repairAllCost, Durrr_globals.canRepair = GetRepairAllCost()
 	if addon.db.profile.repairType > 0 and Durrr_globals.repairAllCost > 0 then
-		local Durrr_standing = UnitReaction("npc", "player")
+		Durrr_standing = UnitReaction("npc", "player")
 		if Durrr_standing >= addon.db.profile.repairThreshold then
 			addon:DoRepair()
 		else
@@ -189,6 +190,11 @@ function addon:RepairAttempt()
 	end
 end
 -- End Checks --
+
+function addon:LowRepConfirmation()
+	--local Durrr_standing = UnitReaction("npc", "player")
+	Durrr_Dialog:Spawn("Durrr_Confirm", Durrr_standing)
+end
 
 --[[
      ########################################################################

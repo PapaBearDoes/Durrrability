@@ -61,12 +61,13 @@ function addon:OnVendorShow()
 end
 
 function addon:OnVendorClose()
+  local Durrr_Dialog = LibStub("LibDialog-1.0")
   Durrr_globals.vendorState = false
   if Durrr_Dialog:ActiveDialog("Durrr_Confirm") then
     Durrr_Dialog:Dismiss("Durrr_Confirm")
   end
-  if Durrr_Dialog:ActiveDialog("Durrr_Dialog") then
-    Durrr_Dialog:Dismiss("Durrr_Dialog")
+  if Durrr_Dialog:ActiveDialog("Durrr_WhoPays") then
+    Durrr_Dialog:Dismiss("Durrr_WhoPays")
   end
 end
 

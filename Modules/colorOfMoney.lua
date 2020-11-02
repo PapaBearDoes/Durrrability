@@ -56,7 +56,7 @@ function addon:GetRepairData()
 		local hasItem, hasCooldown, Durrr_repairCost = Durrr_frame:SetInventoryItem("player", Durrr_globals.slots[Durrr_index][Durrr_globals.ID])
 		if Durrr_max then
 			if Durrr_globals.vendorState == true then
-				Durrr_repairCost = addon:VendorFix(repairCost)
+				Durrr_repairCost = addon:VendorFix(Durrr_repairCost)
 			end
 			Durrr_total = Durrr_total + Durrr_max
 			Durrr_current = Durrr_current + Durrr_val

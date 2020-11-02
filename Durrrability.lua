@@ -43,7 +43,14 @@ Durrr_globals = {
     {0, 0, 0, "Feet", L["Feet"], 0},
     {0, 0, 0, "MainHand", L["MainHand"], 0},
     {0, 0, 0, "SecondaryHand", L["SecondaryHand"], 0},
-  }
+  },
+  repColor = {
+    [4] = "yellow",
+    [5] = "lime",
+    [6] = "00ff88",
+    [7] = "00ffcc",
+    [8] = "cyan",
+  },
 }
 Durrr_frame = CreateFrame("GameTooltip")
 Durrr_frame:SetOwner(WorldFrame, "ANCHOR_NONE")
