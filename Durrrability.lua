@@ -128,34 +128,6 @@ end
 function addon:OnDisable()
 end
 
-function addon:UpdateProfile()
-  addon:ScheduleTimer("UpdateProfileDelayed", 0)
-end
-
-function addon:OnProfileChanged(event, database, newProfileKey)
-  addon.db.profile = database.profile
-end
-
-function addon:UpdateProfileDelayed()
-  for timerKey, timerValue in addon:IterateModules() do
-    if timerValue.db.profile.on then
-      if timerValue:IsEnabled() then
-        timerValue:Disable()
-        timerValue:Enable()
-      else
-        timerValue:Enable()
-      end
-    else
-      timerValue:Disable()
-    end
-  end
-
-  addon:UpdateOptions()
-end
-
-function addon:OnProfileReset()
-end
-
 --[[
      ########################################################################
      |  Last Editted By: @file-author@ - @file-date-iso@

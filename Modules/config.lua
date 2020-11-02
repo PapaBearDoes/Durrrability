@@ -16,7 +16,7 @@ local L = addon:GetLocale()
 -- End Imports
 --[[ ######################################################################## ]]
 --   ## Do All The Things!!!
-DurrrOptions = {
+Durrr_options = {
   type = "group",
   name = "Durrrability",
   args = {
@@ -253,21 +253,21 @@ DurrrOptions = {
 }
 
 tinsert(Durrr_enableTasks, function(self)
-  DurrrOptions.args.profile = LibStub("AceDBOptions-3.0"):GetOptionsTable(addon.db)
-  DurrrOptions.args.profile.order = -2
+  Durrr_options.args.profile = LibStub("AceDBOptions-3.0"):GetOptionsTable(addon.db)
+  Durrr_options.args.profile.order = -2
 
-  LibStub("AceConfig-3.0"):RegisterOptionsTable("Durrrability", DurrrOptions, nil)
+  LibStub("AceConfig-3.0"):RegisterOptionsTable("Durrrability", Durrr_options, nil)
 
   --local Durrr_Dialog = LibStub("AceConfigDialog-3.0")
-  optionFrames = {}
-  optionFrames.general = Durrr_Dialog:AddToBlizOptions("Durrrability", nil, nil, "general")
-  optionFrames.profile = Durrr_Dialog:AddToBlizOptions("Durrrability", L["Profiles"], "Durrrability", "profile")
+  Durrr_optionFrames = {}
+  Durrr_optionFrames.general = Durrr_Dialog:AddToBlizOptions("Durrrability", nil, nil, "general")
+  Durrr_optionFrames.profile = Durrr_Dialog:AddToBlizOptions("Durrrability", L["Profiles"], "Durrrability", "profile")
 end)
 
 -- Config window --
 function addon:ShowConfig()
-	InterfaceOptionsFrame_OpenToCategory(optionFrames.profile)
-	InterfaceOptionsFrame_OpenToCategory(optionFrames.general)
+	InterfaceOptionsFrame_OpenToCategory(Durrr_optionFrames.profile)
+	InterfaceOptionsFrame_OpenToCategory(Durrr_optionFrames.general)
 end
 -- End Options --
 

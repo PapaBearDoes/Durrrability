@@ -96,7 +96,7 @@ function addon:CreateDialogs()
   		show_while_dead = false
   	})
 
-      Durrr_Dialog:Register("DurrrCritWarnToRepair", {
+      Durrr_Dialog:Register("Durrr_CritWarnToRepair", {
     		text = "",
     		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
     		buttons = {
@@ -124,7 +124,7 @@ end
 function addon:CritWarnToRepair()
 	local Durrr_totalCost, Durrr_percent, Durrr_percentMin = addon:GetRepairData()
 	if addon.db.profile.critWarntoRepair and addon.db.profile.critWarnThreshold >= Durrr_percentMin * 100 then
-    Durrr_Dialog:Spawn("DurrrCritWarnToRepair", addon:Colorize(string.format("%d", Durrr_percentMin * 100), addon:GetThresholdHexColor(Durrr_percentMin)))
+    Durrr_Dialog:Spawn("Durrr_CritWarnToRepair", addon:Colorize(string.format("%d", Durrr_percentMin * 100), addon:GetThresholdHexColor(Durrr_percentMin)))
 	end
 end
 -- End Below Threshold Warning --

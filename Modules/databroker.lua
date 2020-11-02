@@ -21,7 +21,7 @@ local Durrr_repairIconCoords = {0.5625, 0.84375, 0, 0.5625}
 
 -- Do LDB stuff --
 local DLDB = LibStub("LibDataBroker-1.1")
-local DurrrLDB = DLDB:NewDataObject("Durrrability", {
+local Durrr_LDB = DLDB:NewDataObject("Durrrability", {
   type = "data source",
   label = L["Durability"],
   text = "",
@@ -53,10 +53,10 @@ local DurrrLDB = DLDB:NewDataObject("Durrrability", {
             tooltip:AddDoubleLine(string.format("%d%%  " .. addon:Colorize("%s", "yellow"), p * 100, Durrr_item[Durrr_NAME]), addon:Coins2Str(math.floor(Durrr_item[Durrr_COST])), r, g, b, 1, 1, 1)
           end
         end
-        if addon.db.profile.showBags and (bagCost > 0) then
-          local r, g, b = addon:GetThresholdColor(bagPercent)
+        if addon.db.profile.showBags and (Durrr_bagCost > 0) then
+          local r, g, b = addon:GetThresholdColor(Durrr_bagPercent)
 
-          tooltip:AddDoubleLine(string.format("%d%%  " .. addon:Colorize("Bags", "yellow"), bagPercent * 100), addon:Coins2Str(math.floor(bagCost)), r, g, b, 1, 1, 1)
+          tooltip:AddDoubleLine(string.format("%d%%  " .. addon:Colorize("Bags", "yellow"), Durrr_bagPercent * 100), addon:Coins2Str(math.floor(Durrr_bagCost)), r, g, b, 1, 1, 1)
         end
       end
 
@@ -77,8 +77,7 @@ local DurrrLDB = DLDB:NewDataObject("Durrrability", {
     end
 
     tooltip:AddLine(" ")
-    local rightClick = (addon:Colorize(L["RightClick"] .. " ", "eda55f") .. L["RightToolTip"])
-    tooltip:AddLine(rightClick)
+    tooltip:AddLine(addon:Colorize(L["RightClick"] .. " ", "eda55f") .. L["RightToolTip"])
   end,
 })
 
@@ -93,16 +92,16 @@ function addon:MainUpdate()
     local Durrr_totalCost, Durrr_percent, Durrr_percentMin  = addon:GetRepairData()
 
     if Durrr_percentMin then
-      DurrrLDB.text = (string.format(addon:Colorize("%d%%", "%s"), Durrr_percentMin * 100, addon:GetThresholdHexColor(Durrr_percentMin)))
+      Durrr_LDB.text = (string.format(addon:Colorize("%d%%", "%s"), Durrr_percentMin * 100, addon:GetThresholdHexColor(Durrr_percentMin)))
     end
   end
 end
 
 function addon:UpdateIcon()
 	if addon.db.profile.repairFromGuild and (addon.db.profile.repairType == 1) then
-		DurrrLDB.iconCoords = Durrr_repairIconCoords
+		Durrr_LDB.iconCoords = Durrr_repairIconCoords
 	else
-		DurrrLDB.iconCoords = Durrr_repairIconCoords
+		Durrr_LDB.iconCoords = Durrr_repairIconCoords
 	end
 end
 -- End LDB stuff --

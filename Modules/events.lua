@@ -25,16 +25,16 @@ function addon:OnProfileChanged(event, database, newProfileKey)
 end
 
 function addon:UpdateProfileDelayed()
-  for timerKey, timerValue in addon:IterateModules() do
-    if timerValue.db.profile.on then
-      if timerValue:IsEnabled() then
-        timerValue:Disable()
-        timerValue:Enable()
+  for Durrr_timerKey, Durrr_timerValue in addon:IterateModules() do
+    if Durrr_timerValue.db.profile.on then
+      if Durrr_timerValue:IsEnabled() then
+        Durrr_timerValue:Disable()
+        Durrr_timerValue:Enable()
       else
-        timerValue:Enable()
+        Durrr_timerValue:Enable()
       end
     else
-      timerValue:Disable()
+      Durrr_timerValue:Disable()
     end
   end
 
