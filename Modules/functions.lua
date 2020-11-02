@@ -116,11 +116,11 @@ end
 
 -- Below Threshold Warnings --
 function addon:WarnToRepair()
-	local Durrr_totalCost, Durrr_percent, Durrr_percentMin = addon:GetRepairData()
-	if addon.db.profile.critWarntoRepair and addon.db.profile.critWarnThreshold >= Durrr_percentMin * 100 then
-    Durrr_Dialog:Spawn("Durrr_CritWarnToRepair", addon:Colorize(string.format("%d", Durrr_percentMin * 100), addon:GetThresholdHexColor(Durrr_percentMin)))
-	elseif addon.db.profile.warntoRepair and addon.db.profile.warnThreshold >= Durrr_percentMin * 100 then
-    Durrr_Dialog:Spawn("Durrr_WarnToRepair", addon:Colorize(string.format("%d", Durrr_percentMin * 100), addon:GetThresholdHexColor(Durrr_percentMin)))
+	local totalCost, percent, percentMin = addon:GetRepairData()
+	if addon.db.profile.critWarntoRepair and addon.db.profile.critWarnThreshold >= percentMin * 100 then
+    Durrr_Dialog:Spawn("Durrr_CritWarnToRepair", addon:Colorize(string.format("%d", percentMin * 100), addon:GetThresholdHexColor(percentMin)))
+	elseif addon.db.profile.warntoRepair and addon.db.profile.warnThreshold >= percentMin * 100 then
+    Durrr_Dialog:Spawn("Durrr_WarnToRepair", addon:Colorize(string.format("%d", percentMin * 100), addon:GetThresholdHexColor(percentMin)))
 	end
 end
 -- End Below Threshold Warning --
@@ -138,14 +138,14 @@ end
 
 -- Auto repair - Guild --
 function addon:AutoRepairFromBank()
-	local Durrr_guildBankWithdrawMoney = GetDurrr_guildBankWithdrawMoney()
-	local Durrr_guildBankMoney = GetDurrr_guildBankMoney()
-	if Durrr_guildBankWithdrawMoney == -1 then
-		Durrr_guildBankWithdrawMoney = Durrr_guildBankMoney
+	local guildBankWithdrawMoney = GetguildBankWithdrawMoney()
+	local guildBankMoney = GetguildBankMoney()
+	if guildBankWithdrawMoney == -1 then
+		guildBankWithdrawMoney = guildBankMoney
 	else
-		Durrr_guildBankWithdrawMoney = min(Durrr_guildBankWithdrawMoney, Durrr_guildBankMoney)
+		guildBankWithdrawMoney = min(guildBankWithdrawMoney, guildBankMoney)
 	end
-	if Durrr_globals.canRepair == true and CanGuildBankRepair() and Durrr_guildBankWithdrawMoney >= Durrr_globals.repairAllCost then
+	if Durrr_globals.canRepair == true and CanGuildBankRepair() and guildBankWithdrawMoney >= Durrr_globals.repairAllCost then
 		RepairAllItems(1)
 		addon:Print(addon:Colorize("["..L["AddonName"].."]", "green") .. L["RepairedGuildFunds"] .. " " .. addon:Coins2Str(Durrr_globals.repairAllCost))
   elseif addon.db.profile.repairFromGuildOnly then
@@ -181,8 +181,8 @@ end
 function addon:RepairAttempt()
 	Durrr_globals.repairAllCost, Durrr_globals.canRepair = GetRepairAllCost()
 	if addon.db.profile.repairType > 0 and Durrr_globals.repairAllCost > 0 then
-		Durrr_standing = UnitReaction("npc", "player")
-		if Durrr_standing >= addon.db.profile.repairThreshold then
+		standing = UnitReaction("npc", "player")
+		if standing >= addon.db.profile.repairThreshold then
 			addon:DoRepair()
 		else
 			addon:LowRepConfirmation()
@@ -192,8 +192,8 @@ end
 -- End Checks --
 
 function addon:LowRepConfirmation()
-	--local Durrr_standing = UnitReaction("npc", "player")
-	Durrr_Dialog:Spawn("Durrr_Confirm", Durrr_standing)
+	--local standing = UnitReaction("npc", "player")
+	Durrr_Dialog:Spawn("Durrr_Confirm", standing)
 end
 
 --[[

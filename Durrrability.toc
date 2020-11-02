@@ -41,7 +41,7 @@ Libraries\LibDialog-1.0\lib.xml
 Locales\locales.xml
 
 #Load Main Files
-Durrrability.lua
+Durrrability.xml
 
 #Load the rest
 Modules/includes.xml

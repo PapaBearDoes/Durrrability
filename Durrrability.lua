@@ -10,76 +10,31 @@
 -- Imports
 local _G = _G
 local me, ns = ...
-local addon = LibStub("LibInit"):NewAddon(ns, me, true, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
+local addon = ns
 local L = addon:GetLocale()
 -- End Imports
 
 --[[ ######################################################################## ]]
+--   | Rules:
+--   | 1) All variables that need to be referenced across multiple files shall
+--   | be defined in the Durrr_globals table and referenced via Durrr_globals.~
+--   | 2) All other variables shall be local'd to either the file or function
+--   | scopes as appropriate.
+--   | 3) When possible, make use of the Durrr_globals.enableTasks table to
+--   | pass one off functions that can be handled when AddonEnabled has fired.
+--   | 4) Do utilize breakout modules to extend and contain large numbers of
+--   | function definitions and name the file appropriately for what those
+--   | functions accomplish.
+--   | 5) Utilize template.lua for all new files.
+--   | 6) Utilize the me, ns, addon variables for all Ace3 functions and
+--   | capabilities.
+--[[ ######################################################################## ]]
 --   ## Do All The Things!!!
--- Define Globals
-Durrr_enableTasks = {}
-Durrr_globals = {
-  ID = 6,
-  SLOT = 4,
-  NAME = 5,
-  VAL = 1,
-  MAX = 2,
-  COST = 3,
-  repairAllCost = nil,
-  canRepair = false,
-  combatState = false,
-  vendorState = false,
-  updateReq = true,
-  slots = {
-    {0, 0, 0, "Head", L["Head"], 0},
-    {0, 0, 0, "Neck", L["Neck"], 0},
-    {0, 0, 0, "Shoulder", L["Shoulder"], 0},
-    {0, 0, 0, "Back", L["Back"], 0},
-    {0, 0, 0, "Chest", L["Chest"], 0},
-    {0, 0, 0, "Wrist", L["Wrist"], 0},
-    {0, 0, 0, "Hands", L["Hands"], 0},
-    {0, 0, 0, "Waist", L["Waist"], 0},
-    {0, 0, 0, "Legs", L["Legs"], 0},
-    {0, 0, 0, "Feet", L["Feet"], 0},
-    {0, 0, 0, "MainHand", L["MainHand"], 0},
-    {0, 0, 0, "SecondaryHand", L["SecondaryHand"], 0},
-  },
-  repColor = {
-    [4] = "yellow",
-    [5] = "lime",
-    [6] = "00ff88",
-    [7] = "00ffcc",
-    [8] = "cyan",
-  },
-}
-Durrr_frame = CreateFrame("GameTooltip")
-Durrr_frame:SetOwner(WorldFrame, "ANCHOR_NONE")
-local Durrr_dbDefaults = {
-  profile = {
-    showDetails = true,
-    showBags = true,
-    updateInCombat = false,
-    repairFromGuild = true,
-    repairFromGuildOnly = false,
-    repairThreshold = 4,
-    showPopup = true,
-    repairType = 1,
-    alwaysAsk = false,
-    warntoRepair = true,
-    warnThreshold = 65,
-    critWarntoRepair = true,
-    critWarnThreshold = 25,
-    modules = {
-      ["*"] = 3
-    }
-  }
-}
-
 function addon:OnInitialize()
   addon.db = LibStub("AceDB-3.0"):New("DurrrabilityDB", Durrr_dbDefaults, "Default")
   if not addon.db then
-    local Durrr_errorDB = L["ErrorDB"]
-    print(Durrr_errorDB)
+    local errorDB = L["ErrorDB"]
+    print(errorDB)
   end
 
   addon.db.RegisterCallback(self, "OnProfileChanged", "UpdateProfile")
@@ -115,17 +70,16 @@ function addon:OnInitialize()
 end
 
 function addon:OnEnable()
-  for i, v in ipairs(Durrr_enableTasks) do
+  for i, v in ipairs(Durrr_globals.enableTasks) do
     v(self)
   end
-  Durrr_enableTasks = nil
+  Durrr_globals.enableTasks = nil
 
   addon:ScheduleRepeatingTimer("MainUpdate", 1)
 end
 
 function addon:OnDisable()
 end
-
 --[[
      ########################################################################
      |  Last Editted By: @file-author@ - @file-date-iso@
