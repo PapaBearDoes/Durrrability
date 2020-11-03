@@ -10,7 +10,6 @@ ignore:
   - .gitattributes
   - .gitignore
   - template.lua
-  - Modules\core.lua
 
 optional-dependencies:
   - LibInit
