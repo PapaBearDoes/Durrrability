@@ -107,10 +107,28 @@ Durrr_options = {
           end,
           set = function(key, value)
             addon.db.profile.showDetails = value
+            if not addon.db.profile.showDetails then
+              addon.db.profile.showAllItemsAlways = value
+            end
+          end,
+        },
+        alwaysShow = {
+          order = 3,
+          type = "toggle",
+          name = L["ShowAllItemsAlways"],
+          desc = L["ShowAllItemsAlwaysToggle"],
+          get = function()
+            return addon.db.profile.showAllItemsAlways
+          end,
+          set = function(key, value)
+            addon.db.profile.showAllItemsAlways = value
+          end,
+          disabled = function()
+            return (addon.db.profile.showDetails == false)
           end,
         },
         bags = {
-          order = 3,
+          order = 4,
           type = "toggle",
           name = L["ShowBags"],
           desc = L["ShowBagsToggle"],
@@ -119,18 +137,6 @@ Durrr_options = {
           end,
           set = function(key, value)
             addon.db.profile.showBags = value
-          end,
-        },
-        alwaysShow = {
-          order = 4,
-          type = "toggle",
-          name = L["ShowAllItemsAlways"],
-          desc = L["ShowAllItemsAlwaysToggle"] .. "\n(Not currently functional!)",
-          get = function()
-            return addon.db.profile.showAllItemsAlways
-          end,
-          set = function(key, value)
-            addon.db.profile.showAllItemsAlways = value
           end,
         },
         combat = {
