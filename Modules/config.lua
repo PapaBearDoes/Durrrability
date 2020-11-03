@@ -20,7 +20,7 @@ tinsert(Durrr_globals.enableTasks, function(self)
   Durrr_options.args.profile = LibStub("AceDBOptions-3.0"):GetOptionsTable(addon.db)
   Durrr_options.args.profile.order = -2
 
-  LibStub("AceConfig-3.0"):RegisterOptionsTable("Durrrability", Durrr_options, nil)
+  LibStub("AceConfig-3.0"):RegisterOptionsTable(me, Durrr_options, nil)
 
   local Durrr_Dialog = LibStub("AceConfigDialog-3.0")
   Durrr_optionFrames = {}

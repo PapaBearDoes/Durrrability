@@ -138,8 +138,8 @@ end
 
 -- Auto repair - Guild --
 function addon:AutoRepairFromBank()
-	local guildBankWithdrawMoney = GetguildBankWithdrawMoney()
-	local guildBankMoney = GetguildBankMoney()
+	local guildBankWithdrawMoney = GetGuildBankWithdrawMoney()
+	local guildBankMoney = GetGuildBankMoney()
 	if guildBankWithdrawMoney == -1 then
 		guildBankWithdrawMoney = guildBankMoney
 	else

@@ -20,6 +20,8 @@ if not L then return end
 --@localization(locale="enUS", format="lua_additive_table")@
 
 --@do-not-package@
+L["ShowAllItemsAlways"] = "Always Show All Items"
+L["ShowAllItemsAlwaysToggle"] = "Always show all items in LDB tooltip"
 L["ItWillCost"] = "It will cost %s"
 L["AddonName"] = "Durrrability"
 L["Ask"] = "Ask me"
