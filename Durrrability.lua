@@ -10,7 +10,6 @@
 -- Imports
 local _G = _G
 local me, ns = ...
---local addon = ns
 local addon = LibStub("LibInit"):NewAddon(ns, me, true, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
 local L = addon:GetLocale()
 -- End Imports
