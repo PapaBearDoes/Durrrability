@@ -9,7 +9,6 @@
 --   ## Let's init this file shall we?
 -- Imports
 local _G = _G
---Durrr = select(2, ...)
 local me, ns = ...
 --local addon = ns
 local addon = LibStub("LibInit"):NewAddon(ns, me, true, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0")
