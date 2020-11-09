@@ -46,11 +46,16 @@ L["CritWarnConf"] = "Warn when critical repair levels reached."
 L["CritWarnToggle"] = "Toggle to warn you to repair when critical repair levels have been reached."
 L["CritWarnMax"] = "Set maximum item durability to toggle the warning."
 L["CritWarnThreshold"] = "Warning Threshold"
-L["CritWarn"] = "|CFFFF0000Bruh!!! Your gear is critically busted!|r\n|CFFFFFF00Your most broken item is at|r %s|CFFFFFF00%%.|r\n|CFFFF0000You need to repair!|r"
+L["CritWarn"] = [=[|CFFFF0000Bruh!!! Your gear is critically busted!|r
+|CFFFFFF00Your most broken item is at|r %s|CFFFFFF00%%.|r
+
+|CFFFF0000You need to repair!|r]=]
 L["DisplayOptions"] = "Display Options"
 L["GeneralSettings"] = "General Settings"
 L["GuildFundsToggle"] = "Toggle to repair using guild bank."
-L["InCombatToggle"] = "Toggle for in-combat updates !!!This *WILL* be CPU intensive if turned on!!!"
+L["InCombatToggle"] = [=[Toggle for in-combat updates.
+
+!!!This *WILL* be CPU intensive if turned on!!!]=]
 L["InCombatUpdate"] = "Update in combat."
 L["LowRepConfirmPop"] = "Pop up a confirmation box for lower reputations."
 L["MinRep"] = "Minimum reputation:"
@@ -71,8 +76,10 @@ L["WarningOpts"] = "Warning Options"
 L["WarnMax"] = "Set maximum item durability to toggle the warning."
 L["WarnThreshold"] = "Warning Threshold"
 L["AutoRepairRequires"] = "Auto repair requires"
-L["CardDeclined"] = "Ahem ... It seems as though your card has been declined... I would love to help, but sadly it seems that you need"
-L["CityWarn"] = "Bruh!!! Your gear is busted! Your most broken item is at %s percent. You might want to think about repairing!"
+L["CityWarn"] = [=[Bruh!!! Your gear is busted!
+Your most broken item is at %s percent.
+
+You might want to think about repairing!]=]
 L["ErrorDB"] = "Error: Database not loaded correctly. Exit WoW and delete Durrrability.lua found in your SavedVariables folder"
 L["NoBroke"] = "Nothing's Broke!"
 L["NoGuildGold"] = "It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds)."
@@ -82,7 +89,9 @@ L["RepairedGuildFunds"] = "Your items have been repaired using guild bank for"
 L["RepairedPersonal"] = "Your items have been repaired for"
 L["RepCost"] = "Your cost based on faction reputation:"
 L["TheGuild"] = "The Guild"
-L["WhoPays"] = "Who will be paying for the repairs?\n\nIt costs %s"
+L["WhoPays"] = [=[Who will be paying for the repairs?
+
+It costs %s]=]
 L["YourRepIs"] = "Your reputation with this vendor is"
 L["Back"] = "Back"
 L["Chest"] = "Chest"
