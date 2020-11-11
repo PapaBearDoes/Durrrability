@@ -21,7 +21,7 @@ local repairIconCoords = {0.5625, 0.84375, 0, 0.5625}
 
 -- Do LDB stuff --
 local DLDB = LibStub("LibDataBroker-1.1")
-local LDB = DLDB:NewDataObject("Durrrability", {
+LDB = DLDB:NewDataObject(me, {
   type = "data source",
   label = L["Durability"],
   text = "",

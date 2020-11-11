@@ -3,6 +3,7 @@ enable-nolib-creation: no
 
 externals:
   Libraries\LibInit: https://github.com/alarofrunetotem/LibInit.git/LibInit
+  Libraries\LibDBIcon-1.0: https://repos.curseforge.com/wow/libdbicon-1-0/trunk
   Libraries\LibDialog-1.0: https://repos.curseforge.com/wow/libdialog-1-0
 
 ignore:
@@ -14,6 +15,7 @@ ignore:
 optional-dependencies:
   - LibInit
   - LibDialog-1.0
+  - LibDBIcon-1.0
 
 license-output: LICENSE
 

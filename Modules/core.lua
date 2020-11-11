@@ -66,7 +66,7 @@ function addon:OnInitialize()
   addon:UpdateIcon()
   addon:ScheduleUpdate()
 
-  --LoadModules()
+  LibStub("LibDBIcon-1.0"):Register(me, LDB, addon.db.profile.minimap)
 end
 
 function addon:OnEnable()

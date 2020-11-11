@@ -73,6 +73,13 @@ Durrr_dbDefaults = {
     warnThreshold = 65,
     critWarntoRepair = true,
     critWarnThreshold = 25,
+    showMinimapButton = true,
+    minimap = {
+      hide = false,
+      lock = false,
+      minimapPos = 205,
+      radius = 80,
+    },
     modules = {
       ["*"] = 3
     }
@@ -137,8 +144,26 @@ Durrr_options = {
             addon.db.profile.showBags = value
           end,
         },
+        showMinimapButton = {
+          order = 6,
+          type = "toggle",
+          name = L["ShowMinimapButton"],
+          desc = L["ShowMinimapButtonDesc"],
+          get = function()
+            return addon.db.profile.showMinimapButton
+          end,
+          set = function(key, value)
+            if value == true then
+              addon.db.profile.showMinimapButton = true
+              addon.db.profile.minimap.hide = false
+            else
+              addon.db.profile.showMinimapButton = false
+              addon.db.profile.minimap.hide = true
+            end
+          end,
+        },
         combat = {
-          order = 5,
+          order = 6,
           type = "toggle",
           name = L["InCombatUpdate"],
           desc = L["InCombatToggle"],

@@ -34,8 +34,9 @@
 ## SavedVariables: DurrrabilityDB
 
 #Load Libraries
-Libraries\LibInit\Libinit.xml
+Libraries\LibInit\LibInit.xml
 Libraries\LibDialog-1.0\lib.xml
+Libraries\LibDBIcon-1.0\lib.xml
 
 #Load Languages
 Locales\locales.xml
