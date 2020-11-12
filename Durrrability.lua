@@ -153,11 +153,10 @@ Durrr_options = {
             return addon.db.profile.showMinimapButton
           end,
           set = function(key, value)
+            addon.db.profile.showMinimapButton = value
             if value == true then
-              addon.db.profile.showMinimapButton = true
               addon.db.profile.minimap.hide = false
             else
-              addon.db.profile.showMinimapButton = false
               addon.db.profile.minimap.hide = true
             end
           end,

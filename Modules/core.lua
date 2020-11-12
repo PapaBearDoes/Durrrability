@@ -65,8 +65,6 @@ function addon:OnInitialize()
 
   addon:UpdateIcon()
   addon:ScheduleUpdate()
-
-  LibStub("LibDBIcon-1.0"):Register(me, LDB, addon.db.profile.minimap)
 end
 
 function addon:OnEnable()
@@ -76,6 +74,7 @@ function addon:OnEnable()
   Durrr_globals.enableTasks = nil
 
   addon:ScheduleRepeatingTimer("MainUpdate", 1)
+
 end
 
 function addon:OnDisable()

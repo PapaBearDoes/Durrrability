@@ -20,8 +20,7 @@ local repairIconCoords = {0.28125, 0.5625, 0, 0.5625}
 local repairIconCoords = {0.5625, 0.84375, 0, 0.5625}
 
 -- Do LDB stuff --
-local DLDB = LibStub("LibDataBroker-1.1")
-LDB = DLDB:NewDataObject(me, {
+DurrrLDB = LibStub("LibDataBroker-1.1"):NewDataObject("DurrrabilityLDB", {
   type = "data source",
   label = L["Durability"],
   text = "",
@@ -93,6 +92,10 @@ LDB = DLDB:NewDataObject(me, {
   end,
 })
 
+tinsert(Durrr_globals.enableTasks, function(self)
+  mapIcon = LibStub("LibDBIcon-1.0"):Register("DurrrabilityMapIcon", DurrrLDB, addon.db.profile.minimap)
+end)
+
 function addon:MainUpdate()
   if Durrr_globals.updateReq then
     Durrr_globals.updateReq = false
@@ -104,16 +107,16 @@ function addon:MainUpdate()
     local totalCost, percent, percentMin  = addon:GetRepairData()
 
     if percentMin then
-      LDB.text = (string.format(addon:Colorize("%d%%", "%s"), percentMin * 100, addon:GetThresholdHexColor(percentMin)))
+      DurrrLDB.text = (string.format(addon:Colorize("%d%%", "%s"), percentMin * 100, addon:GetThresholdHexColor(percentMin)))
     end
   end
 end
 
 function addon:UpdateIcon()
 	if addon.db.profile.repairFromGuild and (addon.db.profile.repairType == 1) then
-		LDB.iconCoords = repairIconCoords
+		DurrrLDB.iconCoords = repairIconCoords
 	else
-		LDB.iconCoords = repairIconCoords
+		DurrrLDB.iconCoords = repairIconCoords
 	end
 end
 -- End LDB stuff --
