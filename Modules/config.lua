@@ -36,7 +36,7 @@ end
 -- End Options --
 
 function addon:UpdateOptions()
-  LibStub("AceConfigRegistry-3.0"):NotifyChange("Durrrability")
+  LibStub("AceConfigRegistry-3.0"):NotifyChange(me)
 end
 
 --[[
