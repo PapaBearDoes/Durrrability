@@ -1,9 +1,10 @@
 # Durrr(ability)
-This is a small LDB plugin for durability display.
 
 *Because everyone has had that Durrr moment and forgot to repair when we're able to.*
 
 The aim of Durrr(ability) is to give you the ability to see when your stuff's borked.
+
+If you have an LDB display like [ChocolateBar](https://www.curseforge.com/wow/addons/chocolatebar) or [TitanPanel](https://www.curseforge.com/wow/addons/titan-panel) this will automatically place itself in your display.  Otherwise, it's just a minimap button that you can move around the minimap or hide completely if you want to.
 
 **Features**
 * Auto-Updating percentage display on your chosen LDB Display
