@@ -18,6 +18,7 @@ local L = addon:GetLocale()
 -- Define Globals
 Durrr_globals = {
   enableTasks = {},
+  mapIcon = {},
   ID = 6,
   SLOT = 4,
   NAME = 5,
@@ -62,7 +63,7 @@ Durrr_dbDefaults = {
     showDetails = true,
     showBags = true,
     updateInCombat = false,
-    showAllItemsAlways = true,
+    showAllItemsAlways = false,
     repairFromGuild = true,
     repairFromGuildOnly = false,
     repairThreshold = 4,
@@ -73,15 +74,12 @@ Durrr_dbDefaults = {
     warnThreshold = 65,
     critWarntoRepair = true,
     critWarnThreshold = 25,
-    showMinimapButton = true,
     minimap = {
-      hide = false,
-      lock = false,
+      hide = true,
       minimapPos = 205,
-      radius = 80,
     },
-    modules = {
-      ["*"] = 3
+    moduleEnabledState = {
+      ["*"] = true
     }
   }
 }
@@ -150,14 +148,20 @@ Durrr_options = {
           name = L["ShowMinimapButton"],
           desc = L["ShowMinimapButtonDesc"],
           get = function()
-            return addon.db.profile.showMinimapButton
+            if addon.db.profile.minimap.hide == true then
+              show = false
+            else
+              show = true
+            end
+            return show
           end,
           set = function(key, value)
-            addon.db.profile.showMinimapButton = value
             if value == true then
               addon.db.profile.minimap.hide = false
+              icon:Show("Durrr_MapIcon")
             else
               addon.db.profile.minimap.hide = true
+              icon:Hide("Durrr_MapIcon")
             end
           end,
         },
@@ -355,6 +359,116 @@ Durrr_options = {
     },
   },
 }
+--End Globals
+
+function addon:OnInitialize()
+  addon.db = LibStub("AceDB-3.0"):New("DurrrabilityDB", Durrr_dbDefaults, "Default")
+  if not addon.db then
+    local errorDB = L["ErrorDB"]
+    print(errorDB)
+  end
+  addon.db.RegisterCallback(self, "OnProfileChanged", "UpdateProfile")
+  addon.db.RegisterCallback(self, "OnProfileCopied", "UpdateProfile")
+  addon.db.RegisterCallback(self, "OnProfileReset", "UpdateProfile")
+
+  Durrr_options.args.profile = LibStub("AceDBOptions-3.0"):GetOptionsTable(addon.db)
+  LibStub("AceConfig-3.0"):RegisterOptionsTable(me, Durrr_options, nil)
+
+  local i, item
+  for i, item in pairs(Durrr_globals.slots) do
+    Durrr_globals.slots[i][Durrr_globals.ID] = GetInventorySlotInfo(item[Durrr_globals.SLOT] .. "Slot")
+  end
+
+  -- Enable/disable modules based on saved settings
+	for name, module in addon:IterateModules() do
+		module:SetEnabledState(self.db.profile.moduleEnabledState[name] or false)
+    --if module.OnEnable then
+      --hooksecurefunc(module, "OnEnable", self.OnModuleEnable_Common) -- Posthook
+    --end
+  end
+
+  addon:CreateDialogs()
+
+  addon:RegisterEvent("PLAYER_DEAD", "ScheduleUpdate")
+	addon:RegisterEvent("PLAYER_UNGHOST", "ScheduleUpdate")
+	addon:RegisterEvent("UPDATE_INVENTORY_DURABILITY", "ScheduleUpdate")
+	addon:RegisterEvent("PLAYER_REGEN_ENABLED", "OnRestEnable")
+	addon:RegisterEvent("PLAYER_REGEN_DISABLED", "OnRestDisable")
+	addon:RegisterEvent("MERCHANT_SHOW", "OnVendorShow")
+	addon:RegisterEvent("MERCHANT_CLOSED", "OnVendorClose")
+
+  if (addon.db.profile.warntoRepair or addon.db.profile.critWarntoRepair) then
+    addon:RegisterEvent("PLAYER_UPDATE_RESTING", "OnWarnUpdate")
+    addon:RegisterEvent("ZONE_CHANGED", "OnWarnUpdate")
+    addon:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnWarnUpdate")
+    addon:ScheduleTimer("OnWarnUpdate", 5)
+  end
+
+  addon:MiniMapIcon()
+
+  addon:UpdateIcon()
+  addon:ScheduleUpdate()
+end
+
+function addon:MiniMapIcon()
+  if icon == nil or not icon then
+    icon = LDB and LibStub("LibDBIcon-1.0")
+    icon:Register("Durrr_MapIcon", DLDB)
+  end
+end
+
+function addon:OnEnable()
+  local Durrr_Dialog = LibStub("AceConfigDialog-3.0")
+  Durrr_optionFrames = {}
+  Durrr_optionFrames.general = Durrr_Dialog:AddToBlizOptions("Durrrability", nil, nil, "general")
+  Durrr_optionFrames.profile = Durrr_Dialog:AddToBlizOptions("Durrrability", L["Profiles"], "Durrrability", "profile")
+
+  addon:ScheduleRepeatingTimer("MainUpdate", 1)
+
+end
+
+function addon:OnDisable()
+end
+
+-- Config window --
+function addon:ShowConfig()
+	InterfaceOptionsFrame_OpenToCategory(Durrr_optionFrames.profile)
+	InterfaceOptionsFrame_OpenToCategory(Durrr_optionFrames.general)
+end
+-- End Options --
+
+function addon:UpdateOptions()
+  LibStub("AceConfigRegistry-3.0"):NotifyChange(me)
+end
+
+function addon:UpdateProfile()
+  addon:ScheduleTimer("UpdateProfileDelayed", 0)
+end
+
+function addon:OnProfileChanged(event, database, newProfileKey)
+  addon.db.profile = database.profile
+end
+
+function addon:UpdateProfileDelayed()
+  for timerKey, timerValue in addon:IterateModules() do
+    if timerValue.db.profile.on then
+      if timerValue:IsEnabled() then
+        timerValue:Disable()
+        timerValue:Enable()
+      else
+        timerValue:Enable()
+      end
+    else
+      timerValue:Disable()
+    end
+  end
+
+  addon:UpdateOptions()
+end
+
+function addon:OnProfileReset()
+end
+
 --[[
      ########################################################################
      |  Last Editted By: @file-author@ - @file-date-iso@
