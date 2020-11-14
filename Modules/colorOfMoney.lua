@@ -51,25 +51,25 @@ function addon:GetRepairData()
 	local current = 0
 	local index, item
 
-	for index, item in pairs(Durrr_globals.slots) do
-		local val, max = GetInventoryItemDurability(Durrr_globals.slots[index][Durrr_globals.ID])
-		local hasItem, hasCooldown, repairCost = Durrr_frame:SetInventoryItem("player", Durrr_globals.slots[index][Durrr_globals.ID])
+	for index, item in pairs(addon.globals.slots) do
+		local val, max = GetInventoryItemDurability(addon.globals.slots[index][addon.globals.ID])
+		local hasItem, hasCooldown, repairCost = Durrr_frame:SetInventoryItem("player", addon.globals.slots[index][addon.globals.ID])
 		if max then
-			if Durrr_globals.vendorState == true then
+			if addon.globals.vendorState == true then
 				repairCost = addon:VendorFix(repairCost)
 			end
 			total = total + max
 			current = current + val
 			totalCost = totalCost + repairCost
-			Durrr_globals.slots[index][Durrr_globals.VAL] = val
-			Durrr_globals.slots[index][Durrr_globals.MAX] = max
-			Durrr_globals.slots[index][Durrr_globals.COST] = repairCost
+			addon.globals.slots[index][addon.globals.VAL] = val
+			addon.globals.slots[index][addon.globals.MAX] = max
+			addon.globals.slots[index][addon.globals.COST] = repairCost
 			percent = val / max
 			if percent < percentMin then
         percentMin = percent
       end
 		else
-			Durrr_globals.slots[index][Durrr_globals.MAX] = 0
+			addon.globals.slots[index][addon.globals.MAX] = 0
 		end
 	end
 
@@ -82,7 +82,7 @@ function addon:GetRepairData()
 				local val, max = GetContainerItemDurability(bag, slot)
 				local hasCooldown, repairCost = Durrr_frame:SetBagItem(bag, slot)
 				if max then
-					if Durrr_globals.vendorState == true then
+					if addon.globals.vendorState == true then
 						repairCost = addon:VendorFix(repairCost)
 					end
 					bagTotal = bagTotal + max

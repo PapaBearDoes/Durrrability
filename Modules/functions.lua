@@ -39,7 +39,7 @@ function addon:CreateDialogs()
       },
     },
     on_show = function(self, data)
-			self.text:SetFormattedText(L["WhoPays"], addon:Coins2Str(Durrr_globals.repairAllCost))
+			self.text:SetFormattedText(L["WhoPays"], addon:Coins2Str(addon.globals.repairAllCost))
     end,
     hide_on_escape = true,
     show_while_dead = false
@@ -60,8 +60,8 @@ function addon:CreateDialogs()
 			},
 		},
 		on_show = function(self, data)
-			local text = L["YourRepIs"] .. addon:Colorize(" %s.\n", Durrr_globals.repColor[data]) .. L["AutoRepairRequires"] .. addon:Colorize(" %s.\n", Durrr_globals.repColor[addon.db.profile.repairThreshold]) .. L["RepairConfirm"] .. "\n" .. L["ItWillCost"]
-			self.text:SetFormattedText(text, _G["FACTION_STANDING_LABEL" .. data], _G["FACTION_STANDING_LABEL" .. addon.db.profile.repairThreshold], addon:Coins2Str(Durrr_globals.repairAllCost))
+			local text = L["YourRepIs"] .. addon:Colorize(" %s.\n", addon.globals.repColor[data]) .. L["AutoRepairRequires"] .. addon:Colorize(" %s.\n", addon.globals.repColor[addon.db.profile.repairThreshold]) .. L["RepairConfirm"] .. "\n" .. L["ItWillCost"]
+			self.text:SetFormattedText(text, _G["FACTION_STANDING_LABEL" .. data], _G["FACTION_STANDING_LABEL" .. addon.db.profile.repairThreshold], addon:Coins2Str(addon.globals.repairAllCost))
 		end,
 		hide_on_escape = true,
 		show_while_dead = false
@@ -127,11 +127,11 @@ end
 
 -- Auto repair - Self --
 function addon:AutoRepair()
-  if Durrr_globals.canRepair == true then
+  if addon.globals.canRepair == true then
 		RepairAllItems()
-		addon:Print(addon:Colorize("[" .. L["AddonName"] .. "]", "green") .. L["RepairedPersonal"] .. " " .. addon:Coins2Str(Durrr_globals.repairAllCost))
+		addon:Print(addon:Colorize("[" .. L["AddonName"] .. "]", "green") .. L["RepairedPersonal"] .. " " .. addon:Coins2Str(addon.globals.repairAllCost))
 	else
-		addon:Print(addon:Colorize("["..L["AddonName"].."]", "green") .. L["CardDeclined"] .. " " .. addon:Coins2Str(Durrr_globals.repairAllCost))
+		addon:Print(addon:Colorize("["..L["AddonName"].."]", "green") .. L["CardDeclined"] .. " " .. addon:Coins2Str(addon.globals.repairAllCost))
   end
 end
 -- End Auto repair - Self --
@@ -145,9 +145,9 @@ function addon:AutoRepairFromBank()
 	else
 		guildBankWithdrawMoney = min(guildBankWithdrawMoney, guildBankMoney)
 	end
-	if Durrr_globals.canRepair == true and CanGuildBankRepair() and guildBankWithdrawMoney >= Durrr_globals.repairAllCost then
+	if addon.globals.canRepair == true and CanGuildBankRepair() and guildBankWithdrawMoney >= addon.globals.repairAllCost then
 		RepairAllItems(1)
-		addon:Print(addon:Colorize("["..L["AddonName"].."]", "green") .. L["RepairedGuildFunds"] .. " " .. addon:Coins2Str(Durrr_globals.repairAllCost))
+		addon:Print(addon:Colorize("["..L["AddonName"].."]", "green") .. L["RepairedGuildFunds"] .. " " .. addon:Coins2Str(addon.globals.repairAllCost))
   elseif addon.db.profile.repairFromGuildOnly then
     addon:Print(addon:Colorize("["..L["AddonName"].."]", "green") .. L["NoGuildGold"])
 	else
@@ -179,8 +179,8 @@ end
 
 -- Checks --
 function addon:RepairAttempt()
-	Durrr_globals.repairAllCost, Durrr_globals.canRepair = GetRepairAllCost()
-	if addon.db.profile.repairType > 0 and Durrr_globals.repairAllCost > 0 then
+	addon.globals.repairAllCost, addon.globals.canRepair = GetRepairAllCost()
+	if addon.db.profile.repairType > 0 and addon.globals.repairAllCost > 0 then
 		standing = UnitReaction("npc", "player")
 		if standing >= addon.db.profile.repairThreshold then
 			addon:DoRepair()

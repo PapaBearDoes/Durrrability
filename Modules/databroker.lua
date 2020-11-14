@@ -40,15 +40,15 @@ DLDB = LDB:NewDataObject("DLDB", {
     local totalCost, percent, percentMin  = addon:GetRepairData()
     if addon.db.profile.showAllItemsAlways then
       tooltip:AddLine(" ")
-      for index, item in pairs(Durrr_globals.slots) do
+      for index, item in pairs(addon.globals.slots) do
         if totalCost <= 0 then
         end
-        local p = item[Durrr_globals.VAL] / item[Durrr_globals.MAX]
+        local p = item[addon.globals.VAL] / item[addon.globals.MAX]
         if p <= 0 then
           p = 1
         end
         local r, g, b = addon:GetThresholdColor(p)
-        tooltip:AddDoubleLine(string.format("%d%%  " .. addon:Colorize("%s", "yellow"), p * 100, item[Durrr_globals.NAME]), addon:Coins2Str(math.floor(item[Durrr_globals.COST])), r, g, b, 1, 1, 1)
+        tooltip:AddDoubleLine(string.format("%d%%  " .. addon:Colorize("%s", "yellow"), p * 100, item[addon.globals.NAME]), addon:Coins2Str(math.floor(item[addon.globals.COST])), r, g, b, 1, 1, 1)
       end
       if addon.db.profile.showBags then
         local r, g, b = addon:GetThresholdColor(bagPercent)
@@ -61,11 +61,11 @@ DLDB = LDB:NewDataObject("DLDB", {
       else
         if addon.db.profile.showDetails then
           tooltip:AddLine(" ")
-          for index, item in pairs(Durrr_globals.slots) do
-            if item[Durrr_globals.MAX] > 0 and item[Durrr_globals.VAL] < item[Durrr_globals.MAX] then
-              local p = item[Durrr_globals.VAL] / item[Durrr_globals.MAX]
+          for index, item in pairs(addon.globals.slots) do
+            if item[addon.globals.MAX] > 0 and item[addon.globals.VAL] < item[addon.globals.MAX] then
+              local p = item[addon.globals.VAL] / item[addon.globals.MAX]
               local r, g, b = addon:GetThresholdColor(p)
-              tooltip:AddDoubleLine(string.format("%d%%  " .. addon:Colorize("%s", "yellow"), p * 100, item[Durrr_globals.NAME]), addon:Coins2Str(math.floor(item[Durrr_globals.COST])), r, g, b, 1, 1, 1)
+              tooltip:AddDoubleLine(string.format("%d%%  " .. addon:Colorize("%s", "yellow"), p * 100, item[addon.globals.NAME]), addon:Coins2Str(math.floor(item[addon.globals.COST])), r, g, b, 1, 1, 1)
             end
           end
           if addon.db.profile.showBags and (bagCost > 0) then
@@ -97,9 +97,9 @@ DLDB = LDB:NewDataObject("DLDB", {
 })
 
 function addon:MainUpdate()
-  if Durrr_globals.updateReq then
-    Durrr_globals.updateReq = false
-    if (Durrr_globals.combatState == true) and (not addon.db.profile.updateInCombat) then
+  if addon.globals.updateReq then
+    addon.globals.updateReq = false
+    if (addon.globals.combatState == true) and (not addon.db.profile.updateInCombat) then
       return
     end
 

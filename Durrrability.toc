@@ -41,11 +41,11 @@ Libraries\LibDBIcon-1.0\lib.xml
 #Load Languages
 Locales\locales.xml
 
-#Load Main Files
+#Load Main File
 Durrrability.lua
 
-#Load the rest
-Modules/includes.xml
+#Load modules
+Modules/modules.xml
 
 #Last Editted By: @file-author@ - @file-date-iso@
 #@file-revision@

@@ -16,7 +16,7 @@ local L = addon:GetLocale()
 --[[ ######################################################################## ]]
 --   ## Do All The Things!!!
 -- Define Globals
-Durrr_globals = {
+addon.globals = {
   enableTasks = {},
   mapIcon = {},
   ID = 6,
@@ -375,8 +375,8 @@ function addon:OnInitialize()
   LibStub("AceConfig-3.0"):RegisterOptionsTable(me, Durrr_options, nil)
 
   local i, item
-  for i, item in pairs(Durrr_globals.slots) do
-    Durrr_globals.slots[i][Durrr_globals.ID] = GetInventorySlotInfo(item[Durrr_globals.SLOT] .. "Slot")
+  for i, item in pairs(addon.globals.slots) do
+    addon.globals.slots[i][addon.globals.ID] = GetInventorySlotInfo(item[addon.globals.SLOT] .. "Slot")
   end
 
   -- Enable/disable modules based on saved settings
