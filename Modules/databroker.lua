@@ -11,8 +11,8 @@
 local _G = _G
 --Durrr = select(2, ...)
 local me, ns = ...
-local addon = ns
-local L = addon:GetLocale()
+local Durrrability = ns
+local L = Durrrability:GetLocale()
 -- End Imports
 --[[ ######################################################################## ]]
 --   ## Do All The Things!!!
@@ -29,48 +29,48 @@ DLDB = LDB:NewDataObject("DLDB", {
   iconCoords = repairIconCoords,
   OnClick = function(frame, click)
     if click == "RightButton" then
-      addon:ShowConfig()
+      Durrrability:ShowConfig()
     end
-    addon:MainUpdate()
+    Durrrability:MainUpdate()
   end,
   OnTooltipShow = function(tooltip)
     if not tooltip or not tooltip.AddLine then return end
     tooltip:AddLine(L["AddonName"] .. " " .. GetAddOnMetadata("Durrrability", "Version"))
 
-    local totalCost, percent, percentMin  = addon:GetRepairData()
-    if addon.db.profile.showAllItemsAlways then
+    local totalCost, percent, percentMin  = Durrrability:GetRepairData()
+    if Durrrability.db.profile.showAllItemsAlways then
       tooltip:AddLine(" ")
-      for index, item in pairs(addon.globals.slots) do
+      for index, item in pairs(Durrrability.globals.slots) do
         if totalCost <= 0 then
         end
-        local p = item[addon.globals.VAL] / item[addon.globals.MAX]
+        local p = item[Durrrability.globals.VAL] / item[Durrrability.globals.MAX]
         if p <= 0 then
           p = 1
         end
-        local r, g, b = addon:GetThresholdColor(p)
-        tooltip:AddDoubleLine(string.format("%d%%  " .. addon:Colorize("%s", "yellow"), p * 100, item[addon.globals.NAME]), addon:Coins2Str(math.floor(item[addon.globals.COST])), r, g, b, 1, 1, 1)
+        local r, g, b = Durrrability:GetThresholdColor(p)
+        tooltip:AddDoubleLine(string.format("%d%%  " .. Durrrability:Colorize("%s", "yellow"), p * 100, item[Durrrability.globals.NAME]), Durrrability:Coins2Str(math.floor(item[Durrrability.globals.COST])), r, g, b, 1, 1, 1)
       end
-      if addon.db.profile.showBags then
-        local r, g, b = addon:GetThresholdColor(bagPercent)
-        tooltip:AddDoubleLine(string.format("%d%%  " .. addon:Colorize("Bags", "yellow"), bagPercent * 100), addon:Coins2Str(math.floor(bagCost)), r, g, b, 1, 1, 1)
+      if Durrrability.db.profile.showBags then
+        local r, g, b = Durrrability:GetThresholdColor(bagPercent)
+        tooltip:AddDoubleLine(string.format("%d%%  " .. Durrrability:Colorize("Bags", "yellow"), bagPercent * 100), Durrrability:Coins2Str(math.floor(bagCost)), r, g, b, 1, 1, 1)
       end
     else
       if totalCost <= 0 then
         tooltip:AddLine(" ")
         tooltip:AddLine(L["NoBroke"], 0, 1, 0)
       else
-        if addon.db.profile.showDetails then
+        if Durrrability.db.profile.showDetails then
           tooltip:AddLine(" ")
-          for index, item in pairs(addon.globals.slots) do
-            if item[addon.globals.MAX] > 0 and item[addon.globals.VAL] < item[addon.globals.MAX] then
-              local p = item[addon.globals.VAL] / item[addon.globals.MAX]
-              local r, g, b = addon:GetThresholdColor(p)
-              tooltip:AddDoubleLine(string.format("%d%%  " .. addon:Colorize("%s", "yellow"), p * 100, item[addon.globals.NAME]), addon:Coins2Str(math.floor(item[addon.globals.COST])), r, g, b, 1, 1, 1)
+          for index, item in pairs(Durrrability.globals.slots) do
+            if item[Durrrability.globals.MAX] > 0 and item[Durrrability.globals.VAL] < item[Durrrability.globals.MAX] then
+              local p = item[Durrrability.globals.VAL] / item[Durrrability.globals.MAX]
+              local r, g, b = Durrrability:GetThresholdColor(p)
+              tooltip:AddDoubleLine(string.format("%d%%  " .. Durrrability:Colorize("%s", "yellow"), p * 100, item[Durrrability.globals.NAME]), Durrrability:Coins2Str(math.floor(item[Durrrability.globals.COST])), r, g, b, 1, 1, 1)
             end
           end
-          if addon.db.profile.showBags and (bagCost > 0) then
-            local r, g, b = addon:GetThresholdColor(bagPercent)
-            tooltip:AddDoubleLine(string.format("%d%%  " .. addon:Colorize("Bags", "yellow"), bagPercent * 100), addon:Coins2Str(math.floor(bagCost)), r, g, b, 1, 1, 1)
+          if Durrrability.db.profile.showBags and (bagCost > 0) then
+            local r, g, b = Durrrability:GetThresholdColor(bagPercent)
+            tooltip:AddDoubleLine(string.format("%d%%  " .. Durrrability:Colorize("Bags", "yellow"), bagPercent * 100), Durrrability:Coins2Str(math.floor(bagCost)), r, g, b, 1, 1, 1)
           end
         end
       end
@@ -78,40 +78,40 @@ DLDB = LDB:NewDataObject("DLDB", {
 
     tooltip:AddLine(" ")
 
-    local r, g, b = addon:GetThresholdColor(percent)
-		tooltip:AddDoubleLine(addon:Colorize(L["Average"] .. " :", "white"), string.format("%d%%", percent * 100), 1, 1, 1, r, g, b)
-    local r, g, b = addon:GetThresholdColor(percentMin)
-    tooltip:AddDoubleLine(addon:Colorize(L["Lowest"] .. " :", "white"), string.format("%d%%", percentMin * 100), 1, 1, 1, r, g, b)
+    local r, g, b = Durrrability:GetThresholdColor(percent)
+		tooltip:AddDoubleLine(Durrrability:Colorize(L["Average"] .. " :", "white"), string.format("%d%%", percent * 100), 1, 1, 1, r, g, b)
+    local r, g, b = Durrrability:GetThresholdColor(percentMin)
+    tooltip:AddDoubleLine(Durrrability:Colorize(L["Lowest"] .. " :", "white"), string.format("%d%%", percentMin * 100), 1, 1, 1, r, g, b)
 
     tooltip:AddLine(" ")
-		tooltip:AddLine(addon:Colorize(L["RepCost"], "white"))
-		tooltip:AddDoubleLine(addon:Colorize(_G["FACTION_STANDING_LABEL4"], "yellow"), addon:Coins2Str(math.floor(totalCost)))
-		tooltip:AddDoubleLine(addon:Colorize(_G["FACTION_STANDING_LABEL5"], "aaff00"), addon:Coins2Str(math.floor(totalCost*0.95)))
-		tooltip:AddDoubleLine(addon:Colorize(_G["FACTION_STANDING_LABEL6"], "55ff00"), addon:Coins2Str(math.floor(totalCost*0.90)))
-		tooltip:AddDoubleLine(addon:Colorize(_G["FACTION_STANDING_LABEL7"], "00ff00"), addon:Coins2Str(math.floor(totalCost*0.85)))
-		tooltip:AddDoubleLine(addon:Colorize(_G["FACTION_STANDING_LABEL8"], "00ffaa"), addon:Coins2Str(math.floor(totalCost*0.80)))
+		tooltip:AddLine(Durrrability:Colorize(L["RepCost"], "white"))
+		tooltip:AddDoubleLine(Durrrability:Colorize(_G["FACTION_STANDING_LABEL4"], "yellow"), Durrrability:Coins2Str(math.floor(totalCost)))
+		tooltip:AddDoubleLine(Durrrability:Colorize(_G["FACTION_STANDING_LABEL5"], "aaff00"), Durrrability:Coins2Str(math.floor(totalCost*0.95)))
+		tooltip:AddDoubleLine(Durrrability:Colorize(_G["FACTION_STANDING_LABEL6"], "55ff00"), Durrrability:Coins2Str(math.floor(totalCost*0.90)))
+		tooltip:AddDoubleLine(Durrrability:Colorize(_G["FACTION_STANDING_LABEL7"], "00ff00"), Durrrability:Coins2Str(math.floor(totalCost*0.85)))
+		tooltip:AddDoubleLine(Durrrability:Colorize(_G["FACTION_STANDING_LABEL8"], "00ffaa"), Durrrability:Coins2Str(math.floor(totalCost*0.80)))
 
     tooltip:AddLine(" ")
-    tooltip:AddLine(addon:Colorize(L["RightClick"] .. " ", "eda55f") .. L["RightToolTip"])
+    tooltip:AddLine(Durrrability:Colorize(L["RightClick"] .. " ", "eda55f") .. L["RightToolTip"])
   end,
 })
 
-function addon:MainUpdate()
-  if addon.globals.updateReq then
-    addon.globals.updateReq = false
-    if (addon.globals.combatState == true) and (not addon.db.profile.updateInCombat) then
+function Durrrability:MainUpdate()
+  if Durrrability.globals.updateReq then
+    Durrrability.globals.updateReq = false
+    if (Durrrability.globals.combatState == true) and (not Durrrability.db.profile.updateInCombat) then
       return
     end
 
-    local totalCost, percent, percentMin  = addon:GetRepairData()
+    local totalCost, percent, percentMin  = Durrrability:GetRepairData()
     if percentMin then
-      DLDB.text = (string.format(addon:Colorize("%d%%", "%s"), percentMin * 100, addon:GetThresholdHexColor(percentMin)))
+      DLDB.text = (string.format(Durrrability:Colorize("%d%%", "%s"), percentMin * 100, Durrrability:GetThresholdHexColor(percentMin)))
     end
   end
 end
 
-function addon:UpdateIcon()
-	if addon.db.profile.repairFromGuild and (addon.db.profile.repairType == 1) then
+function Durrrability:UpdateIcon()
+	if Durrrability.db.profile.repairFromGuild and (Durrrability.db.profile.repairType == 1) then
 		DLDB.iconCoords = repairIconCoords
 	else
 		DLDB.iconCoords = repairIconCoords

@@ -11,29 +11,29 @@
 local _G = _G
 --Durrr = select(2, ...)
 local me, ns = ...
-local addon = ns
-local L = addon:GetLocale()
+local Durrrability = ns
+local L = Durrrability:GetLocale()
 -- End Imports
 --[[ ######################################################################## ]]
 --   ## Do All The Things!!!
-function addon:ScheduleUpdate()
-  if (addon.db.profile.critWarntoRepair) then
-    addon:WarnToRepair()
+function Durrrability:ScheduleUpdate()
+  if (Durrrability.db.profile.critWarntoRepair) then
+    Durrrability:WarnToRepair()
   end
-  addon.globals.updateReq = true
+  Durrrability.globals.updateReq = true
 end
 
-function addon:OnVendorShow()
-  addon.globals.vendorState = true
+function Durrrability:OnVendorShow()
+  Durrrability.globals.vendorState = true
   if not CanMerchantRepair() then
     return
   end
-  addon:RepairAttempt()
+  Durrrability:RepairAttempt()
 end
 
-function addon:OnVendorClose()
+function Durrrability:OnVendorClose()
   local Durrr_Dialog = LibStub("LibDialog-1.0")
-  addon.globals.vendorState = false
+  Durrrability.globals.vendorState = false
   if Durrr_Dialog:ActiveDialog("Durrr_Confirm") then
     Durrr_Dialog:Dismiss("Durrr_Confirm")
   end
@@ -42,20 +42,20 @@ function addon:OnVendorClose()
   end
 end
 
-function addon:OnRestEnable()
-  addon.globals.combatState = false
-  addon:ScheduleUpdate()
+function Durrrability:OnRestEnable()
+  Durrrability.globals.combatState = false
+  Durrrability:ScheduleUpdate()
 end
 
-function addon:OnRestDisable()
-  addon.globals.combatState = true
+function Durrrability:OnRestDisable()
+  Durrrability.globals.combatState = true
 end
 
-function addon:OnWarnUpdate()
+function Durrrability:OnWarnUpdate()
   if IsResting() then
-    addon:WarnToRepair()
-  elseif (addon.db.profile.critWarntoRepair) then
-    addon:WarnToRepair()
+    Durrrability:WarnToRepair()
+  elseif (Durrrability.db.profile.critWarntoRepair) then
+    Durrrability:WarnToRepair()
   end
 end
 -- End Events --

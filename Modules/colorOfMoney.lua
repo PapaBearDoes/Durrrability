@@ -11,13 +11,13 @@
 local _G = _G
 --Durrr = select(2, ...)
 local me, ns = ...
-local addon = ns
-local L = addon:GetLocale()
+local Durrrability = ns
+local L = Durrrability:GetLocale()
 -- End Imports
 --[[ ######################################################################## ]]
 --   ## Do All The Things!!!
 -- Show coins with icons --
-function addon:Coins2Str(copper)
+function Durrrability:Coins2Str(copper)
   local coins = ""
   if not copper or copper < 0 then
     return coints
@@ -26,15 +26,15 @@ function addon:Coins2Str(copper)
   if copper >= 10000 then
 		local gold = math.floor(copper / 10000)
 		copper = copper - gold * 10000
-		coins = coins .. addon:Colorize(gold, "gold") .. " |TInterface\\MoneyFrame\\UI-GoldIcon.blp:0:0:0:0|t"
+		coins = coins .. Durrrability:Colorize(gold, "gold") .. " |TInterface\\MoneyFrame\\UI-GoldIcon.blp:0:0:0:0|t"
 	end
 	if copper >= 100 then
 		local silver = math.floor(copper / 100)
 		copper = copper - silver * 100
-		coins = coins .. addon:Colorize(silver, "silver") .. " |TInterface\\MoneyFrame\\UI-SilverIcon.blp:0:0:0:0|t"
+		coins = coins .. Durrrability:Colorize(silver, "silver") .. " |TInterface\\MoneyFrame\\UI-SilverIcon.blp:0:0:0:0|t"
 	end
 	if copper >= 0 then
-		coins = coins .. addon:Colorize(copper, "copper") .. " |TInterface\\MoneyFrame\\UI-CopperIcon.blp:0:0:0:0|t"
+		coins = coins .. Durrrability:Colorize(copper, "copper") .. " |TInterface\\MoneyFrame\\UI-CopperIcon.blp:0:0:0:0|t"
 	end
 
 	return coins
@@ -42,7 +42,7 @@ end
 -- End Show coins with icons --
 
 -- Data Updates --
-function addon:GetRepairData()
+function Durrrability:GetRepairData()
 	local totalCost = 0
 	local percent = 0
 	local percentMin = 1
@@ -51,39 +51,39 @@ function addon:GetRepairData()
 	local current = 0
 	local index, item
 
-	for index, item in pairs(addon.globals.slots) do
-		local val, max = GetInventoryItemDurability(addon.globals.slots[index][addon.globals.ID])
-		local hasItem, hasCooldown, repairCost = Durrr_frame:SetInventoryItem("player", addon.globals.slots[index][addon.globals.ID])
+	for index, item in pairs(Durrrability.globals.slots) do
+		local val, max = GetInventoryItemDurability(Durrrability.globals.slots[index][Durrrability.globals.ID])
+		local hasItem, hasCooldown, repairCost = Durrrability.frame:SetInventoryItem("player", Durrrability.globals.slots[index][Durrrability.globals.ID])
 		if max then
-			if addon.globals.vendorState == true then
-				repairCost = addon:VendorFix(repairCost)
+			if Durrrability.globals.vendorState == true then
+				repairCost = Durrrability:VendorFix(repairCost)
 			end
 			total = total + max
 			current = current + val
 			totalCost = totalCost + repairCost
-			addon.globals.slots[index][addon.globals.VAL] = val
-			addon.globals.slots[index][addon.globals.MAX] = max
-			addon.globals.slots[index][addon.globals.COST] = repairCost
+			Durrrability.globals.slots[index][Durrrability.globals.VAL] = val
+			Durrrability.globals.slots[index][Durrrability.globals.MAX] = max
+			Durrrability.globals.slots[index][Durrrability.globals.COST] = repairCost
 			percent = val / max
 			if percent < percentMin then
         percentMin = percent
       end
 		else
-			addon.globals.slots[index][addon.globals.MAX] = 0
+			Durrrability.globals.slots[index][Durrrability.globals.MAX] = 0
 		end
 	end
 
 	local bagTotal, bagCurrent = 0, 0
-	if addon.db.profile.showBags then
+	if Durrrability.db.profile.showBags then
 		bagCost = 0;
 		for bag = 0, 4 do
 			local numSlots = GetContainerNumSlots(bag)
 			for slot = 1, numSlots do
 				local val, max = GetContainerItemDurability(bag, slot)
-				local hasCooldown, repairCost = Durrr_frame:SetBagItem(bag, slot)
+				local hasCooldown, repairCost = Durrrability.frame:SetBagItem(bag, slot)
 				if max then
-					if addon.globals.vendorState == true then
-						repairCost = addon:VendorFix(repairCost)
+					if Durrrability.globals.vendorState == true then
+						repairCost = Durrrability:VendorFix(repairCost)
 					end
 					bagTotal = bagTotal + max
 					bagCurrent = bagCurrent + val
@@ -112,7 +112,7 @@ end
 -- End Data Updates --
 
 -- Faction discount --
-function addon:VendorFix(value)
+function Durrrability:VendorFix(value)
 	local standing = UnitReaction("npc", "player")
 	if standing == 5 then
 		value = value * 100 / 95
@@ -128,10 +128,10 @@ end
 -- End Faction discount --
 
 -- Do Colors --
-function addon:GetThresholdPercentage(quality, ...)
+function Durrrability:GetThresholdPercentage(quality, ...)
   local n = select('#', ...)
   if n <= 1 then
-    return addon:GetThresholdPercentage(quality, 0, ... or 1)
+    return Durrrability:GetThresholdPercentage(quality, 0, ... or 1)
   end
 
   local worst = ...
@@ -178,12 +178,12 @@ function addon:GetThresholdPercentage(quality, ...)
   end
 end
 
-function addon:GetThresholdColor(quality, ...)
+function Durrrability:GetThresholdColor(quality, ...)
   if quality ~= quality then
     return 1, 1, 1
   end
 
-  local percent = addon:GetThresholdPercentage(quality, ...)
+  local percent = Durrrability:GetThresholdPercentage(quality, ...)
 
   if percent <= 0 then
     return 1, 0, 0
@@ -196,8 +196,8 @@ function addon:GetThresholdColor(quality, ...)
   end
 end
 
-function addon:GetThresholdHexColor(quality, ...)
-	local r, g, b = addon:GetThresholdColor(quality, ...)
+function Durrrability:GetThresholdHexColor(quality, ...)
+	local r, g, b = Durrrability:GetThresholdColor(quality, ...)
 	return string.format("%02x%02x%02x", r * 255, g * 255, b * 255)
 end
 --[[
