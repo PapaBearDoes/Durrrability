@@ -8,7 +8,7 @@
 #@end-do-not-package@
 ## Version: @project-version@
 #@do-not-package@
-## Version: 1.0.0-Release
+## Version: 1.0.1
 #@end-do-not-package@
 ## Notes: A Simple Durability Plugin for LDB Displays
 ## Notes-deDE: Ein einfaches Haltbarkeits-Plugin für LDB-Displays
@@ -25,7 +25,7 @@
 ## OptionalDeps: LibInit, LibDialog-1.0
 
 #X-Meta
-## X-Category: Data Broker, Miscellaneous
+## X-Category: Data Broker, Miscellaneous, Bags & Inventory, Tooltip
 ## X-License: GPLv3
 ## X-Website: https://github.com/PapaBearDoes/Durrrability
 ## X-Curse-Project-ID: 416370
