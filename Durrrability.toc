@@ -8,7 +8,7 @@
 #@end-do-not-package@
 ## Version: @project-version@
 #@do-not-package@
-## Version: 1.0.1
+## Version: 1.0.5
 #@end-do-not-package@
 ## Notes: A Simple Durability Plugin for LDB Displays
 ## Notes-deDE: Ein einfaches Haltbarkeits-Plugin für LDB-Displays
