@@ -36,7 +36,7 @@
 #Load Libraries
 Libraries\LibInit\LibInit.xml
 Libraries\LibDialog-1.0\lib.xml
-Libraries\LibDBIcon-1.0\embeds.xml
+Libraries\LibDBIcon-1.0\LibDBIcon-1.0\lib.xml
 
 #Load Languages
 Locales\locales.xml
