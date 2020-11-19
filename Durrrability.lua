@@ -68,9 +68,9 @@ function Durrrability:OnModuleEnable_Common()
 end
 
 function Durrrability:MiniMapIcon()
-  if icon == nil or not icon then
-    icon = LDB and LibStub("LibDBIcon-1.0")
-    icon:Register("Durrr_MapIcon", DLDB)
+  if Durrr_icon == nil or not Durrr_icon then
+    Durrr_icon = Durrr_LDB and LibStub("LibDBIcon-1.0")
+    Durrr_icon:Register("Durrr_MapIcon", DLDB)
   end
 end
 

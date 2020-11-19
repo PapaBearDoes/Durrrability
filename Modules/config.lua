@@ -89,10 +89,10 @@ Durrrability.options = {
           set = function(key, value)
             if value == true then
               Durrrability.db.profile.minimap.hide = false
-              icon:Show("Durrr_MapIcon")
+              Durrr_icon:Show("Durrr_MapIcon")
             else
               Durrrability.db.profile.minimap.hide = true
-              icon:Hide("Durrr_MapIcon")
+              Durrr_icon:Hide("Durrr_MapIcon")
             end
           end,
         },
