@@ -13,11 +13,11 @@ local me, ns = ...
 local durrrabilityInitOptions = {
 	profile = "Default",
 	noswitch = false,
-	nogui = true,
-	nohelp = true,
-	enhancedProfile = false,
+	nogui = false,
+	nohelp = false,
+	enhancedProfile = true
 }
-local Durrrability = LibStub("LibInit"):NewAddon(ns, me, durrrabilityInitOptions, true)
+local Durrrability = LibStub("LibInit"):NewAddon(ns, me, durrrabilityInitOptions, true, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0", "AceHook-3.0")
 local L = Durrrability:GetLocale()
 -- End Imports
 --[[ ######################################################################## ]]
@@ -86,7 +86,7 @@ function Durrrability:OnEnable()
   local Durrr_Dialog = LibStub("AceConfigDialog-3.0")
   Durrr_OptionFrames = {}
   Durrr_OptionFrames.general = Durrr_Dialog:AddToBlizOptions("Durrrability", nil, nil, "general")
-  --Durrr_OptionFrames.profile = Durrr_Dialog:AddToBlizOptions("Durrrability", L["Profiles"], "Durrrability", "profile")
+  Durrr_OptionFrames.profile = Durrr_Dialog:AddToBlizOptions("Durrrability", L["Profiles"], "Durrrability", "profile")
 
   Durrrability:ScheduleRepeatingTimer("MainUpdate", 1)
 end
@@ -96,9 +96,8 @@ end
 
 -- Config window --
 function Durrrability:ShowConfig()
-	--InterfaceOptionsFrame_OpenToCategory(Durrr_OptionFrames.profile)
-  InterfaceOptionsFrame_OpenToCategory(Durrr_OptionFrames.general)
-  InterfaceOptionsFrame_OpenToCategory(Durrr_OptionFrames.general)
+	InterfaceOptionsFrame_OpenToCategory(Durrr_OptionFrames.profile)
+	InterfaceOptionsFrame_OpenToCategory(Durrr_OptionFrames.general)
 end
 -- End Options --
 
