@@ -31,7 +31,7 @@
 ## X-Curse-Project-ID: 416370
 
 #Functionality
-## SavedVariables: DurrrabilityDB
+## SavedVariables: DurrrabilitySV
 
 #Load Libraries
 Libraries\LibInit\LibInit.xml

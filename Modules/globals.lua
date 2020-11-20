@@ -59,6 +59,8 @@ Durrrability.frame:SetOwner(WorldFrame, "ANCHOR_NONE")
 
 -- Create DB defaults
 Durrrability.dbDefaults = {
+  global = {
+  },
   profile = {
     showDetails = true,
     showBags = true,
@@ -74,13 +76,13 @@ Durrrability.dbDefaults = {
     warnThreshold = 65,
     critWarntoRepair = true,
     critWarnThreshold = 25,
-    minimap = {
-      hide = true,
-      minimapPos = 205,
-    },
     moduleEnabledState = {
       ["*"] = true
-    }
+    },
+    mmIcon = {
+      hide = false,
+      minimapPos = 205,
+    },
   }
 }
 --[[

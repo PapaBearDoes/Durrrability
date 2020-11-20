@@ -79,7 +79,7 @@ Durrrability.options = {
           name = L["ShowMinimapButton"],
           desc = L["ShowMinimapButtonDesc"],
           get = function()
-            if Durrrability.db.profile.minimap.hide == true then
+            if Durrrability.db.profile.mmIcon.hide == true then
               show = false
             else
               show = true
@@ -88,11 +88,11 @@ Durrrability.options = {
           end,
           set = function(key, value)
             if value == true then
-              Durrrability.db.profile.minimap.hide = false
-              Durrr_icon:Show("Durrr_MapIcon")
+              Durrrability.db.profile.mmIcon.hide = false
+              Durrr_icon:Show(me .. "_mapIcon")
             else
-              Durrrability.db.profile.minimap.hide = true
-              Durrr_icon:Hide("Durrr_MapIcon")
+              Durrrability.db.profile.mmIcon.hide = true
+              Durrr_icon:Hide(me .. "_mapIcon")
             end
           end,
         },

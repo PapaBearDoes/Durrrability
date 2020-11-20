@@ -16,7 +16,7 @@ local L = Durrrability:GetLocale()
 --[[ ######################################################################## ]]
 --   ## Do All The Things!!!
 function Durrrability:OnInitialize()
-  Durrrability.db = LibStub("AceDB-3.0"):New("DurrrabilityDB", Durrrability.dbDefaults, "Default")
+  Durrrability.db = LibStub("AceDB-3.0"):New("DurrrabilitySV", Durrrability.dbDefaults, "Default")
   if not Durrrability.db then
     local errorDB = L["ErrorDB"]
     print(errorDB)
@@ -43,6 +43,7 @@ function Durrrability:OnInitialize()
 
   Durrrability:CreateDialogs()
 
+  --Durrrability:RegisterEvent("ADDON_LOADED", "MiniMapIcon")
   Durrrability:RegisterEvent("PLAYER_DEAD", "ScheduleUpdate")
 	Durrrability:RegisterEvent("PLAYER_UNGHOST", "ScheduleUpdate")
 	Durrrability:RegisterEvent("UPDATE_INVENTORY_DURABILITY", "ScheduleUpdate")
@@ -58,19 +59,19 @@ function Durrrability:OnInitialize()
     Durrrability:ScheduleTimer("OnWarnUpdate", 5)
   end
 
-  Durrrability:MiniMapIcon()
-
   Durrrability:UpdateIcon()
   Durrrability:ScheduleUpdate()
+
+  Durrrability:MiniMapIcon()
 end
 
 function Durrrability:OnModuleEnable_Common()
 end
 
 function Durrrability:MiniMapIcon()
-  if Durrr_icon == nil or not Durrr_icon then
-    Durrr_icon = Durrr_LDB and LibStub("LibDBIcon-1.0")
-    Durrr_icon:Register("Durrr_MapIcon", DLDB)
+  Durrr_icon = LibStub("LibDBIcon-1.0")
+  if not Durrr_icon:IsRegistered(me .. "_mapIcon") then
+    Durrr_icon:Register(me .. "_mapIcon", DLDB, Durrrability.db.profile.mmIcon)
   end
 end
 
@@ -81,7 +82,6 @@ function Durrrability:OnEnable()
   Durrr_OptionFrames.profile = Durrr_Dialog:AddToBlizOptions("Durrrability", L["Profiles"], "Durrrability", "profile")
 
   Durrrability:ScheduleRepeatingTimer("MainUpdate", 1)
-
 end
 
 function Durrrability:OnDisable()
