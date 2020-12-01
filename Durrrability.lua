@@ -59,11 +59,15 @@ function Durrrability:OnInitialize()
 	Durrrability:RegisterEvent("MERCHANT_SHOW", "OnVendorShow")
 	Durrrability:RegisterEvent("MERCHANT_CLOSED", "OnVendorClose")
 
-  if (Durrrability.db.profile.warntoRepair or Durrrability.db.profile.critWarntoRepair) then
+  if (Durrrability.db.profile.warntoRepair) then
     Durrrability:RegisterEvent("PLAYER_UPDATE_RESTING", "OnWarnUpdate")
+		Durrrability:ScheduleTimer("OnWarnUpdate", 5)
+	end
+
+	if (Durrrability.db.profile.critWarntoRepair) then
     Durrrability:RegisterEvent("ZONE_CHANGED", "OnWarnUpdate")
     Durrrability:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnWarnUpdate")
-    Durrrability:ScheduleTimer("OnWarnUpdate", 5)
+		Durrrability:ScheduleTimer("OnWarnUpdate", 5)
   end
 
   Durrrability:UpdateIcon()
