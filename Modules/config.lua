@@ -265,8 +265,8 @@ Durrrability.options = {
 					set = function(key, value)
 						Durrrability.db.profile.critWarntoRepair = value
 						if (value) then
-              Durrrability:RegisterEvent("ZONE_CHANGED", "OnWarnUpdate")
-              Durrrability:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnWarnUpdate")
+              Durrrability:RegisterEvent("ZONE_CHANGED", "OnCritWarnUpdate")
+              Durrrability:RegisterEvent("ZONE_CHANGED_NEW_AREA", "OnCritWarnUpdate")
 						else
               Durrrability:RegisterEvent("ZONE_CHANGED")
               Durrrability:RegisterEvent("ZONE_CHANGED_NEW_AREA")
@@ -285,6 +285,27 @@ Durrrability.options = {
 					set = function(key, value)
 						Durrrability.db.profile.critWarnThreshold = value
 					end,
+        },
+        separator6 = {
+					type = "header",
+					name = "",
+					order = 50,
+				},
+        warnPause = {
+          type = "range",
+          name = L["WarnPause"],
+          desc = L["WarnPauseDesc"],
+          order = 51,
+          width = "full",
+          min = 0,
+          max = 30,
+          step = 1,
+          get = function()
+            return Durrrability.db.profile.warnPause
+          end,
+          set = function(key, value)
+            Durrrability.db.profile.warnPause = value
+          end,
         },
       },
     },

@@ -83,45 +83,60 @@ function Durrrability:CreateDialogs()
 		show_while_dead = false
 	})
 
-    Durrr_Dialog:Register("Durrr_WarnToRepair", {
-  		text = "",
-  		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
-  		buttons = {
-  			{
-  				text = L["Ok"]
-  			},
-  		},
-  		on_show = function(self, data)
-  			self.text:SetFormattedText(L["CityWarn"], data)
-  		end,
-  		hide_on_escape = true,
-  		show_while_dead = false
-  	})
+  Durrr_Dialog:Register("Durrr_WarnToRepair", {
+		text = "",
+		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
+		buttons = {
+			{
+				text = L["Ok"]
+			},
+		},
+		on_show = function(self, data)
+			self.text:SetFormattedText(L["CityWarn"], data)
+		end,
+		hide_on_escape = true,
+		show_while_dead = false,
+		on_hide = function()
+			local warnPause = Durrrability.db.profile.warnPause * 60
+			Durrrability.globals.alreadyWarned = true
+			Durrrability:ScheduleTimer("warnTimerReset", warnPause)
+		end,
+	})
 
-      Durrr_Dialog:Register("Durrr_CritWarnToRepair", {
-    		text = "",
-    		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
-    		buttons = {
-    			{
-    				text = L["Ok"]
-    			},
-    		},
-    		on_show = function(self, data)
-    			self.text:SetFormattedText(L["CritWarn"], data)
-    		end,
-    		hide_on_escape = true,
-    		show_while_dead = false
-    	})
+  Durrr_Dialog:Register("Durrr_CritWarnToRepair", {
+		text = "",
+		icon = [[Interface\DialogFrame\UI-Dialog-Icon-AlertNew]],
+		buttons = {
+			{
+				text = L["Ok"]
+			},
+		},
+		on_show = function(self, data)
+			self.text:SetFormattedText(L["CritWarn"], data)
+		end,
+		hide_on_escape = true,
+		show_while_dead = false,
+		on_hide = function()
+			local warnPause = Durrrability.db.profile.warnPause * 60
+			Durrrability.globals.alreadyWarned = true
+			Durrrability:ScheduleTimer("warnTimerReset", warnPause)
+		end,
+	})
 end
 -- End Dialog Popups --
 
 -- Below Threshold Warnings --
 function Durrrability:WarnToRepair()
 	local totalCost, percent, percentMin = Durrrability:GetRepairData()
+	if Durrrability.db.profile.warntoRepair and Durrrability.db.profile.warnThreshold >= percentMin * 100 then
+    Durrr_Dialog:Spawn("Durrr_WarnToRepair", Durrrability:Colorize(string.format("%d", percentMin * 100), Durrrability:GetThresholdHexColor(percentMin)))
+	end
+end
+
+function Durrrability:CritWarnToRepair()
+	local totalCost, percent, percentMin = Durrrability:GetRepairData()
 	if Durrrability.db.profile.critWarntoRepair and Durrrability.db.profile.critWarnThreshold >= percentMin * 100 then
     Durrr_Dialog:Spawn("Durrr_CritWarnToRepair", Durrrability:Colorize(string.format("%d", percentMin * 100), Durrrability:GetThresholdHexColor(percentMin)))
-	elseif Durrrability.db.profile.warntoRepair and Durrrability.db.profile.warnThreshold >= percentMin * 100 then
-    Durrr_Dialog:Spawn("Durrr_WarnToRepair", Durrrability:Colorize(string.format("%d", percentMin * 100), Durrrability:GetThresholdHexColor(percentMin)))
 	end
 end
 -- End Below Threshold Warning --

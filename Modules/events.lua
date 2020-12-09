@@ -17,9 +17,6 @@ local L = Durrrability:GetLocale()
 --[[ ######################################################################## ]]
 --   ## Do All The Things!!!
 function Durrrability:ScheduleUpdate()
-  if (Durrrability.db.profile.critWarntoRepair) then
-    Durrrability:WarnToRepair()
-  end
   Durrrability.globals.updateReq = true
 end
 
@@ -53,10 +50,23 @@ end
 
 function Durrrability:OnWarnUpdate()
   if IsResting() then
-    Durrrability:WarnToRepair()
-  elseif (Durrrability.db.profile.critWarntoRepair) then
-    Durrrability:WarnToRepair()
+    if Durrrability.globals.alreadyWarned == false then
+      Durrrability:WarnToRepair()
+    end
   end
+end
+
+function Durrrability:OnCritWarnUpdate()
+  if Durrrability.db.profile.critWarntoRepair then
+    if Durrrability.globals.alreadyWarned == false then
+      Durrrability:CritWarnToRepair()
+    end
+  end
+end
+
+function Durrrability:warnTimerReset()
+  Durrrability.globals.alreadyWarned = false
+  Durrrability:ScheduleTimer("OnWarnUpdate", 5)
 end
 -- End Events --
 

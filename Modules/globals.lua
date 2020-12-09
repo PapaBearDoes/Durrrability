@@ -30,6 +30,7 @@ Durrrability.globals = {
   combatState = false,
   vendorState = false,
   updateReq = true,
+  alreadyWarned = false,
   slots = {
     {0, 0, 0, "Head", L["Head"], 0},
     {0, 0, 0, "Neck", L["Neck"], 0},
@@ -76,6 +77,7 @@ Durrrability.dbDefaults = {
     warnThreshold = 65,
     critWarntoRepair = true,
     critWarnThreshold = 25,
+    warnPause = 5,
     moduleEnabledState = {
       ["*"] = true
     },

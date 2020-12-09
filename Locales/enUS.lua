@@ -107,6 +107,8 @@ L["SecondaryHand"] = "SecondaryHand"
 L["Shoulder"] = "Shoulder"
 L["Waist"] = "Waist"
 L["Wrist"] = "Wrist"
+L["WarnPause"] = "Warning Pause"
+L["WarnPauseDesc"] = "How long should we pause warnings after acknowledging them?"
 --@end-do-not-package@
 
 --[[

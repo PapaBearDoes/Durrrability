@@ -4,7 +4,7 @@
 ## Author: PapaBearDoes
 ## Version: @project-version@
 #@do-not-package@
-## Version: 1.0.8
+## Version: 1.0.9
 #@end-do-not-package@
 ## Notes: A Simple Durability Plugin for LDB Displays
 ## Notes-deDE: Ein einfaches Haltbarkeits-Plugin für LDB-Displays
