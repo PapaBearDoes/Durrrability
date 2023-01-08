@@ -5,13 +5,14 @@
      .---------------------------.OOOo--()--oOOO.---------------------------.
      |                                                                      |
      |  PapaBearDoes's Durrrability Addon for World of Warcraft
+     |  @project-version@
      ######################################################################## ]]
 --   ## Let's init this file shall we?
 -- Imports
 local _G = _G
 --Durrr = select(2, ...)
-local me, ns = ...
-local Durrrability = ns
+local myName, addon = ...
+local Durrrability = addon
 local L = Durrrability:GetLocale()
 -- End Imports
 --[[ ######################################################################## ]]
@@ -40,7 +41,7 @@ function Durrrability:CreateDialogs()
       },
     },
     on_show = function(self, data)
-			self.text:SetFormattedText(L["WhoPays"], Durrrability:Coins2Str(Durrrability.globals.repairAllCost))
+			self.text:SetFormattedText(L["WhoPays"], Durrrability:Coins2Str(Durrrability.db.global.repairAllCost))
     end,
     hide_on_escape = true,
     show_while_dead = false
@@ -61,8 +62,8 @@ function Durrrability:CreateDialogs()
 			},
 		},
 		on_show = function(self, data)
-			local text = L["YourRepIs"] .. Durrrability:Colorize(" %s.\n", Durrrability.globals.repColor[data]) .. L["AutoRepairRequires"] .. Durrrability:Colorize(" %s.\n", Durrrability.globals.repColor[Durrrability.db.profile.repairThreshold]) .. L["RepairConfirm"] .. "\n" .. L["ItWillCost"]
-			self.text:SetFormattedText(text, _G["FACTION_STANDING_LABEL" .. data], _G["FACTION_STANDING_LABEL" .. Durrrability.db.profile.repairThreshold], Durrrability:Coins2Str(Durrrability.globals.repairAllCost))
+			local text = L["YourRepIs"] .. Durrrability:Colorize(" %s.\n", Durrrability.db.global.repColor[data]) .. L["AutoRepairRequires"] .. Durrrability:Colorize(" %s.\n", Durrrability.db.global.repColor[Durrrability.db.profile.repairThreshold]) .. L["RepairConfirm"] .. "\n" .. L["ItWillCost"]
+			self.text:SetFormattedText(text, _G["FACTION_STANDING_LABEL" .. data], _G["FACTION_STANDING_LABEL" .. Durrrability.db.profile.repairThreshold], Durrrability:Coins2Str(Durrrability.db.global.repairAllCost))
 		end,
 		hide_on_escape = true,
 		show_while_dead = false
@@ -98,7 +99,7 @@ function Durrrability:CreateDialogs()
 		show_while_dead = false,
 		on_hide = function()
 			local warnPause = Durrrability.db.profile.warnPause * 60
-			Durrrability.globals.alreadyWarned = true
+			Durrrability.db.global.alreadyWarned = true
 			Durrrability:ScheduleTimer("warnTimerReset", warnPause)
 		end,
 	})
@@ -118,7 +119,7 @@ function Durrrability:CreateDialogs()
 		show_while_dead = false,
 		on_hide = function()
 			local warnPause = Durrrability.db.profile.warnPause * 60
-			Durrrability.globals.alreadyWarned = true
+			Durrrability.db.global.alreadyWarned = true
 			Durrrability:ScheduleTimer("warnTimerReset", warnPause)
 		end,
 	})
@@ -153,8 +154,8 @@ function Durrrability:LowRepConfirmation()
 end
 --[[
      ########################################################################
-     |  Last Editted By: PapaBearDoes - 2020-12-09T22:42:31Z
-     |  a7f3efb405ed0a7f2093c28fae666ca86e8610d6
+     |  Last Editted By: @file-author@ - @file-date-iso@
+     |  @file-hash@
      |                                                                      |
      '-------------------------.oooO----------------------------------------|
                               (    )     Oooo.

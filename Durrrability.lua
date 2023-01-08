@@ -5,11 +5,12 @@
      .---------------------------.OOOo--()--oOOO.---------------------------.
      |                                                                      |
      |  PapaBearDoes's Durrrability Addon for World of Warcraft
+     |  @project-version@
      ######################################################################## ]]
 --   ## Let's init this file shall we?
 -- Imports
 local _G = _G
-local me, ns = ...
+local myName, addon = ...
 local durrrabilityInitOptions = {
 	profile = "Default",
 	noswitch = false,
@@ -17,7 +18,7 @@ local durrrabilityInitOptions = {
 	nohelp = false,
 	enhancedProfile = true
 }
-local Durrrability = LibStub("LibInit"):NewAddon(ns, me, durrrabilityInitOptions, true, "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0", "AceHook-3.0")
+local Durrrability = LibStub("LibInit"):NewAddon(addon, myName, durrrabilityInitOptions, true)
 local L = Durrrability:GetLocale()
 -- End Imports
 --[[ ######################################################################## ]]
@@ -33,19 +34,11 @@ function Durrrability:OnInitialize()
   Durrrability.db.RegisterCallback(self, "OnProfileReset", "UpdateProfile")
 
   Durrrability.options.args.profile = LibStub("AceDBOptions-3.0"):GetOptionsTable(Durrrability.db)
-  LibStub("AceConfig-3.0"):RegisterOptionsTable(me, Durrrability.options, nil)
-
-  -- Enable/disable modules based on saved settings
-	for name, module in Durrrability:IterateModules() do
-		module:SetEnabledState(Durrrability.db.profile.moduleEnabledState[name] or false)
-    if module.OnEnable then
-      hooksecurefunc(module, "OnEnable", Durrrability.OnModuleEnable_Common)
-    end
-  end
+  LibStub("AceConfig-3.0"):RegisterOptionsTable(myName, Durrrability.options, nil)
 
   local i, item
-  for i, item in pairs(Durrrability.globals.slots) do
-    Durrrability.globals.slots[i][Durrrability.globals.ID] = GetInventorySlotInfo(item[Durrrability.globals.SLOT] .. "Slot")
+  for i, item in pairs(Durrrability.db.global.slots) do
+    Durrrability.db.global.slots[i][Durrrability.db.global.ID] = GetInventorySlotInfo(item[Durrrability.db.global.SLOT] .. "Slot")
   end
 
   Durrrability:CreateDialogs()
@@ -76,71 +69,18 @@ function Durrrability:OnInitialize()
   Durrrability:MiniMapIcon()
 end
 
-function Durrrability:OnModuleEnable_Common()
-end
-
-function Durrrability:MiniMapIcon()
-  Durrr_icon = LibStub("LibDBIcon-1.0")
-  if not Durrr_icon:IsRegistered(me .. "_mapIcon") then
-    Durrr_icon:Register(me .. "_mapIcon", DLDB, Durrrability.db.profile.mmIcon)
-  end
-end
-
 function Durrrability:OnEnable()
   local Durrr_Dialog = LibStub("AceConfigDialog-3.0")
   Durrr_OptionFrames = {}
-  Durrr_OptionFrames.general = Durrr_Dialog:AddToBlizOptions("Durrrability", nil, nil, "general")
-  Durrr_OptionFrames.profile = Durrr_Dialog:AddToBlizOptions("Durrrability", L["Profiles"], "Durrrability", "profile")
+  Durrr_OptionFrames.general = Durrr_Dialog:AddToBlizOptions(myName, nil, nil, L["general"])
+  Durrr_OptionFrames.profile = Durrr_Dialog:AddToBlizOptions(myName, L["Profiles"], myName, L["profile"])
 
   Durrrability:ScheduleRepeatingTimer("MainUpdate", 1)
 end
-
-function Durrrability:OnDisable()
-end
-
--- Config window --
-function Durrrability:ShowConfig()
-	InterfaceOptionsFrame_OpenToCategory(Durrr_OptionFrames.profile)
-	InterfaceOptionsFrame_OpenToCategory(Durrr_OptionFrames.general)
-end
--- End Options --
-
-function Durrrability:UpdateOptions()
-  LibStub("AceConfigRegistry-3.0"):NotifyChange(me)
-end
-
-function Durrrability:UpdateProfile()
-  Durrrability:ScheduleTimer("UpdateProfileDelayed", 0)
-end
-
-function Durrrability:OnProfileChanged(event, database, newProfileKey)
-  Durrrability.db.profile = database.profile
-end
-
-function Durrrability:UpdateProfileDelayed()
-  for timerKey, timerValue in Durrrability:IterateModules() do
-    if timerValue.db.profile.on then
-      if timerValue:IsEnabled() then
-        timerValue:Disable()
-        timerValue:Enable()
-      else
-        timerValue:Enable()
-      end
-    else
-      timerValue:Disable()
-    end
-  end
-
-  Durrrability:UpdateOptions()
-end
-
-function Durrrability:OnProfileReset()
-end
-
 --[[
      ########################################################################
-     |  Last Editted By: PapaBearDoes - 2020-12-09T22:42:31Z
-     |  a7f3efb405ed0a7f2093c28fae666ca86e8610d6
+     |  Last Editted By: @file-author@ - @file-date-iso@
+     |  @file-hash@
      |                                                                      |
      '-------------------------.oooO----------------------------------------|
                               (    )     Oooo.

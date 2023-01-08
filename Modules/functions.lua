@@ -5,25 +5,25 @@
      .---------------------------.OOOo--()--oOOO.---------------------------.
      |                                                                      |
      |  PapaBearDoes's Durrrability Addon for World of Warcraft
+     |  @project-version@
      ######################################################################## ]]
 --   ## Let's init this file shall we?
 -- Imports
 local _G = _G
 --Durrr = select(2, ...)
-local me, ns = ...
-local Durrrability = ns
-local Durrr_Functions = Durrrability:NewModule("Functions", "AceConsole-3.0", "AceEvent-3.0", "AceTimer-3.0", "AceHook-3.0")
+local myName, addon = ...
+local Durrrability = addon
 local L = Durrrability:GetLocale()
 -- End Imports
 --[[ ######################################################################## ]]
 --   ## Do All The Things!!!
 -- Auto repair - Self --
 function Durrrability:AutoRepair()
-  if Durrrability.globals.canRepair == true then
+  if Durrrability.db.global.canRepair == true then
 		RepairAllItems()
-		Durrrability:Print(Durrrability:Colorize("[" .. L["AddonName"] .. "]", "green") .. L["RepairedPersonal"] .. " " .. Durrrability:Coins2Str(Durrrability.globals.repairAllCost))
+		Durrrability:Print(Durrrability:Colorize("[" .. myName .. "]", "green") .. L["RepairedPersonal"] .. " " .. Durrrability:Coins2Str(Durrrability.db.global.repairAllCost))
 	else
-		Durrrability:Print(Durrrability:Colorize("["..L["AddonName"].."]", "green") .. L["CardDeclined"] .. " " .. Durrrability:Coins2Str(Durrrability.globals.repairAllCost))
+		Durrrability:Print(Durrrability:Colorize("["..myName.."]", "green") .. L["CardDeclined"] .. " " .. Durrrability:Coins2Str(Durrrability.db.global.repairAllCost))
   end
 end
 -- End Auto repair - Self --
@@ -37,13 +37,13 @@ function Durrrability:AutoRepairFromBank()
 	else
 		guildBankWithdrawMoney = min(guildBankWithdrawMoney, guildBankMoney)
 	end
-	if Durrrability.globals.canRepair == true and CanGuildBankRepair() and guildBankWithdrawMoney >= Durrrability.globals.repairAllCost then
+	if Durrrability.db.global.canRepair == true and CanGuildBankRepair() and guildBankWithdrawMoney >= Durrrability.db.global.repairAllCost then
 		RepairAllItems(1)
-		Durrrability:Print(Durrrability:Colorize("["..L["AddonName"].."]", "green") .. L["RepairedGuildFunds"] .. " " .. Durrrability:Coins2Str(Durrrability.globals.repairAllCost))
+		Durrrability:Print(Durrrability:Colorize("["..myName.."]", "green") .. L["RepairedGuildFunds"] .. " " .. Durrrability:Coins2Str(Durrrability.db.global.repairAllCost))
   elseif Durrrability.db.profile.repairFromGuildOnly then
-    Durrrability:Print(Durrrability:Colorize("["..L["AddonName"].."]", "green") .. L["NoGuildGold"])
+    Durrrability:Print(Durrrability:Colorize("["..myName.."]", "green") .. L["NoGuildGold"])
 	else
-		Durrrability:Print(Durrrability:Colorize("["..L["AddonName"].."]", "green") .. L["NoGuildGoldUsePersonal"])
+		Durrrability:Print(Durrrability:Colorize("["..myName.."]", "green") .. L["NoGuildGoldUsePersonal"])
 		Durrrability:AutoRepair()
 	end
 end
@@ -65,8 +65,8 @@ end
 
 -- Checks --
 function Durrrability:RepairAttempt()
-	Durrrability.globals.repairAllCost, Durrrability.globals.canRepair = GetRepairAllCost()
-	if Durrrability.db.profile.repairType > 0 and Durrrability.globals.repairAllCost > 0 then
+	Durrrability.db.global.repairAllCost, Durrrability.db.global.canRepair = GetRepairAllCost()
+	if Durrrability.db.profile.repairType > 0 and Durrrability.db.global.repairAllCost > 0 then
 		standing = UnitReaction("npc", "player")
 		if standing >= Durrrability.db.profile.repairThreshold then
 			Durrrability:DoRepair()
@@ -76,10 +76,49 @@ function Durrrability:RepairAttempt()
 	end
 end
 -- End Checks --
+
+-- Run The Addon --
+function Durrrability:ShowConfig()
+	InterfaceOptionsFrame_OpenToCategory(Durrr_OptionFrames.profile)
+	InterfaceOptionsFrame_OpenToCategory(Durrr_OptionFrames.general)
+end
+
+function Durrrability:UpdateOptions()
+  LibStub("AceConfigRegistry-3.0"):NotifyChange(me)
+end
+
+function Durrrability:UpdateProfile()
+  Durrrability:ScheduleTimer("UpdateProfileDelayed", 0)
+end
+
+function Durrrability:OnProfileChanged(event, database, newProfileKey)
+  Durrrability.db.profile = database.profile
+end
+
+function Durrrability:UpdateProfileDelayed()
+  for timerKey, timerValue in Durrrability:IterateModules() do
+    if timerValue.db.profile.on then
+      if timerValue:IsEnabled() then
+        timerValue:Disable()
+        timerValue:Enable()
+      else
+        timerValue:Enable()
+      end
+    else
+      timerValue:Disable()
+    end
+  end
+
+  Durrrability:UpdateOptions()
+end
+
+function Durrrability:OnProfileReset()
+end
+-- End Addon Functions --
 --[[
      ########################################################################
-     |  Last Editted By: PapaBearDoes - 2020-11-14T21:29:30Z
-     |  e04a0ea10bc01c36fb184f96aaa71582d019138f
+     |  Last Editted By: @file-author@ - @file-date-iso@
+     |  @file-hash@
      |                                                                      |
      '-------------------------.oooO----------------------------------------|
                               (    )     Oooo.
