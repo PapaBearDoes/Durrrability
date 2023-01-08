@@ -5,23 +5,24 @@
      .---------------------------.OOOo--()--oOOO.---------------------------.
      |                                                                      |
      |  PapaBearDoes's Durrrability Addon for World of Warcraft
+     |  @project-version@
      ######################################################################## ]]
 --   ## Let's init this file shall we?
 -- Imports
 local _G = _G
 --Durrr = select(2, ...)
-local me, ns = ...
-local Durrrability = ns
+local myName, addon = ...
+local Durrrability = addon
 local L = Durrrability:GetLocale()
 -- End Imports
 --[[ ######################################################################## ]]
 --   ## Do All The Things!!!
 function Durrrability:ScheduleUpdate()
-  Durrrability.globals.updateReq = true
+  Durrrability.db.global.updateReq = true
 end
 
 function Durrrability:OnVendorShow()
-  Durrrability.globals.vendorState = true
+  Durrrability.db.global.vendorState = true
   if not CanMerchantRepair() then
     return
   end
@@ -30,7 +31,7 @@ end
 
 function Durrrability:OnVendorClose()
   local Durrr_Dialog = LibStub("LibDialog-1.0")
-  Durrrability.globals.vendorState = false
+  Durrrability.db.global.vendorState = false
   if Durrr_Dialog:ActiveDialog("Durrr_Confirm") then
     Durrr_Dialog:Dismiss("Durrr_Confirm")
   end
@@ -40,17 +41,17 @@ function Durrrability:OnVendorClose()
 end
 
 function Durrrability:OnRestEnable()
-  Durrrability.globals.combatState = false
+  Durrrability.db.global.combatState = false
   Durrrability:ScheduleUpdate()
 end
 
 function Durrrability:OnRestDisable()
-  Durrrability.globals.combatState = true
+  Durrrability.db.global.combatState = true
 end
 
 function Durrrability:OnWarnUpdate()
   if IsResting() then
-    if Durrrability.globals.alreadyWarned == false then
+    if Durrrability.db.global.alreadyWarned == false then
       Durrrability:WarnToRepair()
     end
   end
@@ -58,22 +59,21 @@ end
 
 function Durrrability:OnCritWarnUpdate()
   if Durrrability.db.profile.critWarntoRepair then
-    if Durrrability.globals.alreadyWarned == false then
+    if Durrrability.db.global.alreadyWarned == false then
       Durrrability:CritWarnToRepair()
     end
   end
 end
 
 function Durrrability:warnTimerReset()
-  Durrrability.globals.alreadyWarned = false
+  Durrrability.db.global.alreadyWarned = false
   Durrrability:ScheduleTimer("OnWarnUpdate", 5)
 end
 -- End Events --
-
 --[[
      ########################################################################
-     |  Last Editted By: PapaBearDoes - 2020-12-09T22:42:31Z
-     |  a7f3efb405ed0a7f2093c28fae666ca86e8610d6
+     |  Last Editted By: @file-author@ - @file-date-iso@
+     |  @file-hash@
      |                                                                      |
      '-------------------------.oooO----------------------------------------|
                               (    )     Oooo.

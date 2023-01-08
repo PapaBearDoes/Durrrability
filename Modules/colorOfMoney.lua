@@ -5,13 +5,14 @@
      .---------------------------.OOOo--()--oOOO.---------------------------.
      |                                                                      |
      |  PapaBearDoes's Durrrability Addon for World of Warcraft
+     |  @project-version@
      ######################################################################## ]]
 --   ## Let's init this file shall we?
 -- Imports
 local _G = _G
 --Durrr = select(2, ...)
-local me, ns = ...
-local Durrrability = ns
+local myName, addon = ...
+local Durrrability = addon
 local L = Durrrability:GetLocale()
 -- End Imports
 --[[ ######################################################################## ]]
@@ -51,45 +52,62 @@ function Durrrability:GetRepairData()
 	local current = 0
 	local index, item
 
-	for index, item in pairs(Durrrability.globals.slots) do
-		local val, max = GetInventoryItemDurability(Durrrability.globals.slots[index][Durrrability.globals.ID])
-		local hasItem, hasCooldown, repairCost = Durrrability.frame:SetInventoryItem("player", Durrrability.globals.slots[index][Durrrability.globals.ID])
-		if max then
-			if Durrrability.globals.vendorState == true then
-				repairCost = Durrrability:VendorFix(repairCost)
-			end
-			total = total + max
-			current = current + val
-			totalCost = totalCost + repairCost
-			Durrrability.globals.slots[index][Durrrability.globals.VAL] = val
-			Durrrability.globals.slots[index][Durrrability.globals.MAX] = max
-			Durrrability.globals.slots[index][Durrrability.globals.COST] = repairCost
-			percent = val / max
-			if percent < percentMin then
-        percentMin = percent
+	for index, item in pairs(Durrrability.db.global.slots) do
+		local val, max = GetInventoryItemDurability(Durrrability.db.global.slots[index][Durrrability.db.global.ID])
+    if val == nil then val = 1 end
+    if max == nil then max = 1 end
+    local repairCost = 0
+		local data = C_TooltipInfo.GetInventoryItem("player", Durrrability.db.global.slots[index][Durrrability.db.global.ID])
+		if data then
+      TooltipUtil.SurfaceArgs(data)
+			repairCost = data.repairCost
+      if max and repairCost then
+        if Durrrability.db.global.vendorState == true then
+          repairCost = Durrrability:VendorFix(repairCost)
+        end
+			  total = total + max
+        current = current + val
+        totalCost = totalCost + repairCost
+        Durrrability.db.global.slots[index][Durrrability.db.global.VAL] = val
+        Durrrability.db.global.slots[index][Durrrability.db.global.MAX] = max
+        Durrrability.db.global.slots[index][Durrrability.db.global.COST] = repairCost
+        percent = val / max
+        if percent < percentMin then
+          percentMin = percent
+        end
       end
 		else
-			Durrrability.globals.slots[index][Durrrability.globals.MAX] = 0
+			Durrrability.db.global.slots[index][Durrrability.db.global.MAX] = 0
 		end
 	end
 
-	local bagTotal, bagCurrent = 0, 0
+  local bagTotal = 0
+  local bagCurrent = 0
+  local bagCost = 0;
 	if Durrrability.db.profile.showBags then
-		bagCost = 0;
 		for bag = 0, 4 do
-			local numSlots = GetContainerNumSlots(bag)
+			local numSlots = C_Container.GetContainerNumSlots(bag)
 			for slot = 1, numSlots do
-				local val, max = GetContainerItemDurability(bag, slot)
-				local hasCooldown, repairCost = Durrrability.frame:SetBagItem(bag, slot)
-				if max then
-					if Durrrability.globals.vendorState == true then
-						repairCost = Durrrability:VendorFix(repairCost)
-					end
-					bagTotal = bagTotal + max
-					bagCurrent = bagCurrent + val
-					bagCost = bagCost + repairCost
-					percent = val / max
-					if percent < percentMin then percentMin = percent end
+				local val, max = C_Container.GetContainerItemDurability(bag, slot)
+        if val == nil then val = 1 end
+        if max == nil then max = 1 end
+        local repairCost = 0
+				local data = C_TooltipInfo.GetBagItem(bag, slot)
+				if data then
+          TooltipUtil.SurfaceArgs(data)
+					repairCost = data.repairCost
+        end
+        if max and repairCost then
+          if Durrrability.db.global.vendorState == true then
+            repairCost = Durrrability:VendorFix(repairCost)
+          end
+          bagTotal = bagTotal + max
+          bagCurrent = bagCurrent + val
+          bagCost = bagCost + repairCost
+          percent = val / max
+          if percent < percentMin then
+            percentMin = percent
+          end
 				end
 			end
 		end
@@ -103,11 +121,12 @@ function Durrrability:GetRepairData()
 
 	current = current + bagCurrent
 	total = total + bagTotal
+
 	if total then
 		percent = current/total
 	end
-
-	return totalCost, percent, percentMin
+  
+	return totalCost, percent, percentMin, bagCost
 end
 -- End Data Updates --
 
@@ -202,8 +221,8 @@ function Durrrability:GetThresholdHexColor(quality, ...)
 end
 --[[
      ########################################################################
-     |  Last Editted By: PapaBearDoes - 2020-11-14T21:29:30Z
-     |  e04a0ea10bc01c36fb184f96aaa71582d019138f
+     |  Last Editted By: @file-author@ - @file-date-iso@
+     |  @file-hash@
      |                                                                      |
      '-------------------------.oooO----------------------------------------|
                               (    )     Oooo.

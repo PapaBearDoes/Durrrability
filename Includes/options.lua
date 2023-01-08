@@ -5,13 +5,14 @@
      .---------------------------.OOOo--()--oOOO.---------------------------.
      |                                                                      |
      |  PapaBearDoes's Durrrability Addon for World of Warcraft
+     |  @project-version@
      ######################################################################## ]]
 --   ## Let's init this file shall we?
 -- Imports
 local _G = _G
 --Durrr = select(2, ...)
-local me, ns = ...
-local Durrrability = ns
+local myName, addon = ...
+local Durrrability = addon
 local L = Durrrability:GetLocale()
 -- End Imports
 --[[ ######################################################################## ]]

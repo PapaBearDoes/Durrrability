@@ -5,13 +5,14 @@
      .---------------------------.OOOo--()--oOOO.---------------------------.
      |                                                                      |
      |  PapaBearDoes's Durrrability Addon for World of Warcraft
+     |  @project-version@
      ######################################################################## ]]
 --   ## Let's init this file shall we?
 -- Imports
 local _G = _G
 --Durrr = select(2, ...)
-local me, ns = ...
-local Durrrability = ns
+local myName, addon = ...
+local Durrrability = addon
 local L = Durrrability:GetLocale()
 -- End Imports
 --[[ ######################################################################## ]]
@@ -35,20 +36,20 @@ DLDB = Durrr_LDB:NewDataObject("DurrrLDB", {
   end,
   OnTooltipShow = function(tooltip)
     if not tooltip or not tooltip.AddLine then return end
-    tooltip:AddLine(L["AddonName"] .. " " .. GetAddOnMetadata("Durrrability", "Version"))
+    tooltip:AddLine(myName .. " " .. GetAddOnMetadata("Durrrability", "Version"))
 
-    local totalCost, percent, percentMin  = Durrrability:GetRepairData()
+    local totalCost, percent, percentMin, bagCost  = Durrrability:GetRepairData()
     if Durrrability.db.profile.showAllItemsAlways then
       tooltip:AddLine(" ")
-      for index, item in pairs(Durrrability.globals.slots) do
+      for index, item in pairs(Durrrability.db.global.slots) do
         if totalCost <= 0 then
         end
-        local p = item[Durrrability.globals.VAL] / item[Durrrability.globals.MAX]
+        local p = item[Durrrability.db.global.VAL] / item[Durrrability.db.global.MAX]
         if p <= 0 then
           p = 1
         end
         local r, g, b = Durrrability:GetThresholdColor(p)
-        tooltip:AddDoubleLine(string.format("%d%%  " .. Durrrability:Colorize("%s", "yellow"), p * 100, item[Durrrability.globals.NAME]), Durrrability:Coins2Str(math.floor(item[Durrrability.globals.COST])), r, g, b, 1, 1, 1)
+        tooltip:AddDoubleLine(string.format("%d%%  " .. Durrrability:Colorize("%s", "yellow"), p * 100, item[Durrrability.db.global.NAME]), Durrrability:Coins2Str(math.floor(item[Durrrability.db.global.COST])), r, g, b, 1, 1, 1)
       end
       if Durrrability.db.profile.showBags then
         local r, g, b = Durrrability:GetThresholdColor(bagPercent)
@@ -61,11 +62,11 @@ DLDB = Durrr_LDB:NewDataObject("DurrrLDB", {
       else
         if Durrrability.db.profile.showDetails then
           tooltip:AddLine(" ")
-          for index, item in pairs(Durrrability.globals.slots) do
-            if item[Durrrability.globals.MAX] > 0 and item[Durrrability.globals.VAL] < item[Durrrability.globals.MAX] then
-              local p = item[Durrrability.globals.VAL] / item[Durrrability.globals.MAX]
+          for index, item in pairs(Durrrability.db.global.slots) do
+            if item[Durrrability.db.global.MAX] > 0 and item[Durrrability.db.global.VAL] < item[Durrrability.db.global.MAX] then
+              local p = item[Durrrability.db.global.VAL] / item[Durrrability.db.global.MAX]
               local r, g, b = Durrrability:GetThresholdColor(p)
-              tooltip:AddDoubleLine(string.format("%d%%  " .. Durrrability:Colorize("%s", "yellow"), p * 100, item[Durrrability.globals.NAME]), Durrrability:Coins2Str(math.floor(item[Durrrability.globals.COST])), r, g, b, 1, 1, 1)
+              tooltip:AddDoubleLine(string.format("%d%%  " .. Durrrability:Colorize("%s", "yellow"), p * 100, item[Durrrability.db.global.NAME]), Durrrability:Coins2Str(math.floor(item[Durrrability.db.global.COST])), r, g, b, 1, 1, 1)
             end
           end
           if Durrrability.db.profile.showBags and (bagCost > 0) then
@@ -97,9 +98,9 @@ DLDB = Durrr_LDB:NewDataObject("DurrrLDB", {
 })
 
 function Durrrability:MainUpdate()
-  if Durrrability.globals.updateReq then
-    Durrrability.globals.updateReq = false
-    if (Durrrability.globals.combatState == true) and (not Durrrability.db.profile.updateInCombat) then
+  if Durrrability.db.global.updateReq then
+    Durrrability.db.global.updateReq = false
+    if (Durrrability.db.global.combatState == true) and (not Durrrability.db.profile.updateInCombat) then
       return
     end
 
@@ -117,12 +118,18 @@ function Durrrability:UpdateIcon()
 		DLDB.iconCoords = repairIconCoords
 	end
 end
--- End LDB stuff --
 
+function Durrrability:MiniMapIcon()
+  Durrr_icon = LibStub("LibDBIcon-1.0")
+  if not Durrr_icon:IsRegistered(myName .. "_mapIcon") then
+    Durrr_icon:Register(myName .. "_mapIcon", DLDB, Durrrability.db.profile.mmIcon)
+  end
+end
+-- End LDB stuff --
 --[[
      ########################################################################
-     |  Last Editted By: PapaBearDoes - 2020-11-20T1:53:18Z
-     |  fc99a9652fc14b572e08c02facc0d9d8e222317b
+     |  Last Editted By: @file-author@ - @file-date-iso@
+     |  @file-hash@
      |                                                                      |
      '-------------------------.oooO----------------------------------------|
                               (    )     Oooo.

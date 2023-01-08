@@ -4,18 +4,28 @@
                                    (| (.)(.) |)
      .---------------------------.OOOo--()--oOOO.---------------------------.
      |                                                                      |
-     |  PapaBearDoes's Durrrability Addon for World of Warcraft
+     |  PapaBearDoes's Durrrability Addon for World of Warcraft             |
+     |  @project-version@
      ######################################################################## ]]
 --   ## Let's init this file shall we?
 -- Imports
-local me, ns = ...
-local lang = GetLocale()
-local l = LibStub("AceLocale-3.0")
-local L = l:NewLocale(me, "esES")
-if not L then return end
+local myName, addon = ...
+local L = LibStub("AceLocale-3.0"):NewLocale(myName, "esES")
+local L = L or {}
 -- End Imports
 --[[ ######################################################################## ]]
+--[[
+L["Phrase"] = "Translation"
+L["Phrase"] = true
+L["SubNameSpace"] = {
+  L["Phrase"] = "Translation"
+  L["Phrase"] = true
+}
+]]
+--[[ ######################################################################## ]]
 --   ## Do All The Things!!!
+-- esES Localization
+--@localization(locale="esES", format="lua_additive_table", same-key-is-true=true, handle-subnamespaces="subtable")@
 
 --[[Translation missing --]]
 --[[ L["AddonName"] = ""--]] 
@@ -177,12 +187,10 @@ if not L then return end
 --[[ L["Yes"] = ""--]] 
 --[[Translation missing --]]
 --[[ L["YourRepIs"] = ""--]] 
-
-
 --[[
      ########################################################################
-     |  Last Editted By: PapaBearDoes - 2020-11-10T18:01:33Z
-     |  a6a3d377e451b250ff2c586665cf48d6bed631a9
+     |  Last Editted By: @file-author@ - @file-date-iso@
+     |  @file-hash@
      |                                                                      |
      '-------------------------.oooO----------------------------------------|
                               (    )     Oooo.

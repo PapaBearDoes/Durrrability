@@ -5,21 +5,19 @@
 .===========================.OOOo==()==oOOO.===========================.
 |                                                                      |
 |  PapaBearDoes' Durrrability Addon for World of Warcraft              |
+|  @project-version@
 ######################################################################## -->
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\FrameXML\UI.xsd">
-  <Script file="globals.lua"/>
-  <Script file="config.lua"/>
   <Script file="dialog.lua"/>
   <Script file="functions.lua"/>
   <Script file="events.lua"/>
   <Script file="colorOfMoney.lua"/>
-  <Script file="databroker.lua"/>
 </Ui>
 <!--
 ########################################################################
-|  Last Editted By: PapaBearDoes - 2020-11-18T19:10:00Z
-|  9c6b057b6eaf07cb5d73bc05472dc0a434944a3f
+|  Last Editted By: @file-author@ - @file-date-iso@
+|  @file-hash@
 '=======================.oooO==========================================|
                        (    )     Oooo.
                         \  (     (    )

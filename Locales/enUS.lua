@@ -5,28 +5,37 @@
      .---------------------------.OOOo--()--oOOO.---------------------------.
      |                                                                      |
      |  PapaBearDoes's Durrrability Addon for World of Warcraft
+     |  @project-version@
      ######################################################################## ]]
 --   ## Let's init this file shall we?
 -- Imports
-local me, ns = ...
-local lang = GetLocale()
-local l = LibStub("AceLocale-3.0")
-local L = l:NewLocale(me, "enUS", true, true)
-if not L then return end
+local myName, addon = ...
+local L = LibStub("AceLocale-3.0"):NewLocale(myName, "enUS", true)
+local L = L or {}
 -- End Imports
 --[[ ######################################################################## ]]
+--[[
+L["Phrase"] = "Translation"
+L["Phrase"] = true
+L["SubNameSpace"] = {
+  L["Phrase"] = "Translation"
+  L["Phrase"] = true
+}
+]]
+--[[ ######################################################################## ]]
 --   ## Do All The Things!!!
+-- enUS Localization
+--@localization(locale="enUS", format="lua_additive_table", same-key-is-true=true, handle-subnamespaces="subtable")@
 
-L["AddonName"] = "Durrrability"
 L["Ask"] = "Ask me"
 L["AskIfLower"] = "Ask me for input if lower"
-L["AutoRepair"] = "AutoRepair"
+L["AutoRepair"] = true
 L["AutoRepairRequires"] = "Auto repair requires"
-L["Average"] = "Average"
-L["Back"] = "Back"
-L["Cancel"] = "Cancel"
-L["CardDeclined"] = "Ahem ... It seems as though your card has been declined... I would love to help, but sadly it seems that you need"
-L["Chest"] = "Chest"
+L["Average"] = true
+L["Back"] = true
+L["Cancel"] = true
+L["CardDeclined"] = "Ahem ... It seems as though your card has been declined ... I would love to help, but sadly it seems that you need more funds."
+L["Chest"] = true
 L["CityWarn"] = [=[Bruh!!! Your gear is busted!
 Your most broken item is at %s percent.
 
@@ -46,33 +55,33 @@ L["DisplayOptions"] = "Display Options"
 L["DoNothing"] = "Do nothing"
 L["Durability"] = "Durrrability"
 L["ErrorDB"] = "Error: Database not loaded correctly. Exit WoW and delete Durrrability.lua found in your SavedVariables folder"
-L["Feet"] = "Feet"
+L["Feet"] = true
 L["GeneralSettings"] = "General Settings"
 L["GuildFundsToggle"] = "Toggle to repair using guild bank."
-L["Hands"] = "Hands"
-L["Head"] = "Head"
+L["Hands"] = true
+L["Head"] = true
 L["InCombatToggle"] = [=[Toggle for in-combat updates.
 
 !!!This *WILL* be CPU intensive if turned on!!!]=]
 L["InCombatUpdate"] = "Update in combat."
 L["ItWillCost"] = "It will cost %s"
-L["Legs"] = "Legs"
-L["Lowest"] = "Lowest"
+L["Legs"] = true
+L["Lowest"] = true
 L["LowRepConfirmPop"] = "Pop up a confirmation box for lower reputations."
-L["MainHand"] = "MainHand"
+L["MainHand"] = true
 L["MinRep"] = "Minimum reputation:"
 L["MinRepLevel"] = "Minimum reputation level needed to automatically repair at vendors?"
-L["Myself"] = "Myself"
-L["Neck"] = "Neck"
-L["No"] = "No"
+L["Myself"] = true
+L["Neck"] = true
+L["No"] = true
 L["NoBroke"] = "Nothing's Broke!"
 L["NoGuildGold"] = "It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds)."
 L["NoGuildGoldToggle"] = "Toggle to not repair with your money if guild does not have enough."
 L["NoGuildGoldUsePersonal"] = "It seems that you Guild bank does not have enough money (or you're not allowed to use guild funds). We'll repair with your funds then."
-L["Ok"] = "Ok"
+L["Ok"] = true
 L["OnlyGuildFunds"] = "Only use guild funds."
-L["Profiles"] = "Profiles"
-L["Ranged"] = "Ranged"
+L["Profiles"] = true
+L["Ranged"] = true
 L["RepairConfirm"] = "Do you still want to repair?"
 L["RepairedGuildFunds"] = "Your items have been repaired using guild bank for"
 L["RepairedPersonal"] = "Your items have been repaired for"
@@ -83,7 +92,7 @@ L["RepOpts"] = "Reputation Options"
 L["RightClick"] = "Right-Click"
 L["RightToolTip"] = "to open the options menu."
 L["SecondaryHand"] = "SecondaryHand"
-L["Shoulder"] = "Shoulder"
+L["Shoulder"] = true
 L["ShowAllItemsAlways"] = "Always Show All Items"
 L["ShowAllItemsAlwaysToggle"] = "Always show all items in LDB tooltip"
 L["ShowAllItemsToggle"] = "Toggle to show detailed item durability."
@@ -95,7 +104,7 @@ L["ShowMinimapButtonDesc"] = "Shall we show the Minimap Icon?"
 L["TheGuild"] = "The Guild"
 L["UseGuildFunds"] = "Use guild bank."
 L["VendorRepairQuestion"] = "How should Durrrability handle item repairs at vendors?"
-L["Waist"] = "Waist"
+L["Waist"] = true
 L["WarningOpts"] = "Warning Options"
 L["WarnMax"] = "Set maximum item durability to toggle the warning."
 L["WarnPause"] = "Warning Pause"
@@ -104,16 +113,16 @@ L["WarnThreshold"] = "Warning Threshold"
 L["WhoPays"] = [=[Who will be paying for the repairs?
 
 It costs %s]=]
-L["Wrist"] = "Wrist"
-L["Yes"] = "Yes"
+L["Wrist"] = true
+L["Yes"] = true
 L["YourRepIs"] = "Your reputation with this vendor is"
 
-
-
+L["general"] = true
+L["profile"] = true
 --[[
      ########################################################################
-     |  Last Editted By: PapaBearDoes - 2020-12-09T22:42:31Z
-     |  a7f3efb405ed0a7f2093c28fae666ca86e8610d6
+     |  Last Editted By: @file-author@ - @file-date-iso@
+     |  @file-hash@
      |                                                                      |
      '-------------------------.oooO----------------------------------------|
                               (    )     Oooo.
