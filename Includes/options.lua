@@ -90,10 +90,10 @@ Durrrability.options = {
           set = function(key, value)
             if value == true then
               Durrrability.db.profile.mmIcon.hide = false
-              Durrr_icon:Show(me .. "_mapIcon")
+              Durrr_icon:Show(myName .. "_mapIcon")
             else
               Durrrability.db.profile.mmIcon.hide = true
-              Durrr_icon:Hide(me .. "_mapIcon")
+              Durrr_icon:Hide(myName .. "_mapIcon")
             end
           end,
         },
