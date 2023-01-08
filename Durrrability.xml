@@ -1,0 +1,21 @@
+<!--
+                                 \\\\///
+                                /       \
+                              (| (.)(.) |)
+.===========================.OOOo==()==oOOO.===========================.
+|                                                                      |
+|  PapaBearDoes' Durrrability Addon for World of Warcraft              |
+######################################################################## -->
+<Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
+..\FrameXML\UI.xsd">
+  <Script file="Durrrability.lua"/>
+</Ui>
+<!--
+########################################################################
+|  Last Editted By: PapaBearDoes - 2020-11-03T0:40:46Z
+|  bb6cee9583cc1d99a5fa85772ecdc5c5edd987a5
+'=======================.oooO==========================================|
+                       (    )     Oooo.
+                        \  (     (    )
+                         \__)     )  /
+                                 (__/                                    -->

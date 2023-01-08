@@ -1,0 +1,38 @@
+## Interface: 90002
+
+## Title: Durrrability
+## Author: PapaBearDoes
+## Version: 1.0.9
+## Notes: A Simple Durability Plugin for LDB Displays
+## Notes-deDE: Ein einfaches Haltbarkeits-Plugin für LDB-Displays
+## Notes-enUS: A Simple Durability Plugin for LDB Displays
+## Notes-esES: Un complemento de durabilidad simple para pantallas LDB
+## Notes-esMX: Un complemento de durabilidad simple para pantallas LDB
+## Notes-frFR: Un plug-in de durabilité simple pour les écrans LDB
+## Notes-itIT: Un semplice plug-in di durata per display LDB
+## Notes-koKR: LDB 디스플레이를위한 간단한 내구성 플러그인
+## Notes-ptBR: Um plug-in de durabilidade simples para monitores LDB
+## Notes-ruRU: Плагин Simple Durability для дисплеев LDB
+## Notes-zhCN: 用于LDB显示器的简单耐用性插件
+## Notes-zhTW: 用於LDB顯示器的簡單耐用性插件
+## OptionalDeps: LibInit, LibDialog-1.0
+
+## X-Category: Data Broker, Miscellaneous, Bags & Inventory, Tooltip
+## X-License: GPLv3
+## X-Website: https://github.com/PapaBearDoes/Durrrability
+## X-Curse-Project-ID: 416370
+
+## SavedVariables: DurrrabilitySV
+
+Libraries\LibInit\LibInit.xml
+Libraries\LibDialog-1.0\lib.xml
+Libraries\LibDBIcon-1.0\LibDBIcon-1.0\lib.xml
+
+Locales\locales.xml
+
+Durrrability.lua
+
+Modules\modules.xml
+
+#Last Editted By: PapaBearDoes - 2020-12-09T22:42:31Z
+#a7f3efb405ed0a7f2093c28fae666ca86e8610d6
