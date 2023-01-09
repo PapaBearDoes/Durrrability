@@ -19,8 +19,9 @@
 
 # X-Meta
 ## X-Category: Data Broker, Miscellaneous, Bags & Inventory, Tooltip
-## X-License: GPLv3
+## X-License: All Rights Reserved: You are free to fork and modify on GitHub, please ask about anything else.
 ## X-Website: https://github.com/PapaBearDoes/Durrrability
+## X-Discord: https://discord.alphabetcartel.org
 ## X-Curse-Project-ID: 416370
 
 # Functionality
