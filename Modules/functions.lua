@@ -21,9 +21,9 @@ local L = Durrrability:GetLocale()
 function Durrrability:AutoRepair()
   if Durrrability.db.global.canRepair == true then
 		RepairAllItems()
-		Durrrability:Print(Durrrability:Colorize("[" .. myName .. "]", "green") .. L["RepairedPersonal"] .. " " .. Durrrability:Coins2Str(Durrrability.db.global.repairAllCost))
+		Durrrability:Print(L["RepairedPersonal"] .. " " .. Durrrability:Coins2Str(Durrrability.db.global.repairAllCost))
 	else
-		Durrrability:Print(Durrrability:Colorize("["..myName.."]", "green") .. L["CardDeclined"] .. " " .. Durrrability:Coins2Str(Durrrability.db.global.repairAllCost))
+		Durrrability:Print(L["CardDeclined"] .. " " .. Durrrability:Coins2Str(Durrrability.db.global.repairAllCost))
   end
 end
 -- End Auto repair - Self --
@@ -39,11 +39,11 @@ function Durrrability:AutoRepairFromBank()
 	end
 	if Durrrability.db.global.canRepair == true and CanGuildBankRepair() and guildBankWithdrawMoney >= Durrrability.db.global.repairAllCost then
 		RepairAllItems(1)
-		Durrrability:Print(Durrrability:Colorize("["..myName.."]", "green") .. L["RepairedGuildFunds"] .. " " .. Durrrability:Coins2Str(Durrrability.db.global.repairAllCost))
+		Durrrability:Print(L["RepairedGuildFunds"] .. " " .. Durrrability:Coins2Str(Durrrability.db.global.repairAllCost))
   elseif Durrrability.db.profile.repairFromGuildOnly then
-    Durrrability:Print(Durrrability:Colorize("["..myName.."]", "green") .. L["NoGuildGold"])
+    Durrrability:Print(L["NoGuildGold"])
 	else
-		Durrrability:Print(Durrrability:Colorize("["..myName.."]", "green") .. L["NoGuildGoldUsePersonal"])
+		Durrrability:Print(L["NoGuildGoldUsePersonal"])
 		Durrrability:AutoRepair()
 	end
 end
